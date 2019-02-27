@@ -33,7 +33,7 @@ Then, start the django server:
 Finally, open http://localhost:8000 .
 
 ## Directory Description
-**app/**: This directory is used for Django custom application *app*.
+**app_views/**: This directory is used for Django custom application *app*.
 
 **conf/**: This directory contains Django configuration files for deployment.
 
