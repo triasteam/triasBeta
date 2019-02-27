@@ -15,6 +15,7 @@ jc = JsonConfiguration()
 
 
 def general_static(request):
+
     try:
         # 节点总数
         nodes = Node.objects.count()
@@ -53,6 +54,7 @@ def general_static(request):
 
 
 def get_faulty_nodes(request):
+
     try:
         faulty_nodes_num = Node.objects.filter(status=1).count()
         status, result = 'success', {'faulty_nodes_num': faulty_nodes_num}
@@ -64,6 +66,7 @@ def get_faulty_nodes(request):
 
 
 def get_fault_accetpance_rate(request):
+
     try:
         nodes_num = Node.objects.count()
         faulty_nodes_num = Node.objects.filter(status=1).count()
