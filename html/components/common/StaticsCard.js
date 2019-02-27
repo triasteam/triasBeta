@@ -26,9 +26,36 @@ class StaticsCard extends React.Component {
     render() {
         return (
             <div className="card-container">
-                <div >
-                    hi here
-                </div>
+                <section className="card-header clearfix">
+                    <img src={require("../../img/icon/general-statics/icon_gs_nodes@2x.png")} />
+                    <span>Block Height</span>
+                </section>
+                <section className="percent-bar">
+                    <div></div>
+                </section>
+                <section className="percent-bar">
+                    <div></div>
+                </section>
+                <section className="percent-bar">
+                    <div></div>
+                </section>
+                <section className="parameters">
+                    <div className="param-item clearfix">
+                        <span className="point"></span>
+                        <span className="param-name">Trias</span>
+                        <span className="param-value">923.6 M</span>
+                    </div>
+                    <div className="param-item clearfix">
+                        <span className="point"></span>
+                        <span className="param-name">Trias</span>
+                        <span className="param-value">923.6 M</span>
+                    </div>
+                    <div className="param-item clearfix">
+                        <span className="point"></span>
+                        <span className="param-name">Trias</span>
+                        <span className="param-value">923.6 M</span>
+                    </div>
+                </section>
             </div>
         )
     }

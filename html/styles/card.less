@@ -1,0 +1,68 @@
+.card-container {
+    margin: 50px auto;
+    width:226px;
+    height:264px;
+    background:rgba(50,51,60,1);
+    border-radius:4px;
+    padding: 16px;
+    .card-header {
+        img {
+            width: 26px;
+            height: 26px;
+            float: left;
+            margin-right: 8px;
+            margin-bottom: 28px;
+        }
+        span {
+            display: inline-block;
+            font-size:15px;
+            font-weight:600;
+            color:rgba(255,255,255,1);
+            line-height:26px;
+        }
+    }
+    .percent-bar {
+        width:194px;
+        height:18px;
+        background:rgba(41,42,50,1);
+        border-radius:4px;
+        margin-bottom: 4px;
+        padding: 4px 8px;
+        div {
+            background:rgba(41,42,50,1);
+            height:10px;
+            width: 50%;
+            background-image: repeating-linear-gradient(90deg,rgba(161,252,58,1),rgba(161,252,58,1) 1px,transparent 2px,transparent 6px);
+        }
+    }
+    .parameters {
+        margin-top: 7px;
+        .param-item {
+            line-height:22px;
+            border-bottom: 1px solid rgba(68,72,81,1);
+            padding: 5px 0;
+            .point {
+                display: inline-block;
+                width:8px;
+                height:8px;
+                background:rgba(161,252,58,1);
+                border-radius:2px;
+                margin-right: 6px;
+                margin-bottom: 1px;
+                // float: left;
+            }
+            .param-name {
+                font-size:15px;
+                font-weight:400;
+                color:rgba(161,166,173,1);
+            }
+            .param-value {
+                font-size:16px;
+                font-weight:600;
+                color:rgba(255,255,255,1);
+                float: right;
+            }
+        }
+    }
+
+}
