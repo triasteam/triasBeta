@@ -18,6 +18,8 @@ import ChainSatus from "./ChainSatus";
 import Activities from "./Activities";
 import NodeList from "./NodeList";
 
+import StaticsCard from "./common/StaticsCard";
+
 export default class Main extends React.Component {
     constructor(props) {
         super(props);
@@ -137,6 +139,7 @@ export default class Main extends React.Component {
                                 {/* <Route exact path="/stayTuned" component={StayTuned} /> */}
                             </Switch>
                         </section>
+                        <StaticsCard />
                     </div>
                 </Router>
             </IntlProvider>
