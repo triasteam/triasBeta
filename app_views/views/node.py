@@ -17,7 +17,7 @@ def get_node_list(request):
         if status == '':
             nodes_list = list(Node.objects.values())
         else:
-            nodes_list = list(Node.objects.filter(status=status).values())
+            nodes_list = list(Node.objects.filter(status=status).order_by('-block_heigth').values())
         status, result = 'success', {'nodes_list': nodes_list, 'num': len(nodes_list)}
     except Exception as e:
         logger.error(e)

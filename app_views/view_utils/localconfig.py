@@ -14,4 +14,6 @@ class JsonConfiguration:
         records = json.loads(rec)
 
         self.node_list = records["node_list"]
+        self.redis_ip = records["redis_ip"]
+        self.redis_port = records["redis_port"]
         self.request_interval = records["request_interval"]

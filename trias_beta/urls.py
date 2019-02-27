@@ -1,4 +1,4 @@
-"""trias_beta URL Configuration
+"""trias_demo URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.10/topics/http/urls/
@@ -14,8 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from django.contrib import admin
 from django.views.generic import TemplateView
+from django.contrib import admin
 from app_views.views import index, node
 
 urlpatterns = [
@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^api/general_static/', index.general_static),  # General Static
     url(r'^api/faulty_nodes/', index.get_faulty_nodes),  # Faulty Nodes
     url(r'^api/fault_accetpance_rate/', index.get_fault_accetpance_rate),  # Fault Accetpance Rate
+    url(r'^api/data_monitoring/', index.get_data_monitoring),  # Data Monitoring
 
     url(r'^api/node_list/', node.get_node_list),  # Node List
 ]
