@@ -1,0 +1,211 @@
+@import "./reset.css";
+@import "./pagination";
+@import "./dropdownList";
+@import "./nodeList";
+
+@background: #202129;
+@text: #FEFEFE;
+@border: #444851;
+#app .main {
+    min-width: 1080px;
+}
+
+input {
+    outline: none;
+}
+
+input[type="text"] {
+    &:focus {
+        border: 1px solid rgba(161, 252, 58, 1);
+        outline: none;
+    }
+}
+
+input[type="button"] {
+    &:hover {
+        background: rgba(57, 62, 76, 1);
+    }
+    &:focus {
+        background: rgba(37, 40, 48, 1);
+    }
+}
+
+
+
+
+/* Styles for ToggleList component--------------------------------------------------------------------end*/
+
+/* 页面通用样式------------------------------------------start*/
+
+html,
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei", "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei", sans-serif; // font-family: PingFangSC-Regular;
+    font-weight: normal;
+    user-select: none;
+    background-color: @background;
+    color: @text;
+    font-size: 14px;
+}
+
+.header {
+    height: 76px;
+    background: rgba(49, 50, 61, 1);
+    border-bottom: 1px solid @border;
+    position: relative;
+    // text-align: center;
+    min-width: 1080px;
+    >div{
+        max-width: 1080px;
+        margin:0 auto;
+        position: relative;
+        .logo {
+            float: left;
+            margin-right: 48px;
+            // position: absolute;
+            // left: 5%;
+            a {
+                display: inline-block;
+                height: 76px;
+                width: 100px;
+                img {
+                    height: 44px;
+                    margin-top: 16px;
+                }
+            }
+        }
+        >ul {
+            display: inline-block;
+            margin: 0;
+            list-style-type: none;
+            -webkit-padding-start: 0;
+            >li {
+                display: inline-block;
+                // border-left: 1px solid @border;
+                height: 74px;
+                padding: 30px 16px 0;
+                a {
+                    position: relative;
+                    color: #A1A6AD;
+                }
+                a.active {
+                    color: #FEFEFE;
+                }
+                a.active:after {
+                    content: '';
+                    position: absolute;
+                    height: 2px;
+                    border-radius: 1px;
+                    width: 57%;
+                    background-color: #A1FC3A;
+                    bottom: -8px;
+                    left: 21%;
+                }
+            }
+            >li:first-child {
+                border-left: 1px solid @border;
+            }
+            >li:nth-last-child(1) {
+                border-right: 1px solid @border;
+            }
+        }
+        .lang {
+            float: right;
+            padding-top: 27px;
+            .toggle-list{
+                .item-selected{
+                    width: initial;
+                    height: initial;
+                    cursor: pointer;
+                    .fa-globe-americas{
+                        float: left;
+                        font-size: 24px;
+                        margin-left: 0;
+                        margin-right: 4px;
+                        margin-top: -3px;
+                    }
+                    >a>i:last-child{
+                        margin-left: 28px;
+                    }
+                }
+                img {
+                    display: inline-block;
+                    height: 24px;
+                    &.angle-down {
+                        margin-left: 4px;
+                        width: 10px;
+                    }
+                }
+                .list-block{
+                    li>span{
+                        padding: 16px 0;
+                    }
+                    .fa-globe-americas{
+                        color: #1E2328;
+                        margin-right: 8px;
+                        font-size: 24px;
+                    }
+                    span.active .fa-globe-americas{
+                        color: #5db85c;
+                    }
+                }      
+            }
+        }        
+    }
+}
+
+.sub-header {
+    text-align: center;
+    height: 110px;
+    background: #2a2b36;
+}
+
+.main {
+    max-width: 1080px;
+    margin: 48px auto 0;
+}
+
+//清除浮动
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    content: "";
+    line-height: 0;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+//表格公共样式<table>标签加上此类名　
+.customTable {
+    font-size: 12px;
+    width: 100%;
+    text-align: left;
+    color: #FEFEFE;
+    margin-bottom: 48px;
+    table-layout: fixed;
+    thead {
+        background-color: transparent;
+        color: #A1A6AD;
+    }
+    thead tr,
+    tbody tr {
+        height: 60px;
+        padding: 0 10px;
+    }
+    thead tr th,
+    tbody tr td {
+        padding: 20px 20px;
+        word-break: break-all;
+        word-wrap: break-word;
+        a {
+            color: #A1FC3A;
+        }
+    }
+    tbody tr:nth-child(odd) {
+        background-color: #292A32;
+    }
+    tbody tr:nth-child(even) {
+        background-color: #25262E;
+    }
+}

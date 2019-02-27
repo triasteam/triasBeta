@@ -1,0 +1,141 @@
+
+/*自定义下拉列表组件的样式--------------------------------------------------------------------start*/
+
+.my-dropdown-list {
+    position: relative;
+    width: 126px;
+    display: inline-block;
+    font-size: 12px; //下拉列表右边的小箭头图标
+    background: #2E323C;
+    .select-img {
+        position: absolute;
+        right: 16px;
+        top: 11px;
+        z-index: 6;
+        font-size: 16px;
+        color: #DAE1E9;
+    } //当前已选中的选项
+    .item-selected {
+        width: 126px;
+        height: 38px;
+        border-radius: 4px; // border: 1px solid #ccc;
+        background-color: transparent; // color: #fff;
+        // padding: 6px 10px;
+        cursor: default;
+        border: 1px solid #444851;
+        padding: 10px 16px;
+        font-size: 12px;
+        color: #DAE1E9;
+        line-height: 20px;
+        &:hover {
+            border: 1px solid rgba(161, 252, 58, 1);
+        }
+    }
+    .select-img:hover+.item-selected {
+        border-color: rgba(161, 252, 58, 1);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(161, 252, 58, 0.6);
+    } //下拉列表的选项框 
+    .list-block {
+        position: absolute;
+        width: 126px;
+        border: 1px solid #444851;
+        border-top: 0;
+        border-radius: 4px;
+        background-color: #202129;
+        color: #DAE1E9;
+        z-index: 8;
+        ul {
+            margin-bottom: 6px;
+            li {
+                padding: 7px 16px;
+                cursor: pointer;
+                font-size: 14px;
+                color: rgba(255, 255, 255, 1);
+                line-height: 20px;
+                &.active {
+                    background: rgba(39, 65, 8, 1);
+                    border-top: 1px solid rgba(161, 252, 58, 1);
+                    border-bottom: 1px solid rgba(161, 252, 58, 1);
+                }
+                &:hover {
+                    background: rgba(40, 44, 53, 1);
+                }
+                span:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
+/*自定义下拉列表--------------------------------------------------------------------end*/
+
+/* Styles for ToggleList component--------------------------------------------------------------------start*/
+.my-dropdown-list.toggle-list{
+    position: relative;
+    display: inline-block;
+    background: transparent; //当前已选中的选项
+    width: auto;
+    cursor: pointer;
+    .item-selected {
+        border: none;
+        background-color: transparent;
+        font-size: 16px;
+        font-family: MoskMedium500;
+        color: #f6f6f6;
+        line-height: 20px;
+        padding: 0;
+        text-align: center;
+        >a>.fas{
+            margin-left: 4px;
+        }        
+        a{
+            color: #f6f6f6;
+        }
+    }
+    //下拉列表的选项框 
+    .list-block {
+        position: absolute;
+        width: 250px;
+        color: #DAE1E9;
+        z-index: 18;
+        top: 53px;
+        right: -40px;
+        background: #2B2F37;
+        box-shadow: 0 4px 10px 0 rgba(0,0,0,0.80);
+        border-radius: 4px;
+        padding: 16px 24px;
+        border: none;
+        ul {
+            margin-bottom: 6px;
+            li {
+                border-top: none;
+                cursor: pointer;
+                font-size: 14px;
+                color: #f6f6f6;
+                line-height: 20px;
+                &.active {
+                    background: rgba(39, 65, 8, 1);
+                    border-top: 1px solid rgba(161, 252, 58, 1);
+                    border-bottom: 1px solid rgba(161, 252, 58, 1);
+                }
+                &:hover {
+                    background: rgba(40, 44, 53, 1);
+                }
+                span:hover {
+                    cursor: pointer;
+                }                
+            }
+        }
+        &::before{
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 8px solid transparent;
+            border-bottom: 8px solid #2B2F37;
+            top: -16px;
+            right: 56px;
+        }
+    }
+}
