@@ -1,0 +1,117 @@
+.lineMark-card {
+  width: 770px;
+  height: 584px;
+  background: rgba(41, 42, 50, 1);
+  border-radius: 4px;
+  margin:20px 0;
+}
+.lineMark-title {
+  padding: 32px;
+
+  .title-des {
+    font-weight: 600;
+    color: rgba(161, 166, 173, 1);
+    line-height: 28px;
+    font-size: 20px;
+    float: left;
+  }
+  ul {
+    float: right;
+    li {
+      padding: 3px 16px;
+      height: 28px;
+      background: rgba(37, 38, 46, 1);
+      border: 1px solid rgba(68, 72, 81, 1);
+      font-size: 15px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      color: rgba(161, 166, 173, 1);
+      line-height: 22px;
+      border-radius: 4px;
+      cursor: pointer;
+      &.active {
+        background: rgba(161, 252, 58, 0.16);
+        border: 1px solid rgba(161, 252, 58, 1);
+        color: rgba(161, 252, 58, 1);
+      }
+    }
+  }
+}
+
+.lineMark-pie {
+  width: 706px;
+  height: 130px;
+  background: rgba(50, 51, 60, 1);
+  border-radius: 6px;
+  margin: auto;
+  .warpper {
+    float: left;
+    /* background: url('./img_dashboard_A@2x.png') no-repeat; */
+    width: 235px;
+    height: 130px;
+    position: relative;
+    background: rgba(50, 51, 60, 1);
+    border-radius: 6px;
+  }
+
+  .dial {
+    width: 93px;
+    height: 90px;
+    background: url("../img/img_dashboard_A@2x.png") no-repeat;
+    background-size: cover;
+    position: absolute;
+    bottom: 20px;
+    left: 38px;
+  }
+
+  .line {
+    width: 93px;
+    height: 17px;
+    background: #964;
+    /* position: absolute;
+    transform: rotate(90deg) */
+    background: url("../img/img_dashboard_B@2x.png") no-repeat;
+    background-size: cover;
+    position: absolute;
+    bottom: 20px;
+    transform-origin: right bottom;
+    transform: rotate(45deg);
+    left: 30px;
+  }
+
+  .layer {
+    position: absolute;
+    bottom: 20px;
+    left: 47%;
+  }
+
+  .layer-item {
+    font-size: 15px;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(161, 166, 173, 1);
+    line-height: 21px;
+    margin-bottom: 6px;
+  }
+
+  .num {
+    font-size: 24px;
+    font-family: PingFangSC-Semibold;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 1);
+    line-height: 30px;
+    position: relative;
+  }
+
+  .num::after {
+    content: "TPS";
+    position: absolute;
+    top: -2px;
+    right: -32px;
+    font-size: 15px;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(161, 166, 173, 1);
+    line-height: 22px;
+  }
+}
