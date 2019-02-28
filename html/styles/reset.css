@@ -91,20 +91,21 @@ input[type="checkbox"]:focus input[type="text"]:focus {
 }
 /* -webkit自定义滚动条样式   start------------------- */
 ::-webkit-scrollbar {
-    width: 8px;
     height: 8px;
+    width:6px;
+/* height:294px; */
 }
 /* Track 外层轨道 */
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    /* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); */
     -webkit-border-radius: 12px;
     border-radius: 10px;
-    background: #42495b;
+    background: transparent;
 }
 /* Handle （拖动条 */
 ::-webkit-scrollbar-thumb {
     -webkit-border-radius: 10px;
     border-radius: 10px;
-    background: #353c48;
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+    background: rgba(32,33,41,1);
+    /* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5); */
 }
