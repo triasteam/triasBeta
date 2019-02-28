@@ -22,29 +22,7 @@ export default class NodesGraph extends React.Component {
     }
 
     getNodesRelation(){
-        var self = this;
-        self.setState({
-            nodes:[{
-                id:1,
-                ip:"123.123.23.123",
-                status:0
-            },{
-                id:2,
-                ip:"123.123.23.123",
-                status:0 // normal
-            },{
-                id:3,
-                ip:"123.123.23.123",
-                status:1 // offline
-            }],
-            links:[{
-                from:1,
-                to:2
-            },{
-                from:3,
-                to:1
-            }]
-        })
+        var self = this;        
         var data = {
             "status": 200,
             "content": {
@@ -69,32 +47,35 @@ export default class NodesGraph extends React.Component {
                 "nodes": [
                     {
                         "status": "normal",
-                        "id": "123.123.123.123",
+                        "ip": "123.123.123.123",
                     },{
                         "status": "normal",
-                        "id": "123.123.123.000",
+                        "ip": "123.123.123.000",
                     },{
                         "status": "normal",
-                        "id": "123.123.123.888",
+                        "ip": "123.123.123.888",
                     },{
                         "status": "normal",
-                        "id": "123.123.123.111",
+                        "ip": "123.123.123.111",
                     },{
                         "status": "normal",
-                        "id": "123.123.123.222",
+                        "ip": "123.123.123.222",
                     },{
                         "status": "normal",
-                        "id": "123.123.123.333",
+                        "ip": "123.123.123.333",
                     },{
                         "status": "offline",
-                        "id": "123.123.123.444",
+                        "ip": "123.123.123.444",
                     },{
                         "status": "offline",
-                        "id": "123.123.123.555",
+                        "ip": "123.123.123.555",
                     },
                 ]
             }
         };
+        self.setState({
+            nodes:data.content.nodes
+        })
     
         self.updateGraph(data)
     }
@@ -175,7 +156,7 @@ export default class NodesGraph extends React.Component {
                 "class": "ip"
             })
             .text(function (d) {
-                return d.id;
+                return d.ip;
             });
         
         //Now we are giving the SVGs co-ordinates - the force layout is generating the co-ordinates which this code is using to update the attributes of the SVG elements
@@ -216,7 +197,33 @@ export default class NodesGraph extends React.Component {
 
     render() {
         return (
-            <div id="nodesGraph"></div>
+            <div className="visualisation-part">
+                <div className="title">
+                    <h1>Visualization</h1>
+                    <ul>
+                        <li className="active">Trias</li>
+                    </ul>
+                </div>
+                <div id="nodesGraph"></div>
+                <div className="hostlist-contaniner">                
+                    <ul className="host-list">
+                    {
+                        this.state.nodes.map(function(item,index){
+                            return (
+                                <li key={"host"+index}>
+                                    <span className="label">Node IP</span>
+                                    <span className="label">Status</span>
+                                    <span className="label">Level</span>
+                                    <span className="value">{item.ip}</span>
+                                    <span className="value"><div className={item.status==="normal"?"circle green":"circle red"}></div></span>
+                                    <span className="value">{item.level || 'High'}</span>
+                                </li>
+                            )
+                        })
+                    }
+                    </ul>
+                </div>
+            </div>
         )
     }
 }

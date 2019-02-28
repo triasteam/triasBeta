@@ -1,0 +1,130 @@
+/* style of nodes graph----------------------------------------------*/
+.visualisation-part {
+    padding: 32px;
+    background: #292A32;
+
+    .title {
+        width: 738px;
+        margin-bottom: 36px;
+
+        h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: rgba(161, 166, 173, 1);
+            line-height: 28px;
+            display: inline-block;
+        }
+
+        ul {
+            margin-left: 32px;
+            display: inline-block;
+
+            li {
+                padding: 3px 16px;
+                height: 28px;
+                background: rgba(37, 38, 46, 1);
+                border: 1px solid rgba(68, 72, 81, 1);
+                font-size: 15px;
+                font-family: PingFangSC-Regular;
+                font-weight: 400;
+                color: rgba(161, 166, 173, 1);
+                line-height: 22px;
+                border-radius: 4px;
+                cursor: pointer;
+
+                &.active {
+                    background: rgba(161, 252, 58, 0.16);
+                    border: 1px solid rgba(161, 252, 58, 1);
+                    color: rgba(161, 252, 58, 1);
+                }
+            }
+        }
+    }
+
+    #nodesGraph {
+        display: inline-block;
+        width: 738px;
+        height: 500px;
+        background: rgba(50, 51, 60, 1);
+        border-radius: 6px;
+
+        .ip {
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 1);
+            line-height: 17px;
+        }
+    }
+
+    .hostlist-contaniner{        
+        width: 258px;
+        display: inline-block;
+        margin-left: 20px;
+        position: relative;
+
+        .host-list {
+            width: 258px;
+            height: 500px;
+            overflow-y: scroll;
+
+            li {
+                border-bottom: 1px solid #444851;
+                padding: 12px 0;
+
+                .label {
+                    display: inline-block;
+                    font-size:15px;
+                    font-weight:400;
+                    color:rgba(161,166,173,1);
+                    line-height:22px;
+                    width: 60px;
+                }
+
+                .value {
+                    display: inline-block;
+                    font-size:15px;
+                    font-weight:600;
+                    color:rgba(255,255,255,1);
+                    line-height:22px;
+                    width: 60px;
+                    .circle{
+                        display: inline-block;
+                        border-radius: 50%;
+                        width:10px;
+                        height:10px;
+                        &.green {
+                            background:rgba(161,252,58,0.43);
+                            border:1px solid rgba(161,252,58,1);
+                        }
+                        &.red {                        
+                            background:rgba(255,0,117,0.2);
+                            border:1px solid rgba(255,0,117,1);
+                        }
+                    }
+                }
+                
+                .value:nth-child(4),
+                .label:first-child{
+                    width: 125px;
+                }
+                .value:nth-child(5),
+                .label:nth-child(2){
+                    width: 65px;
+                }
+            }
+
+            li:first-child {
+                padding: 0 0 12px 0;
+            }            
+        }
+
+        &:after{
+            content: "";
+            position: absolute;
+            bottom: 0;
+            width:258px;
+            height:74px;
+            background:linear-gradient(180deg,rgba(41,42,50,0) 0%,rgba(41,42,50,1) 100%);
+        }
+    }
+}

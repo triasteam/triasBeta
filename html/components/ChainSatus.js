@@ -248,10 +248,8 @@ class ChainStatus extends React.Component {
             tempList[i]=i
         }
         return (
-            <div className="status-page">
-                <section className="visualisation-part">                
-                    <NodesGraph />
-                </section>
+            <div className="status-page">               
+                <NodesGraph />
                  <section className="bottom-group clearfix">
                     <div className="left-part">
                         <GeneralStatics/>
