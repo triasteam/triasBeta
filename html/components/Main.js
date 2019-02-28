@@ -139,7 +139,44 @@ export default class Main extends React.Component {
                                 {/* <Route exact path="/stayTuned" component={StayTuned} /> */}
                             </Switch>
                         </section>
-                        <StaticsCard />
+                        <section className="bottom-group clearfix">
+                            <div className="left-part">
+                                <div className="general-statics">
+                                    <p className="main-title">General Statics</p>
+                                    <div className="card-group">
+                                        <StaticsCard />
+                                        <StaticsCard />
+                                        <StaticsCard />
+                                        <StaticsCard />
+                                        <StaticsCard />
+                                        <StaticsCard />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="right-part">
+                                <div className="simulations">
+                                    <p className="main-title">Simulations</p>
+                                    <div className="sim-data">
+                                        <p className="clearfix">
+                                            <span className="attr">Simulation</span>
+                                            <span className="value">Haker Attack</span>
+                                        </p>
+                                        <p className="clearfix">
+                                            <span className="attr">Run Time</span>
+                                            <span className="value">00:48:04</span>
+                                        </p>
+                                        <p className="clearfix">
+                                            <span className="attr">Test Group(s)</span>
+                                            <span className="value">1</span>
+                                        </p>
+                                    </div>
+                                    <p className="index">639 (38%)</p>
+                                    <p className="note percent-note">Nodes Affected</p>
+                                    <p className="index">437</p>
+                                    <p className="note">Nodes Affected</p>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </Router>
             </IntlProvider>

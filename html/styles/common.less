@@ -210,3 +210,81 @@ body {
         background-color: #25262E;
     }
 }
+
+.bottom-group {
+    width: 1080px;
+    margin: 20px auto;
+    .main-title {
+        font-size:20px;
+        font-weight:600;
+        color:rgba(161,166,173,1);
+        line-height:28px;
+        margin-bottom: 36px;
+    }
+    .left-part {
+        width: 770px;
+        margin-right: 20px;
+        display: inline-block;
+        .general-statics {
+            background:rgba(41,42,50,1);
+            border-radius:4px;
+            padding: 32px;
+            padding-bottom: 18px;
+            .card-group {
+                display: -webkit-flex; /* Safari */
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+        }
+    }
+    .right-part {
+        width: 290px;
+        float: right;
+        .simulations {
+            height:415px;
+            background:rgba(41,42,50,1);
+            border-radius:4px;
+            padding: 32px 16px 24px;
+            .main-title {
+                margin-bottom: 28px;
+            }
+            .sim-data {
+                height:112px;
+                background:rgba(50,51,60,1);
+                border-radius:6px;
+                padding: 12px;
+                padding-bottom: 0;
+                margin-bottom: 33px;
+                p {
+                    font-size:15px;
+                    font-weight:400;
+                    color:rgba(161,166,173,1);
+                    line-height:22px;
+                    margin-bottom: 12px;
+                    .value {
+                        float: right;
+                        color:rgba(161,252,58,1);
+                        line-height:21px;
+                    }
+                }
+            }
+            .index {
+                font-size:24px;
+                font-weight:600;
+                color:rgba(255,255,255,1);
+                line-height:38px;
+                margin-bottom: 4px;
+            }
+            .note {
+                font-size:15px;
+                font-weight:400;
+                color:rgba(161,166,173,1);
+                line-height:22px
+            }
+            .percent-note {
+                margin-bottom: 32px;
+            }
+        }
+    }
+}
