@@ -6,6 +6,7 @@ import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-in
 import GeneralStatics from "./GeneralStatics";
 import RightPart from "./RightPart";
 import LineMark from './charts/LineMark'
+import NodesGraph from "./NodesGraph";
 
 /* Component for node status page */
 class ChainStatus extends React.Component {
@@ -248,6 +249,9 @@ class ChainStatus extends React.Component {
         }
         return (
             <div className="status-page">
+                <section className="visualisation-part">                
+                    <NodesGraph />
+                </section>
                  <section className="bottom-group clearfix">
                     <div className="left-part">
                         <GeneralStatics/>
