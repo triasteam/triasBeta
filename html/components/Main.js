@@ -17,8 +17,7 @@ import $ from 'jquery'
 import ChainSatus from "./ChainSatus";
 import Activities from "./Activities";
 import NodeList from "./NodeList";
-
-import StaticsCard from "./common/StaticsCard";
+import GeneralStatics from "./GeneralStatics";
 
 export default class Main extends React.Component {
     constructor(props) {
@@ -141,17 +140,7 @@ export default class Main extends React.Component {
                         </section>
                         <section className="bottom-group clearfix">
                             <div className="left-part">
-                                <div className="general-statics">
-                                    <p className="main-title">General Statics</p>
-                                    <div className="card-group">
-                                        <StaticsCard />
-                                        <StaticsCard />
-                                        <StaticsCard />
-                                        <StaticsCard />
-                                        <StaticsCard />
-                                        <StaticsCard />
-                                    </div>
-                                </div>
+                                <GeneralStatics/>
                             </div>
                             <div className="right-part">
                                 <div className="simulations">
