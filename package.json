@@ -36,6 +36,7 @@
     "webpack-dev-server": "^2.3.0"
   },
   "dependencies": {
+    "d3": "^3.5.12",
     "echarts": "^3.7.1",
     "echarts-for-react": "^2.0.15-beta.0",
     "es5-shim": "^4.5.9",
