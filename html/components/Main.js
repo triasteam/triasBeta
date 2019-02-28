@@ -164,6 +164,155 @@ export default class Main extends React.Component {
                                     <p className="index">437</p>
                                     <p className="note">Nodes Affected</p>
                                 </div>
+
+                                <div className="activities">
+                                    <p className="main-title">Activities</p>
+                                    <div className="node-list">
+                                        <section className="item clearfix">
+                                            <div className="left">
+                                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
+                                                <p></p>
+                                            </div>
+                                            <div className="right">
+                                                <p className="line1">Less than a minute</p>
+                                                <p className="line2">3 Nodes Recovered</p>
+                                                <p className="line3">Ethereum</p>
+                                            </div>
+                                        </section>
+                                        <section className="item clearfix">
+                                            <div className="left">
+                                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
+                                                <p></p>
+                                            </div>
+                                            <div className="right">
+                                                <p className="line1">Less than a minute</p>
+                                                <p className="line2">3 Nodes Recovered</p>
+                                                <p className="line3">Ethereum</p>
+                                            </div>
+                                        </section>
+                                        <section className="item clearfix">
+                                            <div className="left">
+                                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
+                                                <p></p>
+                                            </div>
+                                            <div className="right">
+                                                <p className="line1">Less than a minute</p>
+                                                <p className="line2">3 Nodes Recovered</p>
+                                                <p className="line3">Ethereum</p>
+                                            </div>
+                                        </section>
+                                        <section className="item clearfix">
+                                            <div className="left">
+                                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
+                                                <p></p>
+                                            </div>
+                                            <div className="right">
+                                                <p className="line1">Less than a minute</p>
+                                                <p className="line2">3 Nodes Recovered</p>
+                                                <p className="line3">Ethereum</p>
+                                            </div>
+                                        </section>
+                                        <section className="item clearfix">
+                                            <div className="left">
+                                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
+                                                <p></p>
+                                            </div>
+                                            <div className="right">
+                                                <p className="line1">Less than a minute</p>
+                                                <p className="line2">3 Nodes Recovered</p>
+                                                <p className="line3">Ethereum</p>
+                                            </div>
+                                        </section>
+                                        <section className="item clearfix">
+                                            <div className="left">
+                                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
+                                                <p></p>
+                                            </div>
+                                            <div className="right">
+                                                <p className="line1">Less than a minute</p>
+                                                <p className="line2">3 Nodes Recovered</p>
+                                                <p className="line3">Ethereum</p>
+                                            </div>
+                                        </section>
+                                        <section className="item clearfix">
+                                            <div className="left">
+                                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
+                                                <p></p>
+                                            </div>
+                                            <div className="right">
+                                                <p className="line1">Less than a minute</p>
+                                                <p className="line2">3 Nodes Recovered</p>
+                                                <p className="line3">Ethereum</p>
+                                            </div>
+                                        </section>
+                                        <section className="item clearfix">
+                                            <div className="left">
+                                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
+                                                <p></p>
+                                            </div>
+                                            <div className="right">
+                                                <p className="line1">Less than a minute</p>
+                                                <p className="line2">3 Nodes Recovered</p>
+                                                <p className="line3">Ethereum</p>
+                                            </div>
+                                        </section>
+                                        <section className="item clearfix">
+                                            <div className="left">
+                                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
+                                                <p></p>
+                                            </div>
+                                            <div className="right">
+                                                <p className="line1">Less than a minute</p>
+                                                <p className="line2">3 Nodes Recovered</p>
+                                                <p className="line3">Ethereum</p>
+                                            </div>
+                                        </section>
+                                        <section className="item clearfix">
+                                            <div className="left">
+                                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
+                                                <p></p>
+                                            </div>
+                                            <div className="right">
+                                                <p className="line1">Less than a minute</p>
+                                                <p className="line2">3 Nodes Recovered</p>
+                                                <p className="line3">Ethereum</p>
+                                            </div>
+                                        </section>
+                                        <section className="item clearfix">
+                                            <div className="left">
+                                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
+                                                <p></p>
+                                            </div>
+                                            <div className="right">
+                                                <p className="line1">Less than a minute</p>
+                                                <p className="line2">3 Nodes Recovered</p>
+                                                <p className="line3">Ethereum</p>
+                                            </div>
+                                        </section> <section className="item clearfix">
+                                            <div className="left">
+                                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
+                                                <p></p>
+                                            </div>
+                                            <div className="right">
+                                                <p className="line1">Less than a minute</p>
+                                                <p className="line2">3 Nodes Recovered</p>
+                                                <p className="line3">Ethereum</p>
+                                            </div>
+                                        </section>
+                                        <section className="item clearfix">
+                                            <div className="left">
+                                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
+                                                <p></p>
+                                            </div>
+                                            <div className="right">
+                                                <p className="line1">Less than a minute</p>
+                                                <p className="line2">3 Nodes Recovered</p>
+                                                <p className="line3">Ethereum</p>
+                                            </div>
+                                        </section>
+                                    </div>
+                                    <a className="view-all">View All</a>
+                                </div>
                             </div>
                         </section>
                     </div>
