@@ -1,6 +1,61 @@
 .sub-header {
-    .headerBar{
+    .headBar{
         max-width: 1080px;
         margin:auto;
+        
+        ul li{
+            display: inline-block;
+            float: left;
+            line-height: 110px;
+            text-align: left;
+        }
+        li.sub-name{
+            p{
+                height:40px;
+                font-size:24px;
+                font-family:PingFangSC-Semibold;
+                font-weight:600;
+                color:rgba(161,166,173,1);
+                line-height:40px;
+                border-right:1px solid #444851;
+                margin-top:35px;
+            }
+            
+            width:155px;
+            
+        }
+        li.sub-list{
+            width:260px;
+            .left-icon,.right-sub{
+                display: inline-block;
+                float: left;
+            }
+            .left-icon{
+                margin:0 10px 0 42px;
+                img{
+                    width: 26px;
+                    height:26px;
+                }
+            }
+            .right-sub{
+                margin-top:30px;
+            }
+            .right-sub .sub-title{
+                height:20px;
+                font-size:14px;
+                font-family:PingFangSC-Regular;
+                font-weight:400;
+                color:rgba(161,166,173,1);
+                line-height:20px;
+            }
+            .right-sub .sub-sub{
+                height:22px;
+                font-size:15px;
+                font-family:PingFangSC-Semibold;
+                font-weight:600;
+                color:rgba(255,255,255,1);
+                line-height:22px;
+            }
+        }
     }
 }
