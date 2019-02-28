@@ -18,6 +18,7 @@ import ChainSatus from "./ChainSatus";
 import Activities from "./Activities";
 import NodeList from "./NodeList";
 import GeneralStatics from "./GeneralStatics";
+import LineMark from './charts/LineMark'
 
 export default class Main extends React.Component {
     constructor(props) {
@@ -141,6 +142,9 @@ export default class Main extends React.Component {
                         <section className="bottom-group clearfix">
                             <div className="left-part">
                                 <GeneralStatics/>
+                                <LineMark  name="TPS Monitoring"/>
+                                <LineMark name="TPS Monitoring"/>
+                                <LineMark name="TPS Monitoring"/>
                             </div>
                             <div className="right-part">
                                 <div className="simulations">

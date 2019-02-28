@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "echarts": "^3.7.1",
+    "echarts-for-react": "^2.0.15-beta.0",
     "es5-shim": "^4.5.9",
     "es6-promise": "^3.1.2",
     "jquery": "^1.12.4",
