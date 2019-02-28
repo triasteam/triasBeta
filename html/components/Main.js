@@ -313,6 +313,30 @@ export default class Main extends React.Component {
                                     </div>
                                     <a className="view-all">View All</a>
                                 </div>
+
+                                <div className="specifications">
+                                    <p className="main-title">Hardware Specifications</p>
+                                    <section>
+                                        <p className="name">CPU</p>
+                                        <p className="detail">Intel i7-8700K @ 3.70 GHz</p>
+                                    </section>
+                                    <section>
+                                        <p className="name">GPU</p>
+                                        <p className="detail">GeForce GTX 1080 Ti</p>
+                                    </section>
+                                    <section>
+                                        <p className="name">Motherboard</p>
+                                        <p className="detail">ASUS ROG STRIX Z370-I GAMING</p>
+                                    </section>
+                                    <section>
+                                        <p className="name">RAM</p>
+                                        <p className="detail">G.Skill Ripjaws V, 2x16GB</p>
+                                    </section>
+                                    <section>
+                                        <p className="name">SSD</p>
+                                        <p className="detail">Samsung 960 Pro 512 GB M.2 PCIe</p>
+                                    </section>
+                                </div>
                             </div>
                         </section>
                     </div>
