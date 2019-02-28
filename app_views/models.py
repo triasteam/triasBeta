@@ -32,3 +32,12 @@ class Transaction(models.Model):
 
     class Meta:
         db_table = "transaction"
+
+
+class Activity(models.Model):
+    group = models.IntegerField(default=0)  # 0 trias   1 eth    2 hyperledger
+    time = models.BigIntegerField()
+    event = models.CharField(max_length=255, default='')
+
+    class Meta:
+        db_table = "activity"

@@ -15,14 +15,18 @@ from app_views.view_utils.logger import logger
 def get_node_list(request):
 
     status = request.GET.get('status', '')
+    search = request.GET.get('search', '')
     page = request.GET.get('page', 1)
     size = request.GET.get('size', 10)
 
     try:
-        if status == '':
-            nodes = Node.objects.order_by('-block_heigth', '-status')
-        else:
-            nodes = Node.objects.filter(status=status).order_by('-block_heigth', '-status')
+        nodes = Node.objects.all().order_by('-block_heigth', '-status')
+
+        if status:
+            nodes = nodes.filter(status=status)
+
+        if search:
+            nodes = nodes.filter(node_ip__contains=search)
 
         # paging
         paginator = Paginator(nodes, size)

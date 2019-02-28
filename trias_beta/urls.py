@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.views.generic import TemplateView
 from django.contrib import admin
-from app_views.views import index, node
+from app_views.views import index, node, activity
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='index.html')),
@@ -25,6 +25,8 @@ urlpatterns = [
     url(r'^api/faulty_nodes/', index.get_faulty_nodes),  # Faulty Nodes
     url(r'^api/fault_accetpance_rate/', index.get_fault_accetpance_rate),  # Fault Accetpance Rate
     url(r'^api/data_monitoring/', index.get_data_monitoring),  # Data Monitoring
+
+    url(r'^api/activity_list/', activity.get_activity_list),  # Activity List
 
     url(r'^api/node_list/', node.get_node_list),  # Node List
 ]

@@ -35,8 +35,8 @@ def general_static(request):
 
         # 交易峰值(Peak Tx) (前30s)的每个块里的最高交易数
         nowtime = int(time.time())
-        start = int(time.mktime(datetime.datetime.fromtimestamp(nowtime).date().timetuple())) - 86400  # yesterday start timestamp
-        end = int(time.mktime(datetime.datetime.fromtimestamp(nowtime).date().timetuple()))  # today start timestamp
+        start = today_start_time - 86400  # yesterday start timestamp
+        end = today_start_time  # today start timestamp
         # >= 2019-02-26 00:00:00 & < 2019-02-27 00:00:00
         lastes_tx = list(Block.objects.filter(Q(time__gte=start) & Q(time__lt=end)).values_list('tx_num', flat=True))
         lastes_tx.append(0)
@@ -94,22 +94,22 @@ def get_data_monitoring(request):
             new_faulty_nodes_list = [eval(i) for i in faulty_nodes_list]
             start_time = new_faulty_nodes_list[0]
             a_x_time = [(start_time-i*60) for i in range(7)]
-            result['faulty_nodes_list']['time'] = a_x_time
-            result['faulty_nodes_list']['value'] = new_faulty_nodes_list[1:]
+            result['faulty_nodes_list']['time'] = a_x_time[::-1]
+            result['faulty_nodes_list']['value'] = new_faulty_nodes_list[1:][::-1]
 
         if fault_accetpance_rate:
             new_fault_accetpance_rate = [eval(i) for i in fault_accetpance_rate]
             start_time = new_fault_accetpance_rate[0]
             b_x_time = [(start_time - i * 60) for i in range(7)]
-            result['fault_accetpance_rate']['time'] = b_x_time
-            result['fault_accetpance_rate']['value'] = new_fault_accetpance_rate[1:]
+            result['fault_accetpance_rate']['time'] = b_x_time[::-1]
+            result['fault_accetpance_rate']['value'] = new_fault_accetpance_rate[1:][::-1]
 
         if tps_monitoring:
             new_tps_monitoring = [eval(i) for i in tps_monitoring]
             start_time = new_tps_monitoring[0]
             c_x_time = [(start_time - i * 60) for i in range(7)]
-            result['tps_monitoring']['time'] = c_x_time
-            result['tps_monitoring']['value'] = new_tps_monitoring[1:]
+            result['tps_monitoring']['time'] = c_x_time[::-1]
+            result['tps_monitoring']['value'] = new_tps_monitoring[1:][::-1]
 
         status = 'success'
 
