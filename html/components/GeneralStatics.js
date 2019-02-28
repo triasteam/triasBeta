@@ -7,7 +7,7 @@ import $ from 'jquery'
 import StaticsCard from "./common/StaticsCard";
 
 /**
- * StaticsCard components which displays:
+ * GeneralStatics components which displays:
  */
 class GeneralStatics extends React.Component {
     constructor(props) {
