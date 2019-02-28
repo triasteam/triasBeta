@@ -50,6 +50,7 @@ class RightPart extends React.Component {
 
                 <div className="activities">
                     <p className="main-title">Activities</p>
+                    <div className="transparent-bg"></div>
                     <div className="node-list">
                         <section className="item clearfix">
                             <div className="left">

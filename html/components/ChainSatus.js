@@ -3,6 +3,9 @@ import $ from 'jquery'
 // import ES6Promise from 'es6-promise'
 // ES6Promise.polyfill() //let IE6 support Promise object
 import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
+import GeneralStatics from "./GeneralStatics";
+import RightPart from "./RightPart";
+import LineMark from './charts/LineMark'
 
 /* Component for node status page */
 class ChainStatus extends React.Component {
@@ -245,10 +248,15 @@ class ChainStatus extends React.Component {
         }
         return (
             <div className="status-page">
-                <div>
-                    <FormattedMessage id="statusPageSubHeaderH1" tagName="h1" />
-                    <FormattedMessage id="statusPageSubHeaderH2" tagName="h2"/>
-                </div>
+                 <section className="bottom-group clearfix">
+                    <div className="left-part">
+                        <GeneralStatics/>
+                        <LineMark  name="TPS Monitoring"/>
+                        <LineMark name="TPS Monitoring"/>
+                        <LineMark name="TPS Monitoring"/>
+                    </div>
+                    <RightPart />
+                </section>
             </div>
         )
     }
