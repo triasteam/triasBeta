@@ -19,11 +19,15 @@ import Activities from "./Activities";
 import NodeList from "./NodeList";
 
 
+import StaticsCard from "./common/StaticsCard";
+import HeadLine from "./common/HeadLine";
+
 export default class Main extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            lang: 'en'
+            lang: 'en',
+            pathName: ''
         }
         // options for internationalisation
         this.languageList = [{
@@ -56,6 +60,35 @@ export default class Main extends React.Component {
         })
     }
 
+    changeHeadline (name){
+        this.setState({
+            pathName: name
+        });
+    }
+    onLoadHeadNameBar(){
+        let pathArr = window.location.href.split('/')
+        switch(pathArr[pathArr.length-1]){
+            case '':
+            this.setState({
+                pathName: 'Chain Staus'
+            });
+            break;
+            case 'activities':
+            this.setState({
+                pathName: 'Activies'
+            });
+            break;
+            case 'nodes':
+            this.setState({
+                pathName: 'Node List'
+            });
+            break;
+        }
+    }
+    componentDidMount(){
+        this.onLoadHeadNameBar()
+    }
+
     render() {
         let messages = {}
         messages['en'] = en_US;
@@ -86,19 +119,19 @@ export default class Main extends React.Component {
                                 </div>
                                 <ul className="nav">
                                     <li>
-                                        <NavLink exact to="/" activeClassName="active">
+                                        <NavLink exact to="/" activeClassName="active" onClick={this.changeHeadline.bind(this,'Chain Staus')}>
                                             <FormattedMessage id="headerNav1" />
                                         </NavLink>
                                     </li>
                                     <li>
                                         {/* No exact attribute. Be active when url is like '/activities...'.*/}
-                                        <NavLink to="/activities" activeClassName="active">
+                                        <NavLink to="/activities" activeClassName="active" onClick={this.changeHeadline.bind(this,'Activies')}>
                                             <FormattedMessage id="termActivities" />
                                         </NavLink>
                                     </li>
                                     <li>
                                         {/* No exact attribute. Be active when url is like '/nodes...'.*/}
-                                        <NavLink to="/nodes" activeClassName="active">
+                                        <NavLink to="/nodes" activeClassName="active" onClick={this.changeHeadline.bind(this,'Node List')}>
                                             <FormattedMessage id="termNodeList" />
                                         </NavLink>
                                     </li>
@@ -128,9 +161,9 @@ export default class Main extends React.Component {
                                 </ul>
                             </div>
                         </header>
-                        <div className="sub-header"> Chain Status......</div>
+                        <HeadLine headBarName = {this.state.pathName}/>
                         <section className="main">
-                            <Switch>                                
+                            <Switch>
                                 <Route exact path="/" component={ChainSatus} />
                                 <Route exact path="/activities" component={Activities} />
                                 <Route exact path="/nodes" component={NodeList} />
@@ -138,7 +171,7 @@ export default class Main extends React.Component {
                                 {/* <Route exact path="/stayTuned" component={StayTuned} /> */}
                             </Switch>
                         </section>
-                       
+                        
                     </div>
                 </Router>
             </IntlProvider>
