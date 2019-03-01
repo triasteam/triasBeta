@@ -89,7 +89,7 @@ export default class Main extends React.Component {
         switch(pathArr[pathArr.length-1]){
             case '':
             this.setState({
-                pathName: self.state.lang==='en'?'Chain Staus':'区块链状态'
+                pathName: self.state.lang==='en'?'Chain Status':'区块链状态'
             });
             break;
             case 'activities':
@@ -138,7 +138,7 @@ export default class Main extends React.Component {
                                 </div>
                                 <ul className="nav">
                                     <li>
-                                        <NavLink exact to="/" activeClassName="active" onClick={this.changeHeadline.bind(this,this.state.lang==='en'?'Chain Staus':'区块链状态')}>
+                                        <NavLink exact to="/" activeClassName="active" onClick={this.changeHeadline.bind(this,this.state.lang==='en'?'Chain Status':'区块链状态')}>
                                             <FormattedMessage id="headerNav1" />
                                         </NavLink>
                                     </li>
