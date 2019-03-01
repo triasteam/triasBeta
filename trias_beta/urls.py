@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^api/tps/', index.get_tps),  # TPS
     url(r'^api/fault_accetpance_rate/', index.get_fault_accetpance_rate),  # Fault Accetpance Rate
     url(r'^api/data_monitoring/', index.get_data_monitoring),  # Data Monitoring
+    url(r'^api/instant_message/', index.get_instant_message),  # Instant Message
 
     url(r'^api/activity_list/', activity.get_activity_list),  # Activity List
 

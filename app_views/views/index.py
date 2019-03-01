@@ -14,6 +14,27 @@ from app_views.view_utils.redis_util import get_monitoring
 jc = JsonConfiguration()
 
 
+def get_instant_message(request):
+
+    try:
+        result = {}
+        nowtime = int(time.time())
+        activity_list = list(Activity.objects.filter(time__gte=nowtime-10).order_by('-time').values())
+        normal_nodes = list(Node.objects.filter(status=0).values_list('node_ip', flat=True))
+        fault_nodes = list(Node.objects.filter(status=1).values_list('node_ip', flat=True))
+
+        status = 'success'
+        result['normal_nodes'] = normal_nodes
+        result['fault_nodes'] = fault_nodes
+        result['event'] = activity_list
+
+    except Exception as e:
+        logger.error(e)
+        status, result = 'failure', {}
+
+    return JsonResponse({'status': status, 'result': result})
+
+
 def general_static(request):
 
     try:
