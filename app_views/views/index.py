@@ -43,8 +43,13 @@ def general_static(request):
         peak_tx = max(lastes_tx)
 
         status = 'success'
-        result = {'nodes': nodes, 'block_height': block_height, 'accounts': None,
-                  'peak_tx': peak_tx, 'today_tx': today_tx, 'tx_num': tx_num}
+        result = {}
+        result['trias'] = {'nodes': nodes, 'block_height': block_height, 'accounts': None,
+                           'peak_tx': peak_tx, 'today_tx': today_tx, 'tx_num': tx_num}
+        result['ethereum'] = {'nodes': 0, 'block_height': 0, 'accounts': None,
+                           'peak_tx': 0, 'today_tx': 0, 'tx_num': 0}
+        result['hyperledger'] = {'nodes': 0, 'block_height': 0, 'accounts': None,
+                           'peak_tx': 0, 'today_tx': 0, 'tx_num': 0}
 
     except Exception as e:
         logger.error(e)
