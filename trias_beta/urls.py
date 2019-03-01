@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/general_static/', index.general_static),  # General Static
     url(r'^api/faulty_nodes/', index.get_faulty_nodes),  # Faulty Nodes
+    url(r'^api/tps/', index.get_tps),  # TPS
     url(r'^api/fault_accetpance_rate/', index.get_fault_accetpance_rate),  # Fault Accetpance Rate
     url(r'^api/data_monitoring/', index.get_data_monitoring),  # Data Monitoring
 

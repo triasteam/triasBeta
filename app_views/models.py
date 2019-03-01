@@ -36,6 +36,7 @@ class Transaction(models.Model):
 
 class Activity(models.Model):
     group = models.IntegerField(default=0)  # 0 trias   1 eth    2 hyperledger
+    type = models.IntegerField()  # 1 宕机   2 由于时间导致的天榜变更  3  由于攻击导致的天榜变更   4 Ddos攻击
     time = models.BigIntegerField()
     event = models.CharField(max_length=255, default='')
 
