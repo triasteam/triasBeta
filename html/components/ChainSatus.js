@@ -21,6 +21,11 @@ class ChainStatus extends React.Component {
             currentPage: 1,         // current page number
             dangerIp: localStorage.getItem('dangerIp') || '',
             // lang: this.props.intl.locale,    // current locale language
+            Monitoring:{
+                tps_monitoring:null,
+                fault_accetpance_rate:null,
+                faulty_nodes_list:null,
+            },
         }
     }
 
@@ -53,6 +58,10 @@ class ChainStatus extends React.Component {
         // this.dangerIpInterval = setInterval(function(){
         //     self.getDangerIp()
         // },4000)
+
+        this.getMonitoringInterval=setInterval(function(){
+            self.getMonitoring()
+        },5000)
     }
 
     /**
@@ -230,6 +239,23 @@ class ChainStatus extends React.Component {
         this.getLadderList(pagenum, this.state.rowsPerPage)
         //console.log('jump')
     }
+
+    getMonitoring(){
+        var self=this
+        $.ajax({
+            url: '/api/data_monitoring/',
+            type: 'get',
+            dataType: 'json',
+            data: {
+            },
+            success: function (data) {
+                self.setState({
+                    Monitoring:data.result
+                })
+            }
+        })
+    }
+
     /**
      * When the component will be unmounted.
      * Clear the intervals 
@@ -253,9 +279,9 @@ class ChainStatus extends React.Component {
                  <section className="bottom-group clearfix">
                     <div className="left-part">
                         <GeneralStatics/>
-                        <LineMark  name="TPS Monitoring"/>
-                        <LineMark name="TPS Monitoring"/>
-                        <LineMark name="TPS Monitoring"/>
+                        <LineMark  name="TPS Monitoring"  data={this.state.Monitoring.tps_monitoring||null}/>
+                        <LineMark  name="Fault Accetpance Rate" data={this.state.Monitoring.fault_accetpance_rate||null}/>
+                        <LineMark  name="Faulty Nodes" data={this.state.Monitoring.faulty_nodes_list||null}/> 
                     </div>
                     <RightPart />
                 </section>

@@ -1,8 +1,33 @@
 import React, { PureComponent } from "react";
 import ReactEcharts from "echarts-for-react";
-import echarts from "echarts";
 
 export default class Lunar extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      trias: [],
+      ethereum: [],
+      hyperledger: [],
+      time:[]
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let self = this;
+    setTimeout(function() {
+      self.setState({
+        time:nextProps.data.trias.time,
+        trias:nextProps.data.trias.value,
+        ethereum:nextProps.data.ethereum.value,
+        hyperledger:nextProps.data.hyperledger.value,
+      });
+      console.log(self.state.trias)
+    }, 0);
+  }
+
+  componentDidMount() {
+
+  }
   getOption = () => {
     const option = {
       tooltip: {
@@ -28,28 +53,7 @@ export default class Lunar extends PureComponent {
         axisTick: {
           show: false
         },
-        data: [
-          "00:00",
-          "01:15",
-          "02:30",
-          "03:45",
-          "05:00",
-          "06:15",
-          "07:30",
-          "08:45",
-          "10:00",
-          "11:15",
-          "12:30",
-          "13:45",
-          "15:00",
-          "16:15",
-          "17:30",
-          "18:45",
-          "20:00",
-          "21:15",
-          "22:30",
-          "23:45"
-        ]
+        data: this.state.time
       },
       yAxis: {
         type: "value",
@@ -66,12 +70,6 @@ export default class Lunar extends PureComponent {
             color: "#777C84"
           }
         }
-        // axisPointer: {
-        //   snap: true,
-        //   lineStyle:{
-        //       color:'#fff'
-        //   }
-        // }
       },
 
       series: [
@@ -80,29 +78,7 @@ export default class Lunar extends PureComponent {
           type: "line",
           symbol: "none",
           smooth: false,
-
-          data: [
-            500,
-            580,
-            550,
-            660,
-            570,
-            600,
-            750,
-            900,
-            600,
-            590,
-            680,
-            590,
-            600,
-            500,
-            600,
-            750,
-            800,
-            700,
-            600,
-            500
-          ],
+          data:this.state.trias,
           itemStyle: {
             normal: {
               color: "#A1FC3A",
@@ -125,7 +101,7 @@ export default class Lunar extends PureComponent {
               [
                 {
                   name: "Hacker Attack",
-                  xAxis: "00:00",
+                  xAxis: this.state.time[0]+'',
                   label: {
                     normal: {
                       color: "#fff",
@@ -135,13 +111,13 @@ export default class Lunar extends PureComponent {
                   }
                 },
                 {
-                  xAxis: "02:30"
+                  xAxis: this.state.time[1]+''
                 }
               ],
               [
                 {
                   name: "Power Outage",
-                  xAxis: "06:15",
+                  xAxis: this.state.time[2]+'',
                   label: {
                     normal: {
                       color: "#fff",
@@ -151,13 +127,13 @@ export default class Lunar extends PureComponent {
                   }
                 },
                 {
-                  xAxis: "08:45"
+                  xAxis: this.state.time[3]+''
                 }
               ],
               [
                 {
                   name: "Nodes Update",
-                  xAxis: "17:30",
+                  xAxis: this.state.time[4]+'',
                   label: {
                     normal: {
                       color: "#fff",
@@ -167,7 +143,7 @@ export default class Lunar extends PureComponent {
                   }
                 },
                 {
-                  xAxis: "21:15"
+                  xAxis:this.state.time[6]+''
                 }
               ]
             ]
@@ -178,28 +154,7 @@ export default class Lunar extends PureComponent {
           name: "Ethereum",
           smooth: false,
           symbol: "none",
-          data: [
-            300,
-            305,
-            452,
-            400,
-            370,
-            300,
-            500,
-            500,
-            400,
-            390,
-            380,
-            390,
-            400,
-            500,
-            400,
-            550,
-            600,
-            500,
-            600,
-            400
-          ],
+          data:this.state.ethereum,
           itemStyle: {
             normal: {
               color: "#FF0075",
@@ -215,28 +170,7 @@ export default class Lunar extends PureComponent {
           name: "Hyperledger",
           smooth: false,
           symbol: "none",
-          data: [
-            300,
-            30,
-            150,
-            260,
-            100,
-            110,
-            240,
-            123,
-            100,
-            190,
-            180,
-            290,
-            100,
-            200,
-            300,
-            150,
-            300,
-            200,
-            300,
-            200
-          ],
+          data:this.state.hyperledger,
           itemStyle: {
             normal: {
               color: "#00FFE8",
@@ -269,28 +203,28 @@ export default class Lunar extends PureComponent {
         />
 
         <div className="lineMark-pie">
-          <div class="warpper">
-            <div class="dial" />
-            <div class="line" />
-            <div class="layer">
-              <div class="layer-item">Trias</div>
-              <div class="num">3467</div>
+          <div className="warpper">
+            <div className="dial" />
+            <div className="line" />
+            <div className="layer">
+              <div className="layer-item">Trias</div>
+              <div className="num">3467</div>
             </div>
           </div>
-          <div class="warpper">
-            <div class="dial" />
-            <div class="line" />
-            <div class="layer">
-              <div class="layer-item">Ethereum</div>
-              <div class="num">667</div>
+          <div className="warpper">
+            <div className="dial" />
+            <div className="line" />
+            <div className="layer">
+              <div className="layer-item">Ethereum</div>
+              <div className="num">667</div>
             </div>
           </div>
-          <div class="warpper">
-            <div class="dial" />
-            <div class="line" />
-            <div class="layer">
-              <div class="layer-item">Hyperledger</div>
-              <div class="num">1415</div>
+          <div className="warpper">
+            <div className="dial" />
+            <div className="line" />
+            <div className="layer">
+              <div className="layer-item">Hyperledger</div>
+              <div className="num">1415</div>
             </div>
           </div>
         </div>
