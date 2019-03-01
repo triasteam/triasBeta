@@ -11,6 +11,11 @@ class StaticsCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            trias: this.props.cardInfo.trias,
+            hyperledger: this.props.cardInfo.hyperledger,
+            ethereum: this.props.cardInfo.ethereum,
+            src: this.props.src,
+            title: this.props.title
         }
     }
     componentWillMount() {
@@ -21,14 +26,21 @@ class StaticsCard extends React.Component {
      * @param {Object} nextProps new props
      */
     componentWillReceiveProps(nextProps) {
+        if(JSON.stringify(this.props.cardInfo) != JSON.stringify(nextProps.cardInfo) ){
+            this.setState({
+                trias: nextProps.cardInfo.trias,
+                hyperledger: nextProps.cardInfo.hyperledger,
+                ethereum: nextProps.cardInfo.ethereum,
+            }) 
+        }
     }
 
     render() {
         return (
             <div className="card-container">
                 <section className="card-header clearfix">
-                    <img src={require("../../img/icon/general-statics/icon_gs_nodes@2x.png")} />
-                    <span>Block Height</span>
+                    <img src={this.state.src} />
+                    <span>{this.state.title}</span>
                 </section>
                 <section className="percent-bar">
                     <div></div>
@@ -43,17 +55,17 @@ class StaticsCard extends React.Component {
                     <div className="param-item clearfix">
                         <span className="point"></span>
                         <span className="param-name">Trias</span>
-                        <span className="param-value">923.6 M</span>
+                        <span className="param-value">{this.state.trias}</span>
                     </div>
                     <div className="param-item clearfix">
                         <span className="point"></span>
-                        <span className="param-name">Trias</span>
-                        <span className="param-value">923.6 M</span>
+                        <span className="param-name">Hyperledger</span>
+                        <span className="param-value">{this.state.hyperledger}</span>
                     </div>
                     <div className="param-item clearfix">
                         <span className="point"></span>
-                        <span className="param-name">Trias</span>
-                        <span className="param-value">923.6 M</span>
+                        <span className="param-name">Ethereum</span>
+                        <span className="param-value">{this.state.ethereum}</span>
                     </div>
                 </section>
             </div>
