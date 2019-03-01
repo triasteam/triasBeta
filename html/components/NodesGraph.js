@@ -2,6 +2,9 @@ import React from "react"
 // import $ from 'jquery'
 import * as d3 from "d3";
 import {event as d3Event} from 'd3';
+import {
+    FormattedMessage
+  } from "react-intl"; /* react-intl imports */
 
 /* Component for node status page */
 export default class NodesGraph extends React.Component {
@@ -269,7 +272,7 @@ export default class NodesGraph extends React.Component {
         return (
             <div className="visualisation-part">
                 <div className="title">
-                    <h1>Visualization</h1>
+                    <h1><FormattedMessage id="termVisualization"/></h1>
                     <ul>
                         <li className="active">Trias</li>
                     </ul>
@@ -281,9 +284,9 @@ export default class NodesGraph extends React.Component {
                         this.state.nodes.map(function(item,index){
                             return (
                                 <li key={"host"+index}>
-                                    <span className="label">Node IP</span>
-                                    <span className="label">Status</span>
-                                    <span className="label">Level</span>
+                                    <span className="label"><FormattedMessage id="termNode"/> IP</span>
+                                    <span className="label"><FormattedMessage id="termStatus"/></span>
+                                    <span className="label"><FormattedMessage id="termLevel"/></span>
                                     <span className="value">{item.ip}</span>
                                     <span className="value"><div className={item.status==="normal"?"circle green":"circle red"}></div></span>
                                     <span className="value">{item.level || 'High'}</span>

@@ -58,6 +58,24 @@ export default class Main extends React.Component {
                 console.log(data)
             }
         })
+        let pathArr = window.location.href.split('/')
+        switch(pathArr[pathArr.length-1]){
+            case '':
+            this.setState({
+                pathName: lang==='en'?'Chain Status':'区块链状态'
+            });
+            break;
+            case 'activities':
+            this.setState({
+                pathName: lang==='en'?'Activities':'活动通知'
+            });
+            break;
+            case 'nodes':
+            this.setState({
+                pathName: lang==='en'?'Node List':'节点列表'
+            });
+            break;
+        }
     }
 
     changeHeadline (name){
@@ -66,21 +84,22 @@ export default class Main extends React.Component {
         });
     }
     onLoadHeadNameBar(){
+        var self=this
         let pathArr = window.location.href.split('/')
         switch(pathArr[pathArr.length-1]){
             case '':
             this.setState({
-                pathName: 'Chain Staus'
+                pathName: self.state.lang==='en'?'Chain Staus':'区块链状态'
             });
             break;
             case 'activities':
             this.setState({
-                pathName: 'Activies'
+                pathName: self.state.lang==='en'?'Activities':'活动通知'
             });
             break;
             case 'nodes':
             this.setState({
-                pathName: 'Node List'
+                pathName: self.state.lang==='en'?'Node List':'节点列表'
             });
             break;
         }
@@ -119,19 +138,19 @@ export default class Main extends React.Component {
                                 </div>
                                 <ul className="nav">
                                     <li>
-                                        <NavLink exact to="/" activeClassName="active" onClick={this.changeHeadline.bind(this,'Chain Staus')}>
+                                        <NavLink exact to="/" activeClassName="active" onClick={this.changeHeadline.bind(this,this.state.lang==='en'?'Chain Staus':'区块链状态')}>
                                             <FormattedMessage id="headerNav1" />
                                         </NavLink>
                                     </li>
                                     <li>
                                         {/* No exact attribute. Be active when url is like '/activities...'.*/}
-                                        <NavLink to="/activities" activeClassName="active" onClick={this.changeHeadline.bind(this,'Activies')}>
+                                        <NavLink to="/activities" activeClassName="active" onClick={this.changeHeadline.bind(this,this.state.lang==='en'?'Activities':'活动通知')}>
                                             <FormattedMessage id="termActivities" />
                                         </NavLink>
                                     </li>
                                     <li>
                                         {/* No exact attribute. Be active when url is like '/nodes...'.*/}
-                                        <NavLink to="/nodes" activeClassName="active" onClick={this.changeHeadline.bind(this,'Node List')}>
+                                        <NavLink to="/nodes" activeClassName="active" onClick={this.changeHeadline.bind(this,this.state.lang==='en'?'Node List':'节点列表')}>
                                             <FormattedMessage id="termNodeList" />
                                         </NavLink>
                                     </li>
