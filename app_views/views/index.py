@@ -183,3 +183,15 @@ def get_data_monitoring(request):
         status = 'failure'
 
     return JsonResponse({'status': status, 'result': result})
+
+
+def get_hardware_specifications(request):
+    status = "success"
+    result =  {
+        "CPU": "xxxxxxx",
+        "GPU": "xxxxxxx",
+        "Motherboard": "xxxxxxx",
+        "RAM": "xxxxxxx",
+        "SSD": "xxxxxxx"
+    }
+    return JsonResponse({'status': status, 'result': result})
