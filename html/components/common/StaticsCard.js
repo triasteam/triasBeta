@@ -45,10 +45,10 @@ class StaticsCard extends React.Component {
                 <section className="percent-bar">
                     <div></div>
                 </section>
-                <section className="percent-bar">
+                <section className="percent-bar null-bar">
                     <div></div>
                 </section>
-                <section className="percent-bar">
+                <section className="percent-bar null-bar">
                     <div></div>
                 </section>
                 <section className="parameters">
@@ -57,7 +57,7 @@ class StaticsCard extends React.Component {
                         <span className="param-name">Trias</span>
                         <span className="param-value">{this.state.trias}</span>
                     </div>
-                    <div className="param-item clearfix">
+                    {/* <div className="param-item clearfix">
                         <span className="point"></span>
                         <span className="param-name">Hyperledger</span>
                         <span className="param-value">{this.state.hyperledger}</span>
@@ -66,6 +66,16 @@ class StaticsCard extends React.Component {
                         <span className="point"></span>
                         <span className="param-name">Ethereum</span>
                         <span className="param-value">{this.state.ethereum}</span>
+                    </div> */}
+                    <div className="param-item clearfix null-param">
+                        <span className="point"></span>
+                        <span className="param-name">N/A</span>
+                        <span className="param-value">No Data</span>
+                    </div>
+                    <div className="param-item clearfix null-param">
+                        <span className="point"></span>
+                        <span className="param-name">N/A</span>
+                        <span className="param-value">No Data</span>
                     </div>
                 </section>
             </div>

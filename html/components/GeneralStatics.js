@@ -111,10 +111,10 @@ class GeneralStatics extends React.Component {
                     <StaticsCard cardInfo={this.state.nodes} src={require("../img/icon/general-statics/icon_gs_nodes@2x.png")} title="Nodes" />
                     <StaticsCard cardInfo={this.state.block_height} src={require("../img/icon/general-statics/icon_gs_blockHeight@2x.png")} title="Block Height" />
                     {/* <StaticsCard cardInfo={this.state.accounts} src={require("../img/icon/general-statics/icon_gs_account@2x.png")} title="Accounts" /> */}
-                    <div className="card-container">
+                    <div className="card-container null-card">
                         <section className="card-header clearfix">
-                            <img src={this.state.src} />
-                            <span>{this.state.title}</span>
+                            <img src={require("../img/icon/general-statics/icon_gs_account@2x.png")} />
+                            <span>Accounts</span>
                         </section>
                         <section className="percent-bar">
                             <div></div>
@@ -126,21 +126,7 @@ class GeneralStatics extends React.Component {
                             <div></div>
                         </section>
                         <section className="parameters">
-                            <div className="param-item clearfix">
-                                <span className="point"></span>
-                                <span className="param-name">Trias</span>
-                                <span className="param-value">{this.state.trias}</span>
-                            </div>
-                            <div className="param-item clearfix">
-                                <span className="point"></span>
-                                <span className="param-name">Hyperledger</span>
-                                <span className="param-value">{this.state.hyperledger}</span>
-                            </div>
-                            <div className="param-item clearfix">
-                                <span className="point"></span>
-                                <span className="param-name">Ethereum</span>
-                                <span className="param-value">{this.state.ethereum}</span>
-                            </div>
+                            Account statics will be avaliable in the next version.
                         </section>
                     </div>
                     <StaticsCard cardInfo={this.state.peak_tx} src={require("../img/icon/general-statics/icon_gs_peakTx@2x.png")} title="Peak Tx" />
