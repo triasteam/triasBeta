@@ -1,5 +1,5 @@
 import React from "react"
-import { NavLink, Switch, Redirect, Route } from 'react-router-dom'
+import { NavLink, Switch, Redirect, Route, Link } from 'react-router-dom'
 // import ES6Promise from 'es6-promise'
 // ES6Promise.polyfill() //关键代码,让ie识别promise对象!
 import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
@@ -11,11 +11,72 @@ class RightPart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            CPU: "xxxxxxx",
+            GPU: "xxxxxxx",
+            Motherboard: "xxxxxxx",
+            RAM: "xxxxxxx",
+            SSD: "xxxxxxx",
         }
     }
     componentWillMount() {
     }
+    componentDidMount() {
+        this.getActivities();
+        this.getSpecifications();
+    }
 
+    getSimulations() {
+        var self = this;
+        $.ajax({
+            url:"/api/instant_message/",
+            type:"GET",
+            dataType:"json",
+            success: function(data){
+                // console.log("kiki",data)
+                if(data.status == "success") {
+                    self.setState({
+                        CPU: data.result.CPU,
+                        GPU: data.result.GPU,
+                        Motherboard: data.result.Motherboard,
+                        RAM: data.result.RAM,
+                        SSD: data.result.SSD,
+                    })
+                }
+            }
+        })
+    }
+
+    getActivities() {
+        var self = this;
+        $.ajax({
+            url:"/api/instant_message/",
+            type:"GET",
+            dataType:"json",
+            success: function(data){
+                // console.log("kiki",data)
+                if(data.status == "success") {
+                    self.setState({
+                    })
+                }
+            }
+        })
+    }
+
+    getSpecifications() {
+        var self = this;
+        $.ajax({
+            url:"/api/hardware_specifications/",
+            type:"GET",
+            dataType:"json",
+            success: function(data){
+                // console.log("kiki",data)
+                if(data.status == "success") {
+                    self.setState({
+                    })
+                }
+            }
+        })
+    }
     /**
      * Before a mounted component receives new props, reset some state.
      * @param {Object} nextProps new props
@@ -195,30 +256,30 @@ class RightPart extends React.Component {
                             </div>
                         </section>
                     </div>
-                    <a className="view-all">View All</a>
+                    <Link to="/activities" className="view-all">View All</Link>
                 </div>
 
                 <div className="specifications">
                     <p className="main-title">Hardware Specifications</p>
                     <section>
                         <p className="name">CPU</p>
-                        <p className="detail">Intel i7-8700K @ 3.70 GHz</p>
+                        <p className="detail">{ this.state.CPU }</p>
                     </section>
                     <section>
                         <p className="name">GPU</p>
-                        <p className="detail">GeForce GTX 1080 Ti</p>
+                        <p className="detail">{ this.state.GPU }</p>
                     </section>
                     <section>
                         <p className="name">Motherboard</p>
-                        <p className="detail">ASUS ROG STRIX Z370-I GAMING</p>
+                        <p className="detail">{ this.state.Motherboard }</p>
                     </section>
                     <section>
                         <p className="name">RAM</p>
-                        <p className="detail">G.Skill Ripjaws V, 2x16GB</p>
+                        <p className="detail">{ this.state.RAM }</p>
                     </section>
                     <section>
                         <p className="name">SSD</p>
-                        <p className="detail">Samsung 960 Pro 512 GB M.2 PCIe</p>
+                        <p className="detail">{ this.state.SSD }</p>
                     </section>
                 </div>
             </div>

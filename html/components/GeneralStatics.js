@@ -57,7 +57,6 @@ class GeneralStatics extends React.Component {
             type:"GET",
             dataType:"json",
             success: function(data){
-                console.log(data)
                 if(data.status == "success") {
                     self.setState({
                         nodes: {
