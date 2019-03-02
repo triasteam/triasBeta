@@ -146,6 +146,14 @@ export default class NodesGraph extends React.Component {
             .attr({"stroke": "#474856"})
             .style("stroke-width", base_stroke);
     
+            
+        var linkSources = [];
+        var linkTargets = [];
+        for(let i=0;i<data.content.links.length;i++){
+            linkSources.push([0,0])
+            linkTargets.push([0,0])
+        }
+            
         //add group of all nodes
         node = containerGrp
             .selectAll(".node")
@@ -220,6 +228,21 @@ export default class NodesGraph extends React.Component {
             }
         );
 
+        
+        var defs = svg.append("defs");
+
+        //Create a filter per circle so we can adjust the fuzzyness per circle that is flying out
+        defs.append("filter")
+            .attr("id", "fuzzyFilter")
+            .attr("width", "300%")	//increase the width of the filter region to remove blur "boundary"
+            .attr("x", "-100%") //make sure the center of the "width" lies in the middle
+            .attr("color-interpolation-filters","sRGB") //to fix safari: http://stackoverflow.com/questions/24295043/svg-gaussian-blur-in-safari-unexpectedly-lightens-image
+            .append("feGaussianBlur")
+            .attr("class", "blurValues")
+            .attr("in","SourceGraphic")
+            .attr("stdDeviation","0 0"); //start without a blur
+        
+
         //add zoom behavior to nodes
         var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom])
             .on("zoom", function () {
@@ -232,15 +255,83 @@ export default class NodesGraph extends React.Component {
         force.on("tick", function() {
             node.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; });
 
-            link.attr("x1", function (d) { return d.source.x; })
-                .attr("y1", function (d) { return d.source.y; })
-                .attr("x2", function (d) { return d.target.x; })
-                .attr("y2", function (d) { return d.target.y; });
+            link.attr("x1", function (d,i) { 
+                    linkSources[i][0] = d.source.x
+                    return d.source.x; 
+                })
+                .attr("y1", function (d,i) {
+                    linkSources[i][1] = d.source.y
+                    return d.source.y; 
+                })
+                .attr("x2", function (d,i) {
+                    linkTargets[i][0] = d.target.x
+                    return d.target.x; 
+                })
+                .attr("y2", function (d,i) {
+                    linkTargets[i][1] = d.target.y
+                    return d.target.y; 
+                });
 
             node.attr("cx", function (d) { return d.x; })
                 .attr("cy", function (d) { return d.y; });
         });
-        
+
+        force.on("start", function(){
+            containerGrp.selectAll("circle").remove()
+            containerGrp.selectAll("path").remove()
+        })
+        force.on("end", function(){
+            var points = containerGrp.selectAll(".point")
+                .data(linkSources)
+                .enter().append('circle')
+                .attr('id', function(d,i){
+                    return "point"+i
+                })
+                .attr('r',4)
+                .attr('fill', "#A1FC3A")
+                .attr("transform", function(d) { return "translate(" + d + ")"; });
+            
+                
+            var lineFunc = d3.svg.line()
+                .x(function(d) {
+                    return d.x;
+                })
+                .y(function(d){
+                    return d.y
+                })
+
+            for(let i=0;i<data.content.links.length;i++){
+                let pathData = [{x:linkSources[i][0],y:linkSources[i][1]},{x:linkTargets[i][0],y:linkTargets[i][1]}]
+
+                var path = containerGrp.append("path")
+                .attr("d", lineFunc(pathData))
+
+                transition('point'+i,path)
+            }
+
+            function transition(ponitID,path) {
+                d3.select('#'+ponitID)                
+                    .style("filter", "url(#fuzzyFilter)")
+                    .transition()
+                    .duration(1500)                    
+                    .styleTween("opacity", function tween() {
+                        return d3.interpolate(String(0), String(1));
+                    })
+                    .attrTween("transform", translateAlong(path.node()))
+                    .each("end", function(){transition(ponitID,path)}); // infinite loop
+            }
+
+            function translateAlong(path) {
+                var l = path.getTotalLength();
+                return function (i) {
+                    return function (t) {
+                        var p = path.getPointAtLength(t * l);
+                        return "translate(" + p.x + "," + p.y + ")"; //Move marker
+                    }
+                }
+            }
+        })
+
         var linkedByIndex = {};
         //map of all connected nodes index
         data.content.links.forEach(function (d) {
