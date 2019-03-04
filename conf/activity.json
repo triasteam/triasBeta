@@ -2,19 +2,19 @@
   "activity_list": [
     {
       "name": "Hacker Attack 0",
-      "start": "17:18:00"
+      "start": "15:18:00"
     }, {
       "name": "Power AgeOut 1",
-      "start": "17:19:00"
+      "start": "15:19:00"
     }, {
       "name": "Power AgeOut 2",
-      "start": "17:20:00"
+      "start": "15:20:00"
     }, {
       "name": "Power AgeOut 3",
-      "start": "17:30:00"
+      "start": "15:30:00"
     }, {
       "name": "Power AgeOut 4",
-      "start": "17:40:00"
+      "start": "15:40:00"
     }
   ]
 }

@@ -93,9 +93,10 @@ def cal(start, end):
 def get_visualization(request):
     result =  {
         "trias": {
-            "links": [ {"source": "192.168.1.178", "target": "192.168.1.207"}, {"source": "192.168.1.207", "target": "192.168.1.206"},
-                       {"source": "192.168.1.178", "target": "192.168.1.209"}, {"source": "192.168.1.209", "target": "192.168.1.206"},
-                       {"source": "192.168.1.206", "target": "192.168.1.178"}, {"source": "192.168.1.178", "target": "192.168.1.208"}],
+            "links": [ {"source": 0, "target": 2}, {"source": 2, "target": 1},
+                       {"source": 0, "target": 4}, {"source": 4, "target": 1},
+                       {"source": 1, "target": 0}, {"source": 0, "target": 3}],
+
             "nodes": [ {"node_ip": "192.168.1.178", "status": "0"}, {"node_ip": "192.168.1.206", "status": "1"},
                        {"node_ip": "192.168.1.207", "status": "0"}, {"node_ip": "192.168.1.208", "status": "1"},
                        {"node_ip": "192.168.1.209", "status": "0"}]   # 0 正常    1 异常
