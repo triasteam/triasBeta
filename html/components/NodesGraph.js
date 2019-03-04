@@ -1,5 +1,5 @@
 import React from "react"
-// import $ from 'jquery'
+import $ from 'jquery'
 import * as d3 from "d3";
 import {event as d3Event} from 'd3';
 import {
@@ -11,8 +11,7 @@ export default class NodesGraph extends React.Component {
     constructor(props) {
         super(props);
         this.state = {            
-            nodes:[],
-            links:[],
+            triasData:null,
         }
     }
 
@@ -22,80 +21,64 @@ export default class NodesGraph extends React.Component {
      */
     componentDidMount(){
         var self = this
-        self.getNodesRelation()
+        self.getNodesData()
+        this.nodesInterval = setInterval(self.getNodesData.bind(self), 5000);
     }
 
-    getNodesRelation(){
-        var self = this;        
-        var data = {
-            "status": 200,
-            "content": {
-                "links": [
-                    {
-                        "source": 1,
-                        "target": 2
-                    },
-                    {
-                        "source": 2,
-                        "target": 5
-                    },
-                    {
-                        "source": 3,
-                        "target": 4
-                    },
-                    {
-                        "source": 3,
-                        "target": 6
-                    },
-                    {
-                        "source": 4,
-                        "target": 5
-                    },
-                    {
-                        "source": 5,
-                        "target": 3
+    /**
+     * Clear time interval when the component will be unmounted
+     */
+    componentWillUnmount(){
+        let self= this
+        this.nodesInterval = clearInterval(self.nodesInterval)
+    }
+
+    /**
+     * Deep copy object
+     * @param {*} source 
+     */
+    objDeepCopy(source) {
+        var sourceCopy = source instanceof Array ? [] : {};
+        for (var item in source) {
+            sourceCopy[item] = typeof source[item] === 'object' ? this.objDeepCopy(source[item]) : source[item];
+        }
+        return sourceCopy;
+    }
+
+    /**
+     * Get data of nodes from the server
+     */
+    getNodesData(){
+        var self = this;
+        $.ajax({
+            type: "GET",
+            url: "/api/visualization/",
+            data: "data",
+            dataType: "json",
+            success: function (data) {
+                if(data){
+                    // if nodes data updated
+                    if(JSON.stringify(data.result.trias) != JSON.stringify(self.state.triasData)){    
+                        self.setState({
+                            triasData:data.result.trias
+                        })
+                        self.updateGraph(self.objDeepCopy(data.result.trias))
+                    } else {
+                        console.log('nodes not udated!!')
                     }
-                ],
-                "nodes": [
-                    {
-                        "status": "normal",
-                        "ip": "123.123.123.123",
-                    },{
-                        "status": "normal",
-                        "ip": "123.123.123.000",
-                    },{
-                        "status": "normal",
-                        "ip": "123.123.123.888",
-                    },{
-                        "status": "normal",
-                        "ip": "123.123.123.111",
-                    },{
-                        "status": "normal",
-                        "ip": "123.123.123.222",
-                    },{
-                        "status": "normal",
-                        "ip": "123.123.123.333",
-                    },{
-                        "status": "offline",
-                        "ip": "123.123.123.444",
-                    },{
-                        "status": "offline",
-                        "ip": "123.123.123.555",
-                    },{
-                        "status": "normal",
-                        "ip": "123.123.123.123",
-                    },{
-                        "status": "normal",
-                        "ip": "123.123.123.000",
-                    }
-                ]
+                }else{
+                    self.setState({
+                        triasData:null
+                    })  
+                }
+            },
+            error(err){
+                console.log(err)
+                self.setState({
+                    triasData:null
+                })
             }
-        };
-        self.setState({
-            nodes:data.content.nodes
-        })
-    
-        self.updateGraph(data)
+        });
     }
 
     updateGraph(data){
@@ -109,7 +92,7 @@ export default class NodesGraph extends React.Component {
         
         var linkSources = [];   // source positions of links
         var linkTargets = [];   // target positions of links
-        for(let i=0;i<data.content.links.length;i++){
+        for(let i=0;i<data.links.length;i++){
             linkSources.push([0,0])
             linkTargets.push([0,0])
         }
@@ -128,8 +111,8 @@ export default class NodesGraph extends React.Component {
         //Set up the force layout
         //Creates the graph data structure out of the json data
         force = d3.layout.force()
-            .nodes(data.content.nodes)
-            .links(data.content.links)
+            .nodes(data.nodes)
+            .links(data.links)
             .linkDistance(200)
             .charge(-1000)
             .size([width, height])
@@ -149,7 +132,7 @@ export default class NodesGraph extends React.Component {
         //Create all the line svgs but without locations yet
         link = containerGrp
             .selectAll("line")
-            .data(data.content.links)
+            .data(data.links)
             .enter().append("line")
             .attr({"stroke": "#474856"})
             .style("stroke-width", base_stroke);
@@ -157,7 +140,7 @@ export default class NodesGraph extends React.Component {
         //add group of all nodes
         node = containerGrp
             .selectAll(".node")
-            .data(data.content.nodes)
+            .data(data.nodes)
             .enter().append("g")
             .attr({
                 "class" : "nodes",
@@ -174,7 +157,7 @@ export default class NodesGraph extends React.Component {
         node.append("image")
             .attr({
                 "xlink:href" : function (d) {
-                    if(d.status === "normal"){
+                    if(d.status === "0"){
                         return require("../img/img_node_norm@2x.png");
                     }else{
                         return require("../img/img_node_offline@2x.png");
@@ -194,7 +177,7 @@ export default class NodesGraph extends React.Component {
                 "class": "ip"
             })
             .style("font-size", base_text_size + "px")
-            .text(function (d) { return d.ip; });
+            .text(function (d) { return d.node_ip; });
         
         // add double click zomm event to the nodes 
         node.on("dblclick.zoom", function (d) {
@@ -323,7 +306,7 @@ export default class NodesGraph extends React.Component {
                     return d.y
                 })
 
-            for(let i=0;i<data.content.links.length;i++){
+            for(let i=0;i<data.links.length;i++){
                 let pathData = [{x:linkSources[i][0],y:linkSources[i][1]},{x:linkTargets[i][0],y:linkTargets[i][1]}]
 
                 var path = containerGrp.append("path")
@@ -356,7 +339,7 @@ export default class NodesGraph extends React.Component {
 
         var linkedByIndex = {};
         //map of all connected nodes index
-        data.content.links.forEach(function (d) {
+        data.links.forEach(function (d) {
             linkedByIndex[d.source.index + "," + d.target.index] = true;
         });
 
@@ -394,14 +377,14 @@ export default class NodesGraph extends React.Component {
                 <div className="hostlist-contaniner">                
                     <ul className="host-list">
                     {
-                        this.state.nodes.map(function(item,index){
+                        this.state.triasData && this.state.triasData.nodes && this.state.triasData.nodes.map(function(item,index){
                             return (
                                 <li key={"host"+index}>
                                     <span className="label"><FormattedMessage id="termNode"/> IP</span>
                                     <span className="label"><FormattedMessage id="termStatus"/></span>
                                     <span className="label"><FormattedMessage id="termLevel"/></span>
-                                    <span className="value">{item.ip}</span>
-                                    <span className="value"><div className={item.status==="normal"?"circle green":"circle red"}></div></span>
+                                    <span className="value">{item.node_ip}</span>
+                                    <span className="value"><div className={item.status==="0"?"circle green":"circle red"}></div></span>
                                     <span className="value">{item.level || 'High'}</span>
                                 </li>
                             )
