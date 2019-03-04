@@ -12,7 +12,7 @@ class TableList extends React.Component {
             nodeSearchKey: '',//节点列表搜索关键字
             totalItemsCount: 0,
             pageCount: 0,　　　　　　　　　　　　　　　 //总页数
-            hostlist: [{ 'nodeName': '1', 'status': '2', 'blockHeight': '3', 'blockHash': '4', 'updateTime': '5' }],
+            hostlist: [],
             rowsPerPage: 10,
             currentPage: 1
         }
@@ -57,12 +57,14 @@ class TableList extends React.Component {
             success: function (data) {
                 if (data.status == 'success') {
                     self.setState({
-                        totalItemsCount: data.total_item,
-                        pageCount: data.total_page,
+                        totalItemsCount: data.result.num,
+                        pageCount: data.result.total_page,
                         hostlist: data.result.nodes_list || data.result.activities_list
                     })
                 } else {
-                    console.log(data)
+                    self.setState({
+                        hostlist: data.result.nodes_list || data.result.activities_list
+                    })
                 }
 
 
@@ -127,6 +129,22 @@ class TableList extends React.Component {
         this.getHostList(pagenum, this.state.rowsPerPage, this.state.nodeSearchKey)
         //console.log('jump')
     }
+
+    getTimeFormat(inputTime){
+        var date = new Date(inputTime);  
+        var y = date.getFullYear();    
+        var m = date.getMonth() + 1;    
+        m = m < 10 ? ('0' + m) : m;    
+        var d = date.getDate();    
+        d = d < 10 ? ('0' + d) : d;    
+        var h = date.getHours();  
+        h = h < 10 ? ('0' + h) : h;  
+        var minute = date.getMinutes();  
+        var second = date.getSeconds();  
+        minute = minute < 10 ? ('0' + minute) : minute;    
+        second = second < 10 ? ('0' + second) : second;   
+        return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;    
+    }
     render() {
 
         return (
@@ -180,7 +198,8 @@ class TableList extends React.Component {
                                     <td className="hostStatus"><span className={i.status == 0 ? 'normal' : 'error'}></span>{i.status == 0 ? 'Normal' : 'abnormality'}</td>
                                     <td className="">{i.block_heigth}</td>
                                     <td className="">{i.latest_block_hash}</td>
-                                    <td className="">{i.latest_block_time}</td>
+                                    <td className="">{this.getTimeFormat(i.latest_block_time)}</td>
+
                                 </tr>
 
                             )
@@ -191,7 +210,7 @@ class TableList extends React.Component {
 
                                 <tr className="" key={index}>
                                     <td className="">{i.group}</td>
-                                    <td className="">{i.time}</td>
+                                    <td className="">{this.getTimeFormat(i.time)}</td>
                                     <td className="">{i.event}</td>
                                 </tr>
 
@@ -199,7 +218,7 @@ class TableList extends React.Component {
                         }.bind(this))}
 
                         {
-                            !this.state.hostlist.length && <tr className="" style={{ width: '100%', height: '70px', lineHeight: '70px', background: 'transparent', border: 'none', }}><td style={{ paddingLeft: '40px', width: '100%' }}>当前没有匹配的数据。</td></tr>
+                            (!this.state.hostlist.length || this.state.hostlist.length==0) && <tr className="" style={{ width: '100%', height: '70px', lineHeight: '70px', background: 'transparent', border: 'none', }}><td style={{ paddingLeft: '40px', width: '100%' }}>当前没有匹配的数据。</td></tr>
                         }
                     </tbody>
                 </table>
