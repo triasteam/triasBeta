@@ -7,11 +7,12 @@ from django.http import JsonResponse
 from django.db.models import Q
 from app_views.models import Block, Node, Transaction, Activity
 from app_views.view_utils.block_util import stamp2datetime
-from app_views.view_utils.localconfig import JsonConfiguration
+from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration
 from app_views.view_utils.logger import logger
 from app_views.view_utils.redis_util import get_monitoring
 
 jc = JsonConfiguration()
+ac = ActivityConfiguration()
 
 
 def get_instant_message(request):
@@ -24,6 +25,7 @@ def get_instant_message(request):
         fault_nodes = list(Node.objects.filter(status=1).values_list('node_ip', flat=True))
 
         status = 'success'
+        result['node_time'] = nowtime
         result['normal_nodes'] = normal_nodes
         result['fault_nodes'] = fault_nodes
         result['event'] = activity_list

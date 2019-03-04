@@ -92,6 +92,7 @@ STATICFILES_DIRS = [
 ]
 
 CONF_JSON = STATICFILES_DIRS[1] + "/conf.json"
+ACTIVITY_JSON = STATICFILES_DIRS[1] + "/activity.json"
 
 with open(CONF_JSON, 'r') as conf:
     rec = conf.read()
