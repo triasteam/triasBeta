@@ -53,7 +53,6 @@ body {
 .header {
     height: 76px;
     background: rgba(49, 50, 61, 1);
-    border-bottom: 1px solid @border;
     position: relative;
     // text-align: center;
     min-width: 1080px;
@@ -85,35 +84,31 @@ body {
                 display: inline-block;
                 // border-left: 1px solid @border;
                 height: 74px;
-                padding: 30px 16px 0;
+                padding-top: 6px;
                 a {
                     position: relative;
                     color: #A1A6AD;
+                    display: inline-block;
+                    padding: 28px 16px;
                 }
                 a.active {
                     color: #FEFEFE;
+                    background: #292A32
                 }
-                a.active:after {
+                a.active:before {
                     content: '';
                     position: absolute;
                     height: 2px;
                     border-radius: 1px;
-                    width: 57%;
+                    width: 100%;
                     background-color: #A1FC3A;
-                    bottom: -8px;
-                    left: 21%;
+                    top: 0;
+                    left: 0;
                 }
-            }
-            >li:first-child {
-                border-left: 1px solid @border;
-            }
-            >li:nth-last-child(1) {
-                border-right: 1px solid @border;
             }
         }
         .lang {
             float: right;
-            padding-top: 27px;
             .toggle-list{
                 .item-selected{
                     width: initial;
