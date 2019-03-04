@@ -21,6 +21,8 @@ from app_views.views import index, node, activity
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='index.html')),
     url(r'^admin/', admin.site.urls),
+    url(r'^api/event_list/', index.get_current_event),  # Current Event
+    url(r'^api/visualization/', index.get_visualization),  # Visualization Data
     url(r'^api/general_static/', index.general_static),  # General Static
     url(r'^api/faulty_nodes/', index.get_faulty_nodes),  # Faulty Nodes
     url(r'^api/tps/', index.get_tps),  # TPS

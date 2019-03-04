@@ -15,6 +15,104 @@ jc = JsonConfiguration()
 ac = ActivityConfiguration()
 
 
+def get_current_event(request):
+
+    try:
+        result = {}
+        now_str = datetime.datetime.now().strftime('%H:%M:%S')
+        event_list = []
+        next_event_index = None
+        for index, value in enumerate(ac.activity_list):
+            if value['start'] > now_str:
+                next_event_index = index
+                break
+
+        if next_event_index == 0:
+            # nothing happen
+            event_list = cal(0,5)
+            current_index = 0
+        elif next_event_index == None:
+            # everything happened
+            event_list = cal(0,5)
+            current_index = 5
+        else:
+            happened_list = cal(0,next_event_index)
+            unhappen_list = cal(next_event_index,5)
+            event_list = happened_list + unhappen_list
+            current_index = next_event_index
+
+        status = 'success'
+        result['event_list'] = event_list
+        result['current_index'] = current_index - 1
+
+    except Exception as e:
+        logger.error(e)
+        status, result = 'failure', {}
+
+    return JsonResponse({'status': status, 'result': result})
+
+
+def cal(start, end):
+    event_list = []
+    now_str = datetime.datetime.now().strftime('%H:%M:%S')
+    for index, item in enumerate(ac.activity_list[start:end]):
+        # calculate time
+        now_str_list = now_str.split(':')
+        start_time_list = item['start'].split(':')
+        now_second = int(now_str_list[0])*60*60 + int(now_str_list[1])*60 + int(now_str_list[2])
+        start_second = int(start_time_list[0])*60*60 + int(start_time_list[1])*60 + int(start_time_list[2])
+
+        if now_second >= start_second:
+            # happened
+            hour = int((now_second - start_second) // (60 * 60))
+            minute = int((now_second - start_second - hour * 60 * 60) // 60)
+            second = int(now_second - start_second - hour * 60 * 60 - minute * 60)
+        else:
+            # unhappen
+            hour = int((start_second - now_second) // (60 * 60))
+            minute = int((start_second - now_second - hour * 60 * 60) // 60)
+            second = int(start_second - now_second - hour * 60 * 60 - minute * 60)
+
+        hour_str = str(hour)
+        minute_str = str(minute)
+        second_str = str(second)
+        if hour < 10:
+            hour_str = '0' + hour_str
+        if minute < 10:
+            minute_str = '0' + minute_str
+        if second < 10:
+            second_str = '0' + second_str
+
+        interval = '%s:%s:%s' % (hour_str, minute_str, second_str)
+
+        event_list.append({'name': item['name'], 'start': item['start'], 'interval': interval})
+
+    return event_list
+
+
+def get_visualization(request):
+    result =  {
+        "trias": {
+            "links": [ {"source": "192.168.1.178", "target": "192.168.1.207"}, {"source": "192.168.1.207", "target": "192.168.1.206"},
+                       {"source": "192.168.1.178", "target": "192.168.1.209"}, {"source": "192.168.1.209", "target": "192.168.1.206"},
+                       {"source": "192.168.1.206", "target": "192.168.1.178"}, {"source": "192.168.1.178", "target": "192.168.1.208"}],
+            "nodes": [ {"node_ip": "192.168.1.178", "status": "0"}, {"node_ip": "192.168.1.206", "status": "1"},
+                       {"node_ip": "192.168.1.207", "status": "0"}, {"node_ip": "192.168.1.208", "status": "1"},
+                       {"node_ip": "192.168.1.209", "status": "0"}]   # 0 正常    1 异常
+            },
+       "hyperledger": {
+           "links": [],
+            "nodes": []   # 0 正常    1 异常
+            },
+      "ethereum": {
+            "links": [],
+            "nodes": []   # 0 正常    1 异常
+            }
+    }
+
+    return JsonResponse({'status': 'success', 'result': result})
+
+
 def get_instant_message(request):
 
     try:
