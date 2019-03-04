@@ -20,8 +20,8 @@ def get_current_event(request):
     try:
         result = {}
         now_str = datetime.datetime.now().strftime('%H:%M:%S')
-        event_list = []
         next_event_index = None
+        ac_length = len(ac.activity_list)
         for index, value in enumerate(ac.activity_list):
             if value['start'] > now_str:
                 next_event_index = index
@@ -29,15 +29,15 @@ def get_current_event(request):
 
         if next_event_index == 0:
             # nothing happen
-            event_list = cal(0,5)
+            event_list = cal(0,ac_length)
             current_index = 0
         elif next_event_index == None:
             # everything happened
-            event_list = cal(0,5)
-            current_index = 5
+            event_list = cal(0,ac_length)
+            current_index = ac_length
         else:
             happened_list = cal(0,next_event_index)
-            unhappen_list = cal(next_event_index,5)
+            unhappen_list = cal(next_event_index,ac_length)
             event_list = happened_list + unhappen_list
             current_index = next_event_index
 
@@ -183,7 +183,7 @@ def general_static(request):
 def get_tps(request):
 
     try:
-        tps = 111
+        tps = 1  # 1 即 100%
         result = {
             "trias": tps,
             "ethereum": 0,
@@ -201,8 +201,9 @@ def get_faulty_nodes(request):
 
     try:
         faulty_nodes_num = Node.objects.filter(status=1).count()
+        all_nodes_num = Node.objects.count()
         result = {
-            "trias": faulty_nodes_num,
+            "trias": round(faulty_nodes_num/all_nodes_num, 2),
             "ethereum": 0,
             "hyperledger": 0
         }
