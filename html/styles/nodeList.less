@@ -5,9 +5,10 @@
     >form {
         float: left;
         margin-bottom: 20px;
+        width:100%;
         .searchkey {
             float: left;
-            width: 270px;
+            width: 95%;
             height: 38px;
             border-radius: 4px;
             border: 1px solid rgba(68, 72, 81, 1);
@@ -16,12 +17,13 @@
             padding: 0 10px;
         }
         .nodelist-search {
+            float: right;
             width: 38px;
             height: 38px;
-            background: rgba(39, 65, 8, 1);
             border-radius: 4px;
             border: 1px solid rgba(161, 252, 58, 1);
             margin-left: 8px;
+            background: rgba(39, 65, 8, 1) url('../img/icon/button_icon/search.png') no-repeat center;
             i {
                 color: #fff;
             }
@@ -57,5 +59,34 @@
     tbody tr td:nth-child(2n+1){
         background:rgba(41,42,50,1);
         color:rgba(161,166,173,1);
+    }
+}
+
+
+.customTable{
+    td.hostIp{
+        color: @tableColor;
+    }
+    td.hostStatus{
+        span{
+            vertical-align: middle;
+            margin-right:5px;
+        }
+        span.normal{
+            display: inline-block;
+            width:12px;
+            height:12px;
+            background:rgba(161,252,58,0.2);
+            border:1px solid @tableColor;
+            border-radius: 6px;
+        }
+        span.error{
+            display: inline-block;
+            width:12px;
+            height:12px;
+            background:rgba(255,0,117,0.2);
+            border:1px solid rgba(255,0,117,1);
+            border-radius: 6px;
+        }
     }
 }

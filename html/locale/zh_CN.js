@@ -51,6 +51,8 @@ const zh_CN = {
     explorer:"区块链浏览器",
     wallet:"Trias 钱包",
     goBack:"返回",
+    thTestGruop:'测试组',
+    thEvent:'事件'
 }
 
 export default zh_CN;

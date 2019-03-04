@@ -51,6 +51,9 @@ const en_US = {
     explorer:"Blockchain Explorer",
     wallet:"Trias Wallet",
     goBack:"Go Back",
+    thTestGruop:'Test Gruop',
+    thEvent:'Event'
+
 }
 
 export default en_US;
