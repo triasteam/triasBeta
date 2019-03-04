@@ -107,6 +107,13 @@ export default class NodesGraph extends React.Component {
             link = null,
             force = null;
         
+        var linkSources = [];   // source positions of links
+        var linkTargets = [];   // target positions of links
+        for(let i=0;i<data.content.links.length;i++){
+            linkSources.push([0,0])
+            linkTargets.push([0,0])
+        }
+        
         var focus_node = null;
         var highlight_trans = 0.1;
         
@@ -127,7 +134,8 @@ export default class NodesGraph extends React.Component {
             .charge(-1000)
             .size([width, height])
             .start();
-
+        
+        d3.select("div#nodesGraph svg").remove();   // clear svg
         //create svg element using d3
         var svg = d3.select("div#nodesGraph").append("svg")
             .attr("width", width)
@@ -145,15 +153,7 @@ export default class NodesGraph extends React.Component {
             .enter().append("line")
             .attr({"stroke": "#474856"})
             .style("stroke-width", base_stroke);
-    
-            
-        var linkSources = [];
-        var linkTargets = [];
-        for(let i=0;i<data.content.links.length;i++){
-            linkSources.push([0,0])
-            linkTargets.push([0,0])
-        }
-            
+                
         //add group of all nodes
         node = containerGrp
             .selectAll(".node")
@@ -228,21 +228,6 @@ export default class NodesGraph extends React.Component {
             }
         );
 
-        
-        var defs = svg.append("defs");
-
-        //Create a filter per circle so we can adjust the fuzzyness per circle that is flying out
-        defs.append("filter")
-            .attr("id", "fuzzyFilter")
-            .attr("width", "300%")	//increase the width of the filter region to remove blur "boundary"
-            .attr("x", "-100%") //make sure the center of the "width" lies in the middle
-            .attr("color-interpolation-filters","sRGB") //to fix safari: http://stackoverflow.com/questions/24295043/svg-gaussian-blur-in-safari-unexpectedly-lightens-image
-            .append("feGaussianBlur")
-            .attr("class", "blurValues")
-            .attr("in","SourceGraphic")
-            .attr("stdDeviation","0 0"); //start without a blur
-        
-
         //add zoom behavior to nodes
         var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom])
             .on("zoom", function () {
@@ -250,8 +235,8 @@ export default class NodesGraph extends React.Component {
             });
         svg.call(zoom);
 
-        //Now we are giving the SVGs co-ordinates - the force layout is generating the co-ordinates which this code is using to update the attributes of the SVG elements
-        //tick event of network node
+        // update the attributes of svg elements on tick event of network node
+        // also record the new source and target position of links as linkSources and linkTargets
         force.on("tick", function() {
             node.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; });
 
@@ -276,20 +261,58 @@ export default class NodesGraph extends React.Component {
                 .attr("cy", function (d) { return d.y; });
         });
 
+        // on "start" event, transitions start, clear all the paths and moving circles along the links
         force.on("start", function(){
             containerGrp.selectAll("circle").remove()
             containerGrp.selectAll("path").remove()
         })
+
+        // create image pattern to fill the circles
+        containerGrp.append("pattern")
+            .attr({
+                "id": "pointImage",
+                "x": 60,
+                "y": 60,
+                "height": 12,
+                "width": 60
+            })
+            .append("image")
+            .attr({
+                "x": 60,
+                "y": 54,
+                "height": 12,
+                "width": 60,
+                "xlink:href": require("../img/img_chart_dots@2x.png")
+            })
+
+        /**
+         * Get the angle at which the image should be rotated, the image will be moved from pointA to pointB repeatedly.
+         * TIPS:
+         * 1. The y-axis in svg is opposite to the normal Euclidean y-axis. 
+         * 2. Math.atan2(y,x)/(Math.PI/180) calculates the angle, in the Euclidean planet, between the positive x-axis and the ray to the point (x,y)
+         * In order to calculate the angle at which the image actually needs to be rotated, 
+         * I convert the point coordinates (x, -y) in svg into point coordinates in Euclidean space 
+         * and then convert them into coordinate points (-x, -(-y)) in the diagonal quadrant.
+         * @param {*} pointA point coordinates [x1,y1], describe the source position of the link in svg space
+         * @param {*} pointB point coordinates [x2,y2], describe the target position of the link in svg space
+         */
+        function getAngle(pointA,pointB){            
+            var angle = - Math.round(Math.atan2(pointB[1] - pointA[1], -pointB[0] + pointA[0]) / (Math.PI / 180))
+            return angle
+        }
+        
+        // on "end" event, all transitions are finished
         force.on("end", function(){
-            var points = containerGrp.selectAll(".point")
+            // add points to move along the link
+            containerGrp.selectAll(".point")
                 .data(linkSources)
                 .enter().append('circle')
-                .attr('id', function(d,i){
-                    return "point"+i
-                })
-                .attr('r',4)
-                .attr('fill', "#A1FC3A")
-                .attr("transform", function(d) { return "translate(" + d + ")"; });
+                .attr('id', function(d,i){ return "point"+i; })
+                .attr('r',60)
+                .attr('fill', "url(#pointImage)")   // fill the circles with the image pattern
+                .attr("transform", function(d,i) {
+                    return "translate(" + d + ") " + "rotate("+getAngle(linkSources[i], linkTargets[i])+") "; 
+                });
             
                 
             var lineFunc = d3.svg.line()
@@ -304,29 +327,28 @@ export default class NodesGraph extends React.Component {
                 let pathData = [{x:linkSources[i][0],y:linkSources[i][1]},{x:linkTargets[i][0],y:linkTargets[i][1]}]
 
                 var path = containerGrp.append("path")
-                .attr("d", lineFunc(pathData))
+                    .attr("d", lineFunc(pathData))
 
-                transition('point'+i,path)
+                transition(i,path)
             }
 
-            function transition(ponitID,path) {
-                d3.select('#'+ponitID)                
-                    .style("filter", "url(#fuzzyFilter)")
+            function transition(ponitIndex,path) {
+                d3.select('#point'+ponitIndex)                
                     .transition()
-                    .duration(1500)                    
+                    .duration(1800)                    
                     .styleTween("opacity", function tween() {
                         return d3.interpolate(String(0), String(1));
                     })
-                    .attrTween("transform", translateAlong(path.node()))
-                    .each("end", function(){transition(ponitID,path)}); // infinite loop
+                    .attrTween("transform", translateAlong(ponitIndex,path.node()))
+                    .each("end", function(){transition(ponitIndex,path)}); // infinite loop
             }
 
-            function translateAlong(path) {
+            function translateAlong(index,path) {
                 var l = path.getTotalLength();
                 return function (i) {
                     return function (t) {
                         var p = path.getPointAtLength(t * l);
-                        return "translate(" + p.x + "," + p.y + ")"; //Move marker
+                        return "translate(" + p.x + "," + p.y + ") "+"rotate("+getAngle(linkSources[index], linkTargets[index])+")"; //Move points
                     }
                 }
             }
