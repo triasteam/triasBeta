@@ -103,11 +103,11 @@ def get_visualization(request):
             },
        "hyperledger": {
            "links": [],
-            "nodes": []   # 0 正常    1 异常
+            "nodes": []
             },
       "ethereum": {
             "links": [],
-            "nodes": []   # 0 正常    1 异常
+            "nodes": []
             }
     }
 
@@ -185,9 +185,9 @@ def get_tps(request):
     try:
         tps = 1  # 1 即 100%
         result = {
-            "trias": tps,
-            "ethereum": 0,
-            "hyperledger": 0
+            "trias": {'rate': 0.3, 'value': 370},
+            "ethereum": {'rate': 0, 'value': 0},
+            "hyperledger": {'rate': 0, 'value': 0}
         }
         status = 'success'
     except Exception as e:
@@ -203,9 +203,9 @@ def get_faulty_nodes(request):
         faulty_nodes_num = Node.objects.filter(status=1).count()
         all_nodes_num = Node.objects.count()
         result = {
-            "trias": round(faulty_nodes_num/all_nodes_num, 2),
-            "ethereum": 0,
-            "hyperledger": 0
+            "trias": {'rate': round(faulty_nodes_num/all_nodes_num, 2), 'value': faulty_nodes_num},
+            "ethereum": {'rate': 0, 'value': 0},
+            "hyperledger": {'rate': 0, 'value': 0}
         }
         status = 'success'
     except Exception as e:
@@ -222,9 +222,9 @@ def get_fault_accetpance_rate(request):
         faulty_nodes_num = Node.objects.filter(status=1).count()
         # TODO: 朝明组提供公式，webserver计算
         result = {
-            "trias": 1,
-            "ethereum": 0,
-            "hyperledger": 0
+            "trias": {'rate': 0.3, 'value': 30},
+            "ethereum": {'rate': 0, 'value': 0},
+            "hyperledger": {'rate': 0, 'value': 0}
         }
         status = 'success'
     except Exception as e:
@@ -249,6 +249,17 @@ def get_data_monitoring(request):
             new_faulty_nodes_list = [eval(i) for i in faulty_nodes_list]
             start_time = new_faulty_nodes_list[0]
             a_x_time = [(start_time-i*60) for i in range(7)][::-1]
+
+            # Get recent events
+            event_list = []
+            for item in a_x_time:
+                activity_query = Activity.objects.filter(time__gte=item).order_by('time')
+                activity = -1
+                if activity_query.exists():
+                    activity = activity_query[0].type
+                event_list.append(activity)
+
+            result['faulty_nodes_list']['event_list'] = event_list
             result['faulty_nodes_list']['trias']['time'] = a_x_time
             result['faulty_nodes_list']['trias']['value'] = new_faulty_nodes_list[1:][::-1]
             result['faulty_nodes_list']['ethereum']['time'] = a_x_time
@@ -260,6 +271,17 @@ def get_data_monitoring(request):
             new_fault_accetpance_rate = [eval(i) for i in fault_accetpance_rate]
             start_time = new_fault_accetpance_rate[0]
             b_x_time = [(start_time - i * 60) for i in range(7)][::-1]
+
+            # Get recent events
+            event_list = []
+            for item in b_x_time:
+                activity_query = Activity.objects.filter(time__gte=item).order_by('time')
+                activity = -1
+                if activity_query.exists():
+                    activity = activity_query[0].type
+                event_list.append(activity)
+
+            result['fault_accetpance_rate']['event_list'] = event_list
             result['fault_accetpance_rate']['trias']['time'] = b_x_time
             result['fault_accetpance_rate']['trias']['value'] = new_fault_accetpance_rate[1:][::-1]
             result['fault_accetpance_rate']['ethereum']['time'] = b_x_time
@@ -271,6 +293,17 @@ def get_data_monitoring(request):
             new_tps_monitoring = [eval(i) for i in tps_monitoring]
             start_time = new_tps_monitoring[0]
             c_x_time = [(start_time - i * 60) for i in range(7)][::-1]
+
+            # Get recent events
+            event_list = []
+            for item in c_x_time:
+                activity_query = Activity.objects.filter(time__gte=item).order_by('time')
+                activity = -1
+                if activity_query.exists():
+                    activity = activity_query[0].type
+                event_list.append(activity)
+
+            result['tps_monitoring']['event_list'] = event_list
             result['tps_monitoring']['trias']['time'] = c_x_time
             result['tps_monitoring']['trias']['value'] = new_tps_monitoring[1:][::-1]
             result['tps_monitoring']['ethereum']['time'] = c_x_time
