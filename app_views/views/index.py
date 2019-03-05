@@ -66,30 +66,7 @@ def cal(start, end):
         now_second = int(now_str_list[0])*60*60 + int(now_str_list[1])*60 + int(now_str_list[2])
         start_second = int(start_time_list[0])*60*60 + int(start_time_list[1])*60 + int(start_time_list[2])
 
-        if now_second >= start_second:
-            # happened
-            hour = int((now_second - start_second) // (60 * 60))
-            minute = int((now_second - start_second - hour * 60 * 60) // 60)
-            second = int(now_second - start_second - hour * 60 * 60 - minute * 60)
-        else:
-            # unhappen
-            hour = int((start_second - now_second) // (60 * 60))
-            minute = int((start_second - now_second - hour * 60 * 60) // 60)
-            second = int(start_second - now_second - hour * 60 * 60 - minute * 60)
-
-        hour_str = str(hour)
-        minute_str = str(minute)
-        second_str = str(second)
-        if hour < 10:
-            hour_str = '0' + hour_str
-        if minute < 10:
-            minute_str = '0' + minute_str
-        if second < 10:
-            second_str = '0' + second_str
-
-        interval = '%s:%s:%s' % (hour_str, minute_str, second_str)
-
-        event_list.append({'name': item['name'], 'start': item['start'], 'interval': interval})
+        event_list.append({'name': item['name'], 'start': item['start'], 'interval': abs(now_second - start_second)})
 
     return event_list
 

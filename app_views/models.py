@@ -42,3 +42,14 @@ class Activity(models.Model):
 
     class Meta:
         db_table = "activity"
+
+
+class Hardware(models.Model):
+    cpu = models.CharField(max_length=255, default='')
+    gpu = models.CharField(max_length=255, default='')
+    motherboard = models.CharField(max_length=255, default='')
+    ram = models.CharField(max_length=255, default='')
+    ssd = models.CharField(max_length=255, default='')
+
+    class Meta:
+        db_table = "hardware_info"
