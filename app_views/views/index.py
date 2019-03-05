@@ -41,9 +41,13 @@ def get_current_event(request):
             event_list = happened_list + unhappen_list
             current_index = next_event_index
 
+        all_nodes_num = Node.objects.count()
+        fault_nodes_num = Node.objects.filter(status=1).count()
         status = 'success'
         result['event_list'] = event_list
         result['current_index'] = current_index - 1
+        result['all_nodes_num'] = all_nodes_num
+        result['fault_nodes_num'] = fault_nodes_num
 
     except Exception as e:
         logger.error(e)
