@@ -5,7 +5,7 @@ import time
 import datetime
 from django.http import JsonResponse
 from django.db.models import Q
-from app_views.models import Block, Node, Transaction, Activity
+from app_views.models import Block, Node, Transaction, Activity, Hardware
 from app_views.view_utils.block_util import stamp2datetime
 from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration
 from app_views.view_utils.logger import logger
@@ -302,19 +302,26 @@ def get_data_monitoring(request):
 
 
 def get_hardware_specifications(request):
-    status = "success"
-    result =  {
-        "CPU": "xxxxxxx",
-        "GPU": "xxxxxxx",
-        "Motherboard": "xxxxxxx",
-        "RAM": "xxxxxxx",
-        "SSD": "xxxxxxx"
-    }
+
+    try:
+        hardware = Hardware.objects.last()
+        result = {
+            "CPU": hardware.cpu,
+            "GPU": hardware.gpu,
+            "Motherboard": hardware.motherboard,
+            "RAM": hardware.ram,
+            "SSD": hardware.ssd
+        }
+        status = 'success'
+    except Exception as e:
+        logger.error(e)
+        status, result = 'failure', {}
+
     return JsonResponse({'status': status, 'result': result})
 
 
 def get_nodes_num(request):
-    result ={}
+
     try:
         all_nodes_num = Node.objects.count()
         fault_nodes_num = Node.objects.filter(status=1).count()
@@ -322,6 +329,6 @@ def get_nodes_num(request):
         result = {'all_nodes_num': all_nodes_num, 'fault_nodes_num': fault_nodes_num}
     except Exception as e:
         logger.error(e)
-        status = 'failure'
+        status, result = 'failure', {}
 
     return JsonResponse({'status': status, 'result': result})
