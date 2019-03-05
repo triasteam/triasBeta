@@ -22,7 +22,7 @@ class RightPart extends React.Component {
             RAM: "xxxxxxx",
             SSD: "xxxxxxx",
             time:"0",
-            activities:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+            activities:[]
         }
     }
     componentWillMount() {
@@ -36,6 +36,7 @@ class RightPart extends React.Component {
 
     componentDidMount() {
         this.getSpecifications();
+        this.getActivities();
 
         this.activitiesInterval = setInterval(this.getActivities.bind(this),10000);
     }
