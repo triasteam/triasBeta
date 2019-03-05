@@ -11,7 +11,7 @@ import GeneralStatics from "./GeneralStatics";
 import RightPart from "./RightPart";
 import LineMark from "./charts/LineMark";
 import NodesGraph from "./NodesGraph";
-
+import EventHappenSwiper from "./common/EventHappenSwiper"
 /* Component for node status page */
 class ChainStatus extends React.Component {
   constructor(props) {
@@ -240,6 +240,7 @@ class ChainStatus extends React.Component {
     }
     return (
       <div className="status-page">
+        <EventHappenSwiper/>
         <NodesGraph />
         <section className="bottom-group clearfix">
           <div className="left-part">

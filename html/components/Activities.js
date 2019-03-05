@@ -22,7 +22,7 @@ class Activities extends React.Component {
     render() {
         return (
             <div className="activites-page">
-                <TableList searchListApi={'api/activity_list/'}/>
+                <TableList searchListApi={'/api/activity_list/'}/>
             </div>
         )
     }

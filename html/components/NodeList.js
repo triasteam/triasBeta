@@ -23,7 +23,7 @@ class NodeList extends React.Component {
             <div className="nodelist customTableWarp clearfix">
                 
                 
-                <TableList searchListApi={'api/node_list/'}/>
+                <TableList searchListApi={'/api/node_list/'}/>
                 
             </div>
 

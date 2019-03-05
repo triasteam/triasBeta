@@ -166,7 +166,7 @@ class TableList extends React.Component {
                 <table className="customTable">
                     <thead>
                         {
-                            this.props.searchListApi == 'api/node_list/' &&
+                            this.props.searchListApi == '/api/node_list/' &&
                             <tr>
                                 <FormattedMessage id="thNodeLabel" tagName="th" />
                                 {/* <FormattedMessage id="thLocation" tagName="th" /> */}
@@ -177,7 +177,7 @@ class TableList extends React.Component {
                             </tr>
                         }
                         {
-                            this.props.searchListApi == 'api/activity_list/' &&
+                            this.props.searchListApi == '/api/activity_list/' &&
                             <tr>
                                 <FormattedMessage id="thTestGruop" tagName="th" />
                                 <FormattedMessage id="thTime" tagName="th" />
@@ -187,7 +187,7 @@ class TableList extends React.Component {
                     </thead>
 
                     <tbody>
-                        {this.props.searchListApi == 'api/node_list/' && this.state.hostlist && this.state.hostlist.map(function (i, index) {
+                        {this.props.searchListApi == '/api/node_list/' && this.state.hostlist && this.state.hostlist.map(function (i, index) {
                             return (
 
                                 <tr className="" key={index}>
@@ -205,7 +205,7 @@ class TableList extends React.Component {
                             )
                         }.bind(this))}
 
-                        {this.props.searchListApi == 'api/activity_list/' && this.state.hostlist && this.state.hostlist.map(function (i, index) {
+                        {this.props.searchListApi == '/api/activity_list/' && this.state.hostlist && this.state.hostlist.map(function (i, index) {
                             return (
 
                                 <tr className="" key={index}>
