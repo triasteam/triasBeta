@@ -330,3 +330,17 @@ def get_hardware_specifications(request):
         "SSD": "xxxxxxx"
     }
     return JsonResponse({'status': status, 'result': result})
+
+
+def get_nodes_num(request):
+    result ={}
+    try:
+        all_nodes_num = Node.objects.count()
+        fault_nodes_num = Node.objects.filter(status=1).count()
+        status = 'success'
+        result = {'all_nodes_num': all_nodes_num, 'fault_nodes_num': fault_nodes_num}
+    except Exception as e:
+        logger.error(e)
+        status = 'failure'
+
+    return JsonResponse({'status': status, 'result': result})

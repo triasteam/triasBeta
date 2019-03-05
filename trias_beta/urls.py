@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^api/data_monitoring/', index.get_data_monitoring),  # Data Monitoring
     url(r'^api/instant_message/', index.get_instant_message),  # Instant Message
     url(r'^api/hardware_specifications/', index.get_hardware_specifications),  # Hardware Specifications
+    url(r'^api/nodes_num/', index.get_nodes_num),  # Nodes Number
 
     url(r'^api/activity_list/', activity.get_activity_list),  # Activity List
 
