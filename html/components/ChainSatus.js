@@ -26,13 +26,37 @@ class ChainStatus extends React.Component {
       dangerIp: localStorage.getItem("dangerIp") || "",
       // lang: this.props.intl.locale,    // current locale language
       Monitoring: {
-        tps_monitoring: null,
-        fault_accetpance_rate: null,
-        faulty_nodes_list: null
+        tps_monitoring: {
+          trias:null,
+          ethereum:null,
+          hyperledger:null,
+        },
+        fault_accetpance_rate:{
+          trias:null,
+          ethereum:null,
+          hyperledger:null,
+        },
+        faulty_nodes_list: {
+          trias:null,
+          ethereum:null,
+          hyperledger:null,
+        }
       },
-      tps_dial: null,
-      faulty_nodes_dial: null,
-      fault_accetpance_rate_dial: null
+      tps_dial: {
+        trias:null,
+        ethereum:null,
+        hyperledger:null,
+      },
+      faulty_nodes_dial: {
+        trias:null,
+        ethereum:null,
+        hyperledger:null,
+      },
+      fault_accetpance_rate_dial: {
+        trias:null,
+        ethereum:null,
+        hyperledger:null,
+      }
     };
   }
 
@@ -138,6 +162,8 @@ class ChainStatus extends React.Component {
     this.getLadderList(pagenum, this.state.rowsPerPage);
     //console.log('jump')
   }
+
+  
 
   getMonitoring() {
     var self = this;
