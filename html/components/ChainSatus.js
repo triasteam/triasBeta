@@ -17,13 +17,6 @@ class ChainStatus extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dotsNum: 100, // number of dots in timer graph
-      timeLeft: 691200, // date and time for countdown to
-      rowsPerPage: 50, // maximum number of rows per page in the table
-      totalItemsCount: 0, // total number of rows in the table
-      totalPagesCount: 1, // total number of pages
-      currentPage: 1, // current page number
-      dangerIp: localStorage.getItem("dangerIp") || "",
       // lang: this.props.intl.locale,    // current locale language
     };
   }
@@ -47,89 +40,9 @@ class ChainStatus extends React.Component {
    * - Get data for this page.
    */
   componentDidMount() {
-    var self = this;
-    // this.getMonitoringInterval = setInterval(function() {
-    //   self.getMonitoring();
-    //   self.getTpsDial();
-    //   self.getFaultyDial();
-    //   self.getAccetpanceDial();
-    // }, 5000);
-    setTimeout(() => {
-      self.getMonitoring();
-      self.getTpsDial();
-      self.getFaultyDial();
-      self.getAccetpanceDial();
-    }, 0);
+    
   }
 
-  /**
-   * Update maximum number of rows per page
-   * @param {int} num new value
-   */
-  setRowsPerPage(num) {
-    this.setState({
-      rowsPerPage: num
-    });
-    // get new data and update state.
-    this.getLadderList(this.state.currentPage, num);
-  }
-
-  /**
-   * On select page number by clicking buttons in the pagination
-   * @param {int} pagenum new page number
-   */
-  onSelectPage(pagenum) {
-    this.setState({
-      currentPage: pagenum
-    });
-    this.getLadderList(pagenum, this.state.rowsPerPage);
-    //console.log(pagenum)
-  }
-
-  /**
-   * Event handler for the change event of the page number input area.
-   * Control the input of page number:
-   * - not empty
-   * - positive integer
-   * - no more than the maximum number of pages
-   * @param {Object} e change evnet
-   */
-  onChangePageInput(e) {
-    var re = /^[0-9]+$/;
-    var pagenum = e.target.value; // get the page number input
-    if (
-      pagenum != "" &&
-      (!re.test(pagenum) ||
-        pagenum == 0 ||
-        pagenum > this.state.totalPagesCount)
-    ) {
-      $("#inputPageNum").val(""); // clear the contents of the input box
-    }
-  }
-
-  /**
-   * Event handler for the keydown event of the page number input area.
-   * Listening to the Enter button event.
-   * @param {Object} e keydown event
-   */
-  onPageInputKeyDown(e) {
-    if (e.keyCode === 13) {
-      // if Enter button is pressed
-      this.handleJumpPage();
-    }
-  }
-
-  /**
-   * When jump to another page
-   */
-  handleJumpPage() {
-    var pagenum = parseInt($("#inputPageNum").val());
-    this.setState({
-      currentPage: pagenum
-    });
-    this.getLadderList(pagenum, this.state.rowsPerPage);
-    //console.log('jump')
-  }
 
   
 
@@ -140,17 +53,9 @@ class ChainStatus extends React.Component {
    * Clear the intervals
    */
   componentWillUnmount() {
-    var self = this;
-    this.ladderListInterval = clearInterval(self.ladderListInterval);
-    // this.dangerIpInterval = clearInterval(self.dangerIpInterval)
   }
 
   render() {
-    var self = this;
-    var tempList = new Array(100);
-    for (var i = 0; i < 100; i++) {
-      tempList[i] = i;
-    }
     return (
       <div className="status-page">
         <EventHappenSwiper/>

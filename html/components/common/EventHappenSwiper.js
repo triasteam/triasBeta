@@ -92,7 +92,7 @@ export default class EventHappenSwiper extends React.Component {
         }
         var interval = (times, index) => {
             this.timerChange = setInterval(() => {
-                clearTimeout(this.timerChange)
+                clearInterval(this.timerChange)
                 times--;
                 changeTime(times, index)
             }, 1000)
@@ -116,7 +116,7 @@ export default class EventHappenSwiper extends React.Component {
         }
         var intervalAdd = (times, index) => {
             this.timerChange = setInterval(() => {
-                clearTimeout(this.timerChange)
+                clearInterval(this.timerChange)
                 times++;
                 changeTime(times, index)
             }, 1000)
