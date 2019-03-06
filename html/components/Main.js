@@ -27,7 +27,9 @@ export default class Main extends React.Component {
         super(props);
         this.state = {
             lang: 'en',
-            pathName: ''
+            pathName: '',
+            eventList: [],
+            currentEventIndex: 0,
         }
         // options for internationalisation
         this.languageList = [{
@@ -104,8 +106,36 @@ export default class Main extends React.Component {
             break;
         }
     }
+    getTimeEvent() {
+        var self = this
+        $.ajax({
+            url: '/api/event_list/ ',
+            type: 'get',
+            dataType: 'json',               //GET方式时,表单数据被转换成请求格式作为URL地址的参数进行传递
+            data: {
+            },
+            success: function (data) {
+                console.log(data)
+                if (data.status == 'success') {
+                    self.setState({
+                        currentEventIndex: data.result.current_index,
+                        eventList: data.result.event_list
+                    })
+                } else {
+                    self.setState({
+                        currentEventIndex: -1,
+                        eventList: []
+                    })
+                }
+            },
+            error: function () {
+
+            }
+        })
+    }
     componentDidMount(){
-        this.onLoadHeadNameBar()
+        this.onLoadHeadNameBar();
+        this.getTimeEvent();
     }
 
     render() {
@@ -180,7 +210,8 @@ export default class Main extends React.Component {
                                 </ul>
                             </div>
                         </header>
-                        <HeadLine headBarName = {this.state.pathName}/>
+                        <HeadLine headBarName = {this.state.pathName} eventList = {this.state.eventList}
+            currentEventIndex = {this.state.currentEventIndex}/>
                         <section className="main">
                             <Switch>
                                 <Route exact path="/" component={ChainSatus} />

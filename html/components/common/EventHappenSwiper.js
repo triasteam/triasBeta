@@ -27,7 +27,6 @@ export default class EventHappenSwiper extends React.Component {
         this.state = {
             eventList: [],
             currentEventIndex: 0,
-            currentTime: 0,
         }
     }
     createSwiper() {
@@ -59,7 +58,6 @@ export default class EventHappenSwiper extends React.Component {
             data: {
             },
             success: function (data) {
-                console.log(data)
                 if (data.status == 'success') {
                     self.setState({
                         currentEventIndex: data.result.current_index,

@@ -21,10 +21,11 @@ export default class HeadLine extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
         }
     }
-
+    componentDidMount() {
+        
+    }
     render() {
 
         return (
@@ -42,9 +43,13 @@ export default class HeadLine extends React.Component {
                                 <p className="sub-title">
                                     Current Event
                                 </p>
-                                <p className="sub-sub">
-                                    Hacker Attack
-                                </p>
+                                {
+                                    this.props.eventList.length>0 && 
+                                    <p className="sub-sub">
+                                        {this.props.eventList[this.props.currentEventIndex].name}
+                                    </p>
+                                }
+                               
                             </div>
                         </li>
                         <li className="sub-list clearfix">
@@ -55,9 +60,12 @@ export default class HeadLine extends React.Component {
                                 <p className="sub-title">
                                     Time Remain
                                 </p>
-                                <p className="sub-sub">
-                                    00:18:46
-                                </p>
+                                {
+                                    this.props.eventList.length>0 && 
+                                    <p className="sub-sub">
+                                        {this.props.eventList[this.props.currentEventIndex].start}
+                                    </p>
+                                }
                             </div>
                         </li>
                         <li className="sub-list clearfix">
@@ -68,9 +76,12 @@ export default class HeadLine extends React.Component {
                                 <p className="sub-title">
                                     Next Event
                                 </p>
-                                <p className="sub-sub">
-                                    Power Outage (20:30)
-                                </p>
+                                {
+                                    this.props.eventList.length>0 && 
+                                    <p className="sub-sub">
+                                        {this.props.eventList[this.props.currentEventIndex+1].name}
+                                    </p>
+                                }
                             </div>
                         </li>
                     </ul>
