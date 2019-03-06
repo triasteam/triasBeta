@@ -5,24 +5,31 @@ export default class Lunar extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      trias: [],
-      ethereum: [],
-      hyperledger: [],
-      time: [],
-      trias_dial: "",
-      ethereum_dial: "",
-      hyperledger_dial: "",
-      event_list:[]
+      trias: [],                    //The line chart trias data
+      ethereum: [],                 //The line chart ethereum data
+      hyperledger: [],              //The line chart hyperledger data
+      time: [],                     //The line chart timeline
+      trias_dial: "",               //Trias dial data
+      ethereum_dial: "",            //Ethereum dial data
+      hyperledger_dial: "",         //Hyperledger dial data
+      event_list: []                //Histogram event data
     };
     this.timeArr = [];
   }
 
+  /**
+   * A timestamp to standard time
+   */
   formatDate(now) {
     var hour = now.getHours();
     var minute = now.getMinutes();
     return hour + ":" + minute;
   }
 
+  /**
+   * Before a mounted component receives new props, reset some state.
+   * @param {Object} nextProps new props
+   */
   componentWillReceiveProps(nextProps) {
     let self = this;
     self.timeArr = [];
@@ -46,33 +53,39 @@ export default class Lunar extends PureComponent {
         trias_dial: nextProps.dial.trias || null,
         ethereum_dial: nextProps.dial.ethereum || null,
         hyperledger_dial: nextProps.dial.hyperledger || null,
-        event_list: nextProps.data.event_list||[]
+        event_list: nextProps.data.event_list || []
       });
     }, 0);
   }
-
+  /**
+   * After the component is mounted.
+   * - Request data line chart start timing for 5 seconds
+   * - Get data for this page.
+   */
   componentDidMount() {}
+
   getOption = () => {
     const event_list = [];
     // -1: 没有事件  1: Power Outage  4: 攻击  5: 节点更新         只有这四种情况
-    for (let i = 0; i < this.state.event_list.length-1; i++) {
-      let des='';
+    for (let i = 0; i < this.state.event_list.length - 1; i++) {
+      let des = "";
       switch (this.state.event_list[i]) {
         case 1:
-        des = "Power Outage";
+          des = "Power Outage";
           break;
         case 4:
-        des = "攻击";
+          des = "攻击";
           break;
         case 5:
-        des = "节点更新";
+          des = "节点更新";
           break;
         case -1:
-        des = "没有事件";
+          des = "没有事件";
           break;
-      };
-      event_list.push([{
-          name:des,
+      }
+      event_list.push([
+        {
+          name: des,
           xAxis: this.timeArr[i] + "",
           label: {
             normal: {
@@ -80,10 +93,11 @@ export default class Lunar extends PureComponent {
               show: true
             }
           }
-
-      },{
-          xAxis: this.timeArr[i+1] + ""
-      }])
+        },
+        {
+          xAxis: this.timeArr[i + 1] + ""
+        }
+      ]);
     }
 
     const option = {
@@ -147,14 +161,13 @@ export default class Lunar extends PureComponent {
           },
           markArea: {
             itemStyle: {
-              //globa
+              // global
               normal: {
                 color: "#25262E",
                 opacity: "0.9"
               }
             },
-
-           data:event_list,
+            data: event_list
           }
         },
         {

@@ -1,7 +1,10 @@
 import React from "react";
 import LineMark from "./LineMark";
 import $ from "jquery";
-/* 自定义静态折线图 */
+
+/**
+ * Component for the line chart collection
+ */
 export default class LineMarkCollection extends React.Component {
   constructor(props) {
     super(props);
@@ -11,19 +14,19 @@ export default class LineMarkCollection extends React.Component {
           trias: null,
           ethereum: null,
           hyperledger: null,
-          event_list:[],
+          event_list: []
         },
         fault_accetpance_rate: {
           trias: null,
           ethereum: null,
           hyperledger: null,
-          event_list:[],
+          event_list: []
         },
         faulty_nodes_list: {
           trias: null,
           ethereum: null,
           hyperledger: null,
-          event_list:[],
+          event_list: []
         }
       },
       tps_dial: {
@@ -43,6 +46,10 @@ export default class LineMarkCollection extends React.Component {
       }
     };
   }
+
+  /**
+   * - Get data for three line chart.
+   */
   getMonitoring() {
     var self = this;
     $.ajax({
@@ -57,6 +64,10 @@ export default class LineMarkCollection extends React.Component {
       }
     });
   }
+
+  /**
+   * - Get data for TPS Monitoring pie chart.
+   */
   getTpsDial() {
     var self = this;
     $.ajax({
@@ -71,6 +82,10 @@ export default class LineMarkCollection extends React.Component {
       }
     });
   }
+
+  /**
+   * - Get data for Faulty Nodes pie chart.
+   */
   getFaultyDial() {
     var self = this;
     $.ajax({
@@ -85,6 +100,10 @@ export default class LineMarkCollection extends React.Component {
       }
     });
   }
+
+  /**
+   * - Get data for Fault Accetpance Rate pie chart.
+   */
   getAccetpanceDial() {
     var self = this;
     $.ajax({
@@ -100,10 +119,14 @@ export default class LineMarkCollection extends React.Component {
     });
   }
 
-  //组件已经成功被渲染
+  /**
+   * After the component is mounted.
+   * - Request data line chart start timing for 5 seconds
+   * - Get data for this page.
+   */
   componentDidMount() {
     var self = this;
-    this.getMonitoringInterval = setInterval(function() {
+    self.getMonitoringInterval = setInterval(function() {
       self.getMonitoring();
       self.getTpsDial();
       self.getFaultyDial();
@@ -116,8 +139,21 @@ export default class LineMarkCollection extends React.Component {
       self.getAccetpanceDial();
     }, 0);
   }
-  //当组件props将要发生变化时
+
+  /**
+   * When the component will be unmounted.
+   * Clear the intervals
+   */
+  componentWillUnmount() {
+    clearInterval(this.getMonitoringInterval);
+  }
+
+  /**
+   * Before a mounted component receives new props, reset some state.
+   * @param {Object} nextProps new props
+   */
   componentWillReceiveProps(nextProps) {}
+
   render() {
     return (
       <div>
