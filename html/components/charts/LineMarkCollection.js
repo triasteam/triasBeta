@@ -10,17 +10,20 @@ export default class LineMarkCollection extends React.Component {
         tps_monitoring: {
           trias: null,
           ethereum: null,
-          hyperledger: null
+          hyperledger: null,
+          event_list:[],
         },
         fault_accetpance_rate: {
           trias: null,
           ethereum: null,
-          hyperledger: null
+          hyperledger: null,
+          event_list:[],
         },
         faulty_nodes_list: {
           trias: null,
           ethereum: null,
-          hyperledger: null
+          hyperledger: null,
+          event_list:[],
         }
       },
       tps_dial: {

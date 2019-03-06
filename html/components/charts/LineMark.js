@@ -11,43 +11,81 @@ export default class Lunar extends PureComponent {
       time: [],
       trias_dial: "",
       ethereum_dial: "",
-      hyperledger_dial: ""
+      hyperledger_dial: "",
+      event_list:[]
     };
-    this.timeArr=[];
+    this.timeArr = [];
   }
 
-   formatDate(now) { 
-    var hour=now.getHours(); 
-    var minute=now.getMinutes(); 
-    return  hour+":"+minute
-    }; 
-
+  formatDate(now) {
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    return hour + ":" + minute;
+  }
 
   componentWillReceiveProps(nextProps) {
     let self = this;
-    self.timeArr=[];
-    if(!nextProps.data.trias||!nextProps.data.ethereum||!nextProps.data.hyperledger){
-      return false
+    self.timeArr = [];
+    if (
+      !nextProps.data.trias ||
+      !nextProps.data.ethereum ||
+      !nextProps.data.hyperledger
+    ) {
+      return false;
     }
-    let  getMonitoringTime=nextProps.data.trias.time
-    for(var i=0;i<getMonitoringTime.length;i++){
-      self.timeArr.push(self.formatDate(new Date(getMonitoringTime[i]*1000))) 
+    let getMonitoringTime = nextProps.data.trias.time;
+    for (var i = 0; i < getMonitoringTime.length; i++) {
+      self.timeArr.push(self.formatDate(new Date(getMonitoringTime[i] * 1000)));
     }
     setTimeout(function() {
       self.setState({
-        time:  self.timeArr||[],
-        trias: nextProps.data.trias.value||[],
-        ethereum: nextProps.data.ethereum.value||[],
-        hyperledger: nextProps.data.hyperledger.value||[],
-        trias_dial: nextProps.dial.trias||null,
-        ethereum_dial: nextProps.dial.ethereum||null,
-        hyperledger_dial: nextProps.dial.hyperledger||null,
+        time: self.timeArr || [],
+        trias: nextProps.data.trias.value || [],
+        ethereum: nextProps.data.ethereum.value || [],
+        hyperledger: nextProps.data.hyperledger.value || [],
+        trias_dial: nextProps.dial.trias || null,
+        ethereum_dial: nextProps.dial.ethereum || null,
+        hyperledger_dial: nextProps.dial.hyperledger || null,
+        event_list: nextProps.data.event_list||[]
       });
     }, 0);
   }
 
   componentDidMount() {}
   getOption = () => {
+    const event_list = [];
+    // -1: 没有事件  1: Power Outage  4: 攻击  5: 节点更新         只有这四种情况
+    for (let i = 0; i < this.state.event_list.length-1; i++) {
+      let des='';
+      switch (this.state.event_list[i]) {
+        case 1:
+        des = "Power Outage";
+          break;
+        case 4:
+        des = "攻击";
+          break;
+        case 5:
+        des = "节点更新";
+          break;
+        case -1:
+        des = "没有事件";
+          break;
+      };
+      event_list.push([{
+          name:des,
+          xAxis: this.timeArr[i] + "",
+          label: {
+            normal: {
+              color: "#fff",
+              show: true
+            }
+          }
+
+      },{
+          xAxis: this.timeArr[i+1] + ""
+      }])
+    }
+
     const option = {
       tooltip: {
         trigger: "axis",
@@ -109,63 +147,14 @@ export default class Lunar extends PureComponent {
           },
           markArea: {
             itemStyle: {
-              //全局的
+              //globa
               normal: {
                 color: "#25262E",
                 opacity: "0.9"
               }
             },
 
-            data: [
-              [
-                {
-                  name: "Hacker Attack",
-                  xAxis: this.timeArr[0] + "",
-                  label: {
-                    normal: {
-                      color: "#fff",
-                      show: true
-                      //   position: [10, '50%']
-                    }
-                  }
-                },
-                {
-                  xAxis: this.timeArr[1] + ""
-                }
-              ],
-              [
-                {
-                  name: "Power Outage",
-                  xAxis: this.timeArr[2] + "",
-                  label: {
-                    normal: {
-                      color: "#fff",
-                      show: true
-                      //   position: [10, 0]
-                    }
-                  }
-                },
-                {
-                  xAxis: this.timeArr[3] + ""
-                }
-              ],
-              [
-                {
-                  name: "Nodes Update",
-                  xAxis: this.timeArr[4] + "",
-                  label: {
-                    normal: {
-                      color: "#fff",
-                      show: true
-                      //   position: [10, 0]
-                    }
-                  }
-                },
-                {
-                  xAxis: this.timeArr[6] + ""
-                }
-              ]
-            ]
+           data:event_list,
           }
         },
         {
@@ -223,7 +212,12 @@ export default class Lunar extends PureComponent {
         <div className="lineMark-pie">
           <div className="warpper">
             <div className="dial" />
-            <div className="line" />
+            <div
+              className="line"
+              style={{
+                transform: `rotate(${this.state.trias_dial.rate * 90}deg)`
+              }}
+            />
             <div className="layer">
               <div className="layer-item">Trias</div>
               <div className="num">{this.state.trias_dial.value}</div>
@@ -231,7 +225,12 @@ export default class Lunar extends PureComponent {
           </div>
           <div className="warpper">
             <div className="dial" />
-            <div className="line" />
+            <div
+              className="line"
+              style={{
+                transform: `rotate(${this.state.ethereum_dial.rate * 90}deg)`
+              }}
+            />
             <div className="layer">
               <div className="layer-item">Ethereum</div>
               <div className="num">{this.state.ethereum_dial.value}</div>
@@ -239,7 +238,12 @@ export default class Lunar extends PureComponent {
           </div>
           <div className="warpper">
             <div className="dial" />
-            <div className="line" />
+            <div
+              className="line"
+              style={{
+                transform: `rotate(${this.state.hyperledger_dial.rate * 90}deg)`
+              }}
+            />
             <div className="layer">
               <div className="layer-item">Hyperledger</div>
               <div className="num">{this.state.hyperledger_dial.value}</div>
