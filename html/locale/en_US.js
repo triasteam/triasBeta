@@ -1,7 +1,16 @@
 const en_US = {
     /* Attribute naming(for reference only): class name + tag name */
     headerNav1: "Chain Status",
-    triasHomepage: "Trias Homepage" ,
+    triasHomepage: "Trias Homepage" ,    
+    subHeaderP1: "Current Event",
+    subHeaderP2: "Time Remain",
+    subHeaderP3: "Next Event",    
+    titleGeneralStatistics: "General Statistics",
+    titleSimulations: "Simulations",
+    titleHardwareSpecifications: "Hardware Specifications",
+    // titleTPSMonitoring: "TPS Monitoring",
+    // titleFaultAcceptanceRate: "Fault Acceptance Rate",
+    // titleFaultyNodes: "Faulty Nodes",
     paginationItemsCountP: 'Showing {from} to {to} of {count} items',
     paginationPageInput: "Enter",
     paginationJumpBtn: "GO",
