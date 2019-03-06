@@ -168,9 +168,8 @@ class TableList extends React.Component {
                         {
                             this.props.searchListApi == '/api/node_list/' &&
                             <tr>
-                                <FormattedMessage id="thNodeLabel" tagName="th" />
-                                {/* <FormattedMessage id="thLocation" tagName="th" /> */}
-                                <FormattedMessage id="thStatus" tagName="th" />
+                                <th><FormattedMessage id="termNode"/> IP</th>
+                                <FormattedMessage id="termStatus" tagName="th" />
                                 <FormattedMessage id="thBlockHeight" tagName="th" />
                                 <FormattedMessage id="thBlockHash" tagName="th" />
                                 <FormattedMessage id="thBlockUpdateTime" tagName="th" />

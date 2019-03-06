@@ -191,16 +191,6 @@ export default class Main extends React.Component {
                                             <FormattedMessage id="triasHomepage" />
                                         </a>
                                     </li>
-                                    {/* <li>
-                                        <a href="https://explorer.trias.one/" target="blank">
-                                            <FormattedMessage id="explorer" />
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <Link to="/stayTuned">
-                                            <FormattedMessage id="wallet" />
-                                        </Link>
-                                    </li> */}
                                     <li className='lang'>
                                         <ToggleList
                                             listID="langlist"
