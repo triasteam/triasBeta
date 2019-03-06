@@ -1,5 +1,5 @@
 import React from "react"
-import { NavLink, Switch, Redirect, Route, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 // import ES6Promise from 'es6-promise'
 // ES6Promise.polyfill() //关键代码,让ie识别promise对象!
 import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
@@ -159,7 +159,7 @@ class RightPart extends React.Component {
         return (
             <div className="right-part">
                 <div className="simulations">
-                    <p className="main-title">Simulations</p>
+                    <p className="main-title"><FormattedMessage id="titleSimulations"/></p>
                     <div className="sim-data">
                         <p className="clearfix">
                             <span className="attr">Simulation</span>
@@ -181,7 +181,7 @@ class RightPart extends React.Component {
                 </div>
 
                 <div className="activities">
-                    <p className="main-title">Activities</p>
+                    <p className="main-title"><FormattedMessage id="termActivities"/></p>
                     <div className="transparent-bg"></div>
                     <div className="node-list">
                         {/* <section className="item clearfix">
@@ -245,7 +245,7 @@ class RightPart extends React.Component {
                 </div>
 
                 <div className="specifications">
-                    <p className="main-title">Hardware Specifications</p>
+                    <p className="main-title"><FormattedMessage id="titleHardwareSpecifications" /></p>
                     <section>
                         <p className="name">CPU</p>
                         <p className="detail">{ this.state.CPU }</p>
@@ -272,7 +272,7 @@ class RightPart extends React.Component {
     }
 }
 
-/* Inject intl to Activities props */
+/* Inject intl to RightPart props */
 const propTypes = {
     intl: intlShape.isRequired,
 };

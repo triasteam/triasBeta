@@ -1,21 +1,8 @@
 import React from "react"
-import $ from "jquery";
+
+import { FormattedMessage } from 'react-intl' /* react-intl imports */
 /**
- * Custom toggle list component.
- * Usage:
- * <ToggleList
- * listID="langlist"
- * itemsToSelect={[{
-      ele: <span onClick={()=>this.changeLanguage('zh')}>中文</span>
-    }, {
-        ele: <span  onClick={()=>this.changeLanguage('en')}>English</span>
-    }]}
- * name={<i className="fas fa-globe-americas"></i>} />
- * 
- * Attributes:
- * - listID: id of the outer container
- * - itemsToSelect: a list of elements( ele: element shows in the drop-down list )
- * - name: shows in the toggle button
+ * Custom headline component.
  */
 export default class HeadLine extends React.Component {
     constructor(props) {
@@ -41,7 +28,7 @@ export default class HeadLine extends React.Component {
                             </div>
                             <div className="right-sub">
                                 <p className="sub-title">
-                                    Current Event
+                                    <FormattedMessage id="subHeaderP1" />
                                 </p>
                                 {
                                     this.props.eventList.length>0 && 
@@ -58,7 +45,7 @@ export default class HeadLine extends React.Component {
                             </div>
                             <div className="right-sub">
                                 <p className="sub-title">
-                                    Time Remain
+                                    <FormattedMessage id="subHeaderP2"/>
                                 </p>
                                 {
                                     this.props.eventList.length>0 && 
@@ -74,7 +61,7 @@ export default class HeadLine extends React.Component {
                             </div>
                             <div className="right-sub">
                                 <p className="sub-title">
-                                    Next Event
+                                    <FormattedMessage id="subHeaderP3" />
                                 </p>
                                 {
                                     this.props.eventList.length>0 && 

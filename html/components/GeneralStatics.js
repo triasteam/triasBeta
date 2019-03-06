@@ -1,7 +1,4 @@
 import React from "react"
-import { NavLink, Switch, Redirect, Route } from 'react-router-dom'
-// import ES6Promise from 'es6-promise'
-// ES6Promise.polyfill() //关键代码,让ie识别promise对象!
 import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
 import $ from 'jquery'
 import StaticsCard from "./common/StaticsCard";
@@ -105,7 +102,7 @@ class GeneralStatics extends React.Component {
     render() {
         return (
             <div className="general-statics">
-                <p className="main-title">General Statics</p>
+                <p className="main-title"><FormattedMessage id="titleGeneralStatistics"/></p>
                 <div className="card-group">
                     <StaticsCard cardInfo={this.state.nodes} src={require("../img/icon/general-statics/icon_gs_nodes@2x.png")} title="Nodes" />
                     <StaticsCard cardInfo={this.state.block_height} src={require("../img/icon/general-statics/icon_gs_blockHeight@2x.png")} title="Block Height" />
@@ -137,7 +134,7 @@ class GeneralStatics extends React.Component {
     }
 }
 
-/* Inject intl to Activities props */
+/* Inject intl to GeneralStatics props */
 const propTypes = {
     intl: intlShape.isRequired,
 };
