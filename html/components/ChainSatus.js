@@ -9,7 +9,7 @@ import {
 } from "react-intl"; /* react-intl imports */
 import GeneralStatics from "./GeneralStatics";
 import RightPart from "./RightPart";
-import LineMark from "./charts/LineMark";
+import LineMarkCollection from "./charts/LineMarkCollection";
 import NodesGraph from "./NodesGraph";
 import EventHappenSwiper from "./common/EventHappenSwiper"
 /* Component for node status page */
@@ -25,38 +25,6 @@ class ChainStatus extends React.Component {
       currentPage: 1, // current page number
       dangerIp: localStorage.getItem("dangerIp") || "",
       // lang: this.props.intl.locale,    // current locale language
-      Monitoring: {
-        tps_monitoring: {
-          trias:null,
-          ethereum:null,
-          hyperledger:null,
-        },
-        fault_accetpance_rate:{
-          trias:null,
-          ethereum:null,
-          hyperledger:null,
-        },
-        faulty_nodes_list: {
-          trias:null,
-          ethereum:null,
-          hyperledger:null,
-        }
-      },
-      tps_dial: {
-        trias:null,
-        ethereum:null,
-        hyperledger:null,
-      },
-      faulty_nodes_dial: {
-        trias:null,
-        ethereum:null,
-        hyperledger:null,
-      },
-      fault_accetpance_rate_dial: {
-        trias:null,
-        ethereum:null,
-        hyperledger:null,
-      }
     };
   }
 
@@ -80,12 +48,12 @@ class ChainStatus extends React.Component {
    */
   componentDidMount() {
     var self = this;
-    this.getMonitoringInterval = setInterval(function() {
-      self.getMonitoring();
-      self.getTpsDial();
-      self.getFaultyDial();
-      self.getAccetpanceDial();
-    }, 5000);
+    // this.getMonitoringInterval = setInterval(function() {
+    //   self.getMonitoring();
+    //   self.getTpsDial();
+    //   self.getFaultyDial();
+    //   self.getAccetpanceDial();
+    // }, 5000);
     setTimeout(() => {
       self.getMonitoring();
       self.getTpsDial();
@@ -165,62 +133,7 @@ class ChainStatus extends React.Component {
 
   
 
-  getMonitoring() {
-    var self = this;
-    $.ajax({
-      url: "/api/data_monitoring/",
-      type: "get",
-      dataType: "json",
-      data: {},
-      success: function(data) {
-        self.setState({
-          Monitoring: data.result
-        });
-      }
-    });
-  }
-  getTpsDial() {
-    var self = this;
-    $.ajax({
-      url: "/api/tps/",
-      type: "get",
-      dataType: "json",
-      data: {},
-      success: function(data) {
-        self.setState({
-          tps_dial: data.result
-        });
-      }
-    });
-  }
-  getFaultyDial() {
-    var self = this;
-    $.ajax({
-      url: "/api/faulty_nodes/",
-      type: "get",
-      dataType: "json",
-      data: {},
-      success: function(data) {
-        self.setState({
-          faulty_nodes_dial: data.result
-        });
-      }
-    });
-  }
-  getAccetpanceDial() {
-    var self = this;
-    $.ajax({
-      url: "/api/fault_accetpance_rate/",
-      type: "get",
-      dataType: "json",
-      data: {},
-      success: function(data) {
-        self.setState({
-          fault_accetpance_rate_dial: data.result
-        });
-      }
-    });
-  }
+ 
 
   /**
    * When the component will be unmounted.
@@ -245,21 +158,7 @@ class ChainStatus extends React.Component {
         <section className="bottom-group clearfix">
           <div className="left-part">
             <GeneralStatics />
-            <LineMark
-              name="TPS Monitoring"
-              data={this.state.Monitoring.tps_monitoring || null}
-              dial={this.state.tps_dial || null}
-            />
-            <LineMark
-              name="Fault Accetpance Rate"
-              data={this.state.Monitoring.fault_accetpance_rate || null}
-              dial={this.state.fault_accetpance_rate_dial || null}
-            />
-            <LineMark
-              name="Faulty Nodes"
-              data={this.state.Monitoring.faulty_nodes_list || null}
-              dial={this.state.faulty_nodes_dial || null}
-            />
+            <LineMarkCollection />
           </div>
           <RightPart />
         </section>
