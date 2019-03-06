@@ -1,14 +1,16 @@
 import React from "react";
 import LineMark from "./LineMark";
 import $ from "jquery";
+import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
 
 /**
  * Component for the line chart collection
  */
-export default class LineMarkCollection extends React.Component {
+class LineMarkCollection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      lang: this.props.intl.locale,    // current locale language
       Monitoring: {
         tps_monitoring: {
           trias: null,
@@ -45,6 +47,19 @@ export default class LineMarkCollection extends React.Component {
         hyperledger: null
       }
     };
+  }
+
+  /**
+   * Before a mounted component receives new props, reset some state.
+   * @param {Object} nextProps new props
+   */
+  componentWillReceiveProps(nextProps){
+      // if locale language will be changed, reset lang state
+      if(this.state.lang != nextProps.intl.locale){
+          this.setState({
+              lang: nextProps.intl.locale
+          })
+      }
   }
 
   /**
@@ -148,27 +163,21 @@ export default class LineMarkCollection extends React.Component {
     clearInterval(this.getMonitoringInterval);
   }
 
-  /**
-   * Before a mounted component receives new props, reset some state.
-   * @param {Object} nextProps new props
-   */
-  componentWillReceiveProps(nextProps) {}
-
   render() {
     return (
       <div>
         <LineMark
-          name="TPS Monitoring"
+          name={this.state.lang=="zh"?"TPS 监控":"TPS Monitoring"}
           data={this.state.Monitoring.tps_monitoring || null}
           dial={this.state.tps_dial || null}
         />
         <LineMark
-          name="Fault Accetpance Rate"
+          name={this.state.lang=="zh"?"容错率":"Fault Acceptance Rate"}
           data={this.state.Monitoring.fault_accetpance_rate || null}
           dial={this.state.fault_accetpance_rate_dial || null}
         />
         <LineMark
-          name="Faulty Nodes"
+          name={this.state.lang=="zh"?"错误节点":"Faulty Nodes"}
           data={this.state.Monitoring.faulty_nodes_list || null}
           dial={this.state.faulty_nodes_dial || null}
         />
@@ -176,3 +185,11 @@ export default class LineMarkCollection extends React.Component {
     );
   }
 }
+
+
+/* Inject intl to LineMarkCollection props */
+const propTypes = {
+  intl: intlShape.isRequired,
+};
+LineMarkCollection.propTypes = propTypes
+export default injectIntl(LineMarkCollection)
