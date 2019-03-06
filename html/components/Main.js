@@ -49,17 +49,17 @@ export default class Main extends React.Component {
         this.setState({
             lang: lang
         })
-        $.ajax({
-            url:"/api/language/language",
-            type: "POST",
-            dataType: "json",
-            data:{
-                language: lang === 'en'?1:0
-            },
-            success: function(data){
-                console.log(data)
-            }
-        })
+        // $.ajax({
+        //     url:"/api/language/language",
+        //     type: "POST",
+        //     dataType: "json",
+        //     data:{
+        //         language: lang === 'en'?1:0
+        //     },
+        //     success: function(data){
+        //         console.log(data)
+        //     }
+        // })
         let pathArr = window.location.href.split('/')
         switch(pathArr[pathArr.length-1]){
             case '':
