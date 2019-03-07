@@ -164,9 +164,16 @@ def general_static(request):
 def get_tps(request):
 
     try:
-        tps = 1  # 1 即 100%
+        qtime = int(time.time())
+        isBlock = Block.objects.filter(Q(time__lte=qtime) & Q(time__gt=(qtime - 60)))
+        data = 0
+        if isBlock.exists():
+            for tx in list(isBlock.values_list('tx_num', flat=True)):
+                data += tx
+        data /= 60
+
         result = {
-            "trias": {'rate': 0.3, 'value': 370},
+            "trias": {'rate': round(data/100, 2), 'value': int(data)},
             "ethereum": {'rate': 0, 'value': 0},
             "hyperledger": {'rate': 0, 'value': 0}
         }
@@ -234,10 +241,13 @@ def get_data_monitoring(request):
             # Get recent events
             event_list = []
             for item in a_x_time:
-                activity_query = Activity.objects.filter(time__gte=item).order_by('time')
+                activity_query = Activity.objects.filter(Q(time__gte=item) & Q(time__lt=(item + 60))).order_by('time')
                 activity = -1
                 if activity_query.exists():
-                    activity = activity_query[0].type
+                    for type in list(activity_query.values_list('type', flat=True)):
+                        if type == 1 or type == 4:
+                            activity = type
+                            break
                 event_list.append(activity)
 
             result['faulty_nodes_list']['event_list'] = event_list
@@ -256,10 +266,13 @@ def get_data_monitoring(request):
             # Get recent events
             event_list = []
             for item in b_x_time:
-                activity_query = Activity.objects.filter(time__gte=item).order_by('time')
+                activity_query = Activity.objects.filter(Q(time__gte=item) & Q(time__lt=(item + 60))).order_by('time')
                 activity = -1
                 if activity_query.exists():
-                    activity = activity_query[0].type
+                    for type in list(activity_query.values_list('type', flat=True)):
+                        if type == 1 or type == 4:
+                            activity = type
+                            break
                 event_list.append(activity)
 
             result['fault_accetpance_rate']['event_list'] = event_list
@@ -278,10 +291,13 @@ def get_data_monitoring(request):
             # Get recent events
             event_list = []
             for item in c_x_time:
-                activity_query = Activity.objects.filter(time__gte=item).order_by('time')
+                activity_query = Activity.objects.filter(Q(time__gte=item) & Q(time__lt=(item + 60))).order_by('time')
                 activity = -1
                 if activity_query.exists():
-                    activity = activity_query[0].type
+                    for type in list(activity_query.values_list('type', flat=True)):
+                        if type == 1 or type == 4:
+                            activity = type
+                            break
                 event_list.append(activity)
 
             result['tps_monitoring']['event_list'] = event_list
