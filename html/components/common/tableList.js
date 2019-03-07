@@ -2,7 +2,9 @@ import React from "react"
 import $ from "jquery";
 import CustomPagination from "./CustomPagination"
 import { injectIntl, intlShape, FormattedMessage } from 'react-intl' /* react-intl imports */
-
+import { DatePicker } from 'antd';
+import moment from 'moment';
+import "antd/dist/antd.css";
 class TableList extends React.Component {
 
     constructor(props) {
@@ -14,12 +16,71 @@ class TableList extends React.Component {
             pageCount: 0,　　　　　　　　　　　　　　　 //总页数
             hostlist: [],
             rowsPerPage: 10,
-            currentPage: 1
+            currentPage: 1,
+            startValue: null,
+            endValue: null,
+            endOpen: false,
+            testGroup:'All Test Groups',
+            toggleTestGroup:false,
+            testGroupId: 3,
         }
     }
+    handleToggleTestGroup(){
+        this.setState({
+            toggleTestGroup:!this.state.toggleTestGroup,
+        })
+    }
+    handleChangeTestGroup(e){
+        let groupId = $(e.target).index();
+        this.setState({
+            testGroupId:groupId,
+            toggleTestGroup:false,
+            testGroup:$(e.target).text()
+        })
+        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey,groupId)
+    }
+    disabledDate(current) {
+        // Can not select days before today and today
+        return current > moment().endOf('day');
+    }
+
+    disabledEndDate = (endValue) => {
+        const startValue = this.state.startValue;
+        if (!endValue || !startValue) {
+            return false;
+        }
+        return endValue.valueOf() < startValue.valueOf();
+    }
+
+    onChange = (field, value) => {
+        this.setState({
+            [field]: value,
+        });
+    }
+
+    onStartChange = (value) => {
+        this.onChange('startValue', value);
+    }
+
+    onEndChange = (value) => {
+        this.onChange('endValue', value);
+    }
+
+    handleStartOpenChange = (open) => {
+        if (!open) {
+            this.setState({ endOpen: true });
+        }
+        // console.log(this.state.startValue)
+    }
+
+    handleEndOpenChange = (open) => {
+        this.setState({ endOpen: open });
+        // console.log(new Date(this.state.endValue).getTime())
+    }
+
 
     componentDidMount() {
-        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey)
+        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey,this.state.testGroupId)
     }
 
     /**
@@ -29,13 +90,13 @@ class TableList extends React.Component {
         this.setState({
             nodeSearchKey: e.target.value
         })
-        this.getHostList(this.state.currentPage, this.state.rowsPerPage, e.target.value)
+        this.getHostList(this.state.currentPage, this.state.rowsPerPage, e.target.value,this.state.testGroupId)
     }
 
 
     handleSearchNode(e) {
         e.preventDefault();
-        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey)
+        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey,this.state.testGroupId)
     }
 
     /**
@@ -43,17 +104,27 @@ class TableList extends React.Component {
      * @param {int} currentPage 
      * @param {int} rowsPerPage 
      */
-    getHostList(currentPage, rowsPerPage, searchKey) {
-        var self = this
+    getHostList(currentPage, rowsPerPage, searchKey,testGroupId) {
+        let self = this
+        let data = self.state.startValue && self.state.endValue ? {
+            group:testGroupId,
+            curr_page: currentPage,
+            page_size: rowsPerPage,
+            search: searchKey,
+            start: new Date(self.state.startValue).getTime(),
+            end: new Date(self.state.endValue).getTime()
+        } : {
+                group:testGroupId,
+                curr_page: currentPage,
+                page_size: rowsPerPage,
+                search: searchKey,
+            };
+
         $.ajax({
             url: self.props.searchListApi,
             type: 'get',
             dataType: 'json',               //GET方式时,表单数据被转换成请求格式作为URL地址的参数进行传递
-            data: {
-                curr_page: currentPage,
-                page_size: rowsPerPage,
-                search: searchKey,
-            },
+            data: data,
             success: function (data) {
                 if (data.status == 'success') {
                     self.setState({
@@ -81,7 +152,7 @@ class TableList extends React.Component {
         this.setState({
             rowsPerPage: num
         })
-        this.getHostList(this.state.currentPage, num, this.state.nodeSearchKey)
+        this.getHostList(this.state.currentPage, num, this.state.nodeSearchKey,this.state.testGroupId)
         //console.log(num)
     }
 
@@ -93,7 +164,7 @@ class TableList extends React.Component {
         this.setState({
             currentPage: pagenum
         })
-        this.getHostList(pagenum, this.state.rowsPerPage, this.state.nodeSearchKey)
+        this.getHostList(pagenum, this.state.rowsPerPage, this.state.nodeSearchKey,this.state.testGroupId)
         //console.log(pagenum)
     }
 
@@ -126,27 +197,26 @@ class TableList extends React.Component {
         this.setState({
             currentPage: pagenum
         })
-        this.getHostList(pagenum, this.state.rowsPerPage, this.state.nodeSearchKey)
+        this.getHostList(pagenum, this.state.rowsPerPage, this.state.nodeSearchKey,this.state.testGroupId)
         //console.log('jump')
     }
 
-    getTimeFormat(inputTime){
-        var date = new Date(inputTime);  
-        var y = date.getFullYear();    
-        var m = date.getMonth() + 1;    
-        m = m < 10 ? ('0' + m) : m;    
-        var d = date.getDate();    
-        d = d < 10 ? ('0' + d) : d;    
-        var h = date.getHours();  
-        h = h < 10 ? ('0' + h) : h;  
-        var minute = date.getMinutes();  
-        var second = date.getSeconds();  
-        minute = minute < 10 ? ('0' + minute) : minute;    
-        second = second < 10 ? ('0' + second) : second;   
-        return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;    
+    getTimeFormat(inputTime) {
+        var date = new Date(inputTime);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? ('0' + m) : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        var h = date.getHours();
+        h = h < 10 ? ('0' + h) : h;
+        var minute = date.getMinutes();
+        var second = date.getSeconds();
+        minute = minute < 10 ? ('0' + minute) : minute;
+        second = second < 10 ? ('0' + second) : second;
+        return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
     }
     render() {
-
         return (
             <div className="table-list customTableWarp">
                 <form onSubmit={this.handleSearchNode.bind(this)} className="clearfix">
@@ -162,13 +232,58 @@ class TableList extends React.Component {
                         <i className="fa fa-search" aria-hidden="true"></i>
                     </button>
                 </form>
+
+                {
+                    this.props.searchListApi == '/api/activity_list/' &&
+                    <div className="datePicker clearfix">
+                        <div className="left-pick">
+                            <div className="select-group">
+                                <h5 onClick={this.handleToggleTestGroup.bind(this)}>{this.state.testGroup}</h5>
+                                {
+                                    this.state.toggleTestGroup && 
+                                    <div className="selevt-list" onClick={this.handleChangeTestGroup.bind(this)}>
+                                        <p>Trias</p>
+                                        <p>Eth</p>
+                                        <p>Super Books</p>
+                                        <p>All Test Groups</p>
+                                    </div>
+                                }
+                               
+                            </div>
+                        </div>
+                        <div className="right-pick">
+                            <span>from</span>
+                            <DatePicker
+                                disabledDate={this.disabledDate}
+                                showTime
+                                format="YYYY/MM/DD HH:mm:ss"
+                                value={this.state.startValue}
+                                placeholder="Start time"
+                                onChange={this.onStartChange}
+                                onOpenChange={this.handleStartOpenChange}
+                            />
+                            <span>to</span>
+                            <DatePicker
+                                disabledDate={this.disabledEndDate}
+                                showTime
+                                format="YYYY/MM/DD HH:mm:ss"
+                                value={this.state.endValue}
+                                placeholder="End time"
+                                onChange={this.onEndChange}
+                                open={this.state.endOpen}
+                                onOpenChange={this.handleEndOpenChange}
+                            />
+                        </div>
+
+                    </div>
+                }
                 {/*主机列表的表格*/}
                 <table className="customTable">
                     <thead>
                         {
                             this.props.searchListApi == '/api/node_list/' &&
                             <tr>
-                                <th><FormattedMessage id="termNode"/> IP</th>
+                                <th><FormattedMessage id="termNode" /> IP</th>
                                 <FormattedMessage id="termStatus" tagName="th" />
                                 <FormattedMessage id="thBlockHeight" tagName="th" />
                                 <FormattedMessage id="thBlockHash" tagName="th" />
@@ -217,7 +332,7 @@ class TableList extends React.Component {
                         }.bind(this))}
 
                         {
-                            (!this.state.hostlist.length || this.state.hostlist.length==0) && <tr className="" style={{ width: '100%', height: '70px', lineHeight: '70px', background: 'transparent', border: 'none', }}><td style={{ paddingLeft: '40px', width: '100%' }}>当前没有匹配的数据。</td></tr>
+                            (!this.state.hostlist.length || this.state.hostlist.length == 0) && <tr className="" style={{ width: '100%', height: '70px', lineHeight: '70px', background: 'transparent', border: 'none', }}><td style={{ paddingLeft: '40px', width: '100%' }}>当前没有匹配的数据。</td></tr>
                         }
                     </tbody>
                 </table>

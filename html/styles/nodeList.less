@@ -90,3 +90,72 @@
         }
     }
 }
+.datePicker{
+    .left-pick{
+        float: left;
+    }
+    .right-pick{
+        float: right;
+        >span{
+            font-size:15px;
+            font-weight:400;
+            color:rgba(161,166,173,1);
+            line-height:22px;
+            display: inline-block;
+            margin:0 8px;
+        }
+    }
+    
+    .ant-calendar-picker-icon{
+        background: url("../img/angle-down-solid.svg") no-repeat center;
+        svg{
+            display: none;
+        }
+    }
+    .ant-calendar-picker-input{
+        height:38px;
+        background:rgba(46,50,60,1);
+        border-radius:4px;
+        border:1px solid rgba(68,72,81,1);
+        color: #DAE1E9;
+    }
+}
+
+.select-group{
+    width:168px;
+    height:38px;
+    border-radius:4px;
+    border:1px solid rgba(68,72,81,1);
+    position: relative;
+    background: rgba(46,50,60,1) url("../img/angle-down-solid.svg") no-repeat 145px center;
+    background-size: 6%;
+    h5{
+        font-size:15px;
+        font-weight:400;
+        color:rgba(218,225,233,1);
+        line-height:38px;
+        height:38px;
+        padding-left:16px;
+        cursor: pointer;
+    }
+    .selevt-list{
+        position: absolute;
+        z-index: 9;
+        background:rgba(46,50,60,1);
+        border-radius:0 0 4px 4px;
+        width:100%;
+        border:1px solid rgba(68,72,81,1);
+        border-top:none;
+        p{
+            font-size:15px;
+            font-weight:400;
+            color:rgba(218,225,233,1);
+            line-height:38px;
+            height:38px;
+            padding-left:16px;
+            cursor: pointer;
+        }
+    }
+    
+}
+

@@ -14,7 +14,7 @@ from app_views.view_utils.logger import logger
 
 def get_activity_list(request):
 
-    group = request.GET.get('group', '')
+    group = int(request.GET.get('group', '3'))
     search = request.GET.get('search', '')
     start = request.GET.get('start', 0)
     end = request.GET.get('end', 4704624000)
@@ -24,7 +24,7 @@ def get_activity_list(request):
     try:
         activities = Activity.objects.filter(Q(time__gte=start) & Q(time__lte=end)).order_by('-time')
 
-        if group:
+        if group and (group != 3):
             activities = activities.filter(group=group)
 
         if search:
