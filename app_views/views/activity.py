@@ -24,7 +24,7 @@ def get_activity_list(request):
     try:
         activities = Activity.objects.filter(Q(time__gte=start) & Q(time__lte=end)).order_by('-time')
 
-        if group & (group != 3):
+        if group and (group != 3):
             activities = activities.filter(group=group)
 
         if search:
