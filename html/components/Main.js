@@ -29,6 +29,16 @@ export default class Main extends React.Component {
             pathName: '',
             eventList: [],
             currentEventIndex: -1,
+            currentInfo: {
+                selectedEvent: {  
+                    name: "",
+                    time: "",
+                    group: 0,
+                },
+                all_nodes_num: 0,  
+                fault_nodes_num: 0,  
+                current_index: -1, 
+            }
         }
         // options for internationalisation
         this.languageList = [{
