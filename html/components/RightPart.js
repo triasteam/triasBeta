@@ -22,7 +22,8 @@ class RightPart extends React.Component {
             RAM: "xxxxxxx",
             SSD: "xxxxxxx",
             time:"0",
-            activities:[]
+            activities:[],
+            currentInfo: {},
         }
     }
     componentWillMount() {
@@ -39,6 +40,10 @@ class RightPart extends React.Component {
         this.getActivities();
 
         this.activitiesInterval = setInterval(this.getActivities.bind(this),10000);
+        console.log('rrrrrr',this.props.currentEventIndex)
+        this.setState({
+            currentInfo: this.props.currentInfo
+        })
     }
 
     /**
@@ -153,6 +158,19 @@ class RightPart extends React.Component {
      * @param {Object} nextProps new props
      */
     componentWillReceiveProps(nextProps) {
+        console.log('rrrrr',this.props.currentInfo,nextProps.currentInfo)
+        if (JSON.stringify(nextProps.currentInfo) != JSON.stringify(this.props.currentInfo)) {
+            this.setState({
+                currentInfo: nextProps.currentInfo
+            })
+        }
+        console.log('nextProps.src',nextProps.src);
+        console.log('this.props.src',this.props.src);
+        if (JSON.stringify(nextProps.src) != JSON.stringify(this.state.imgSrc) && JSON.stringify(nextProps.src)) {
+            this.setState({
+                imgSrc:nextProps.src
+            })
+        }
     }
 
     render() {
