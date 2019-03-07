@@ -14,7 +14,7 @@ from app_views.view_utils.logger import logger
 
 def get_activity_list(request):
 
-    group = request.GET.get('group', 3)
+    group = int(request.GET.get('group', '3'))
     search = request.GET.get('search', '')
     start = request.GET.get('start', 0)
     end = request.GET.get('end', 4704624000)
