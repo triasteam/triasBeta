@@ -10,6 +10,7 @@ class GeneralStatics extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            lang: this.props.intl.locale,    // current locale language
             nodes: {
                 trias: 0,
                 hyperledger: 0,
@@ -43,6 +44,23 @@ class GeneralStatics extends React.Component {
 
         }
     }
+
+    /**
+     * Before a mounted component receives new props, reset some state.
+     * @param {Object} nextProps new props
+     */
+    componentWillReceiveProps(nextProps){
+        console.log('intl.locale')
+        console.log(nextProps.intl.locale)
+        console.log(this.state.lang)
+      // if locale language will be changed, reset lang state
+      if(this.state.lang != nextProps.intl.locale){
+          this.setState({
+              lang: nextProps.intl.locale
+          })
+      }
+    }
+
     componentWillMount() {
         this.getGeneralStatics();
     }
@@ -92,25 +110,18 @@ class GeneralStatics extends React.Component {
         })
     }
 
-    /**
-     * Before a mounted component receives new props, reset some state.
-     * @param {Object} nextProps new props
-     */
-    componentWillReceiveProps(nextProps) {
-    }
-
     render() {
         return (
             <div className="general-statics">
                 <p className="main-title"><FormattedMessage id="titleGeneralStatistics"/></p>
                 <div className="card-group">
-                    <StaticsCard cardInfo={this.state.nodes} src={require("../img/icon/general-statics/icon_gs_nodes@2x.png")} title="Nodes" />
-                    <StaticsCard cardInfo={this.state.block_height} src={require("../img/icon/general-statics/icon_gs_blockHeight@2x.png")} title="Block Height" />
+                    <StaticsCard cardInfo={this.state.nodes} src={require("../img/icon/general-statics/icon_gs_nodes@2x.png")} title={this.state.lang=="zh"?"节点":"Nodes"} />
+                    <StaticsCard cardInfo={this.state.block_height} src={require("../img/icon/general-statics/icon_gs_blockHeight@2x.png")} title={this.state.lang=="zh"?"区块高度":"Block Height"} />
                     {/* <StaticsCard cardInfo={this.state.accounts} src={require("../img/icon/general-statics/icon_gs_account@2x.png")} title="Accounts" /> */}
                     <div className="card-container null-card">
                         <section className="card-header clearfix">
                             <img src={require("../img/icon/general-statics/icon_gs_account@2x.png")} />
-                            <span>Accounts</span>
+                            <span>{this.state.lang=="zh"?"账户":"Accounts"}</span>
                         </section>
                         <section className="percent-bar">
                             <div></div>
@@ -122,12 +133,12 @@ class GeneralStatics extends React.Component {
                             <div></div>
                         </section>
                         <section className="parameters">
-                            Account statics will be avaliable in the next version.
+                            {this.state.lang=="zh"?"帐户统计数据将在下一版本中提供。":"Account statistics will be avaliable in the next version."}
                         </section>
                     </div>
-                    <StaticsCard cardInfo={this.state.peak_tx} src={require("../img/icon/general-statics/icon_gs_peakTx@2x.png")} title="Peak Tx" />
-                    <StaticsCard cardInfo={this.state.today_tx} src={require("../img/icon/general-statics/icon_gs_txToday@2x.png")} title="Tx Today" />
-                    <StaticsCard cardInfo={this.state.tx_num} src={require("../img/icon/general-statics/icon_gs_irrTx@2x.png")} title="Irreversible Tx" />
+                    <StaticsCard cardInfo={this.state.peak_tx} src={require("../img/icon/general-statics/icon_gs_peakTx@2x.png")} title={this.state.lang=="zh"?"峰值交易数":"Peak Tx"} />
+                    <StaticsCard cardInfo={this.state.today_tx} src={require("../img/icon/general-statics/icon_gs_txToday@2x.png")} title={this.state.lang=="zh"?"今日交易总数":"Tx Today"} />
+                    <StaticsCard cardInfo={this.state.tx_num} src={require("../img/icon/general-statics/icon_gs_irrTx@2x.png")} title={this.state.lang=="zh"?"不可逆的交易":"Irreversible Tx"} />
                 </div>
             </div>
         )
