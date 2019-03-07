@@ -14,6 +14,12 @@ const en_US = {
     paginationItemsCountP: 'Showing {from} to {to} of {count} items',
     paginationPageInput: "Enter",
     paginationJumpBtn: "GO",
+    btnViewAll: 'View All',
+    simuLable1: 'Simulation',
+    simuLable2: 'Run Time',
+    simuLable3: 'Test Group(s)',
+    simuLable4: 'Nodes affected',
+    simuLable5: 'Hardware/Software Failure',
     /* Terms repeatedly used: 'term...' */
     termActivities: "Activities",
     termNode: "Node",
@@ -27,8 +33,7 @@ const en_US = {
     thBlockUpdateTime: "Block Generated time",
     thTime: "Time",
     thTestGruop:'Test Gruop',
-    thEvent:'Event'
-
+    thEvent:'Event',
 }
 
 export default en_US;

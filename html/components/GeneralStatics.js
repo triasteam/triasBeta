@@ -50,9 +50,6 @@ class GeneralStatics extends React.Component {
      * @param {Object} nextProps new props
      */
     componentWillReceiveProps(nextProps){
-        console.log('intl.locale')
-        console.log(nextProps.intl.locale)
-        console.log(this.state.lang)
       // if locale language will be changed, reset lang state
       if(this.state.lang != nextProps.intl.locale){
           this.setState({

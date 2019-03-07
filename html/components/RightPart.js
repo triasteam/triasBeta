@@ -162,22 +162,22 @@ class RightPart extends React.Component {
                     <p className="main-title"><FormattedMessage id="titleSimulations"/></p>
                     <div className="sim-data">
                         <p className="clearfix">
-                            <span className="attr">Simulation</span>
+                            <span className="attr"><FormattedMessage id="simuLable1"/></span>
                             <span className="value">Haker Attack</span>
                         </p>
                         <p className="clearfix">
-                            <span className="attr">Run Time</span>
+                            <span className="attr"><FormattedMessage id="simuLable2"/></span>
                             <span className="value">00:48:04</span>
                         </p>
                         <p className="clearfix">
-                            <span className="attr">Test Group(s)</span>
+                            <span className="attr"><FormattedMessage id="simuLable3"/></span>
                             <span className="value">1</span>
                         </p>
                     </div>
                     <p className="index">639 (38%)</p>
-                    <p className="note percent-note">Nodes Affected</p>
+                    <p className="note percent-note"><FormattedMessage id="simuLable4"/></p>
                     <p className="index">437</p>
-                    <p className="note">Nodes Affected</p>
+                    <p className="note"><FormattedMessage id="simuLable5"/></p>
                 </div>
 
                 <div className="activities">
@@ -241,7 +241,7 @@ class RightPart extends React.Component {
                             </div>
                         </section> */}
                     </div>
-                    <Link to="/activities" className="view-all">View All</Link>
+                    <Link to="/activities" className="view-all"><FormattedMessage id="btnViewAll"/></Link>
                 </div>
 
                 <div className="specifications">

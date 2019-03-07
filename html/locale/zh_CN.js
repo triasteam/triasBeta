@@ -14,6 +14,12 @@ const zh_CN = {
     paginationItemsCountP: '显示 {from}-{to} 项条目，共 {count} 项条目。',
     paginationPageInput: "输入",
     paginationJumpBtn: "跳转",
+    btnViewAll: '查看所有',
+    simuLable1: '模拟',
+    simuLable2: '执行时间',
+    simuLable3: '测试组',
+    simuLable4: '受影响的节点',
+    simuLable5: '软硬件故障',
     /* 多次使用的名词，'term...' */
     termActivities: "活动通知",
     termNode: "节点",    
