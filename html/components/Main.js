@@ -29,7 +29,7 @@ export default class Main extends React.Component {
             lang: 'en',
             pathName: '',
             eventList: [],
-            currentEventIndex: 0,
+            currentEventIndex: -1,
         }
         // options for internationalisation
         this.languageList = [{
@@ -129,7 +129,10 @@ export default class Main extends React.Component {
                 }
             },
             error: function () {
-
+                self.setState({
+                    currentEventIndex: -1,
+                    eventList: []
+                })
             }
         })
     }
