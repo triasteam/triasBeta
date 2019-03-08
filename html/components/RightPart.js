@@ -189,6 +189,7 @@ class RightPart extends React.Component {
             intervalAdd(times)
         }
         var changeTime = (times) => {
+            console.log('ttt222',times)
             var day = 0,
                 hour = 0,
                 minute = 0,
@@ -223,12 +224,24 @@ class RightPart extends React.Component {
                                 {  this.state.currentInfo.selectedEvent.name }
                             </span>
                         </p>
-                        <p className="clearfix">
-                            <span className="attr"><FormattedMessage id="simuLable2"/></span>
-                            <span className="value time">
-                                {  this.state.currentInfo == -1 ? 0 : transformTimeAdd(this.state.currentInfo.selectedEvent.time)}
-                            </span>
-                        </p>
+                        {
+                                this.state.currentEventIndex !== -1 &&
+                                <p className="clearfix">
+                                    <span className="attr"><FormattedMessage id="simuLable2"/></span>
+                                    <span className="value time">
+                                        {  this.state.currentInfo == -1 ? 0 : this.state.currentInfo.selectedEvent.time  ? transformTimeAdd(this.state.currentInfo.selectedEvent.time) : '00:00:00'}
+                                    </span>
+                                </p>
+                        }
+                        {
+                                this.state.currentEventIndex == -1 &&
+                                <p className="clearfix">
+                                    <span className="attr"><FormattedMessage id="simuLable2"/></span>
+                                    <span className="value time">
+                                        00:00:00
+                                    </span>
+                                </p>
+                        }
                         <p className="clearfix">
                             <span className="attr"><FormattedMessage id="simuLable3"/></span>
                             <span className="value">
@@ -240,8 +253,8 @@ class RightPart extends React.Component {
                     { this.state.currentInfo.current_index == -1 ? 0 : 1}{text}
                      ({ this.state.currentInfo.all_nodes_num == 0 ? '0%' : (1/this.state.currentInfo.all_nodes_num).toFixed(2) * 100 + '%'})</p>
                     <p className="note percent-note"><FormattedMessage id="simuLable4"/></p>
-                    <p className="index">{ this.state.currentInfo.current_index == -1 || !this.state.currentInfo.fault_nodes_num ? 0 : this.currentInfo.fault_nodes_num}{text}
-                    ({ this.state.currentInfo.all_nodes_num == 0 || !this.state.currentInfo.fault_nodes_num  ? '0%' : (this.currentInfo.fault_nodes_num/this.state.currentInfo.all_nodes_num).toFixed(4) * 100 + '%'})</p>
+                    <p className="index">{ this.state.currentInfo.current_index == -1 || !this.state.currentInfo.fault_nodes_num ? 0 : this.state.currentInfo.fault_nodes_num}{text}
+                    ({ this.state.currentInfo.all_nodes_num == 0 || !this.state.currentInfo.fault_nodes_num  ? '0%' : (this.state.currentInfo.fault_nodes_num/this.state.currentInfo.all_nodes_num).toFixed(4) * 100 + '%'})</p>
                     <p className="note"><FormattedMessage id="simuLable5"/></p>
                 </div>
 
