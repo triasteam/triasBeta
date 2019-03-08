@@ -134,11 +134,7 @@ def general_static(request):
         # 交易总数
         tx_num = Transaction.objects.count()
         # 最新块高
-        last_block = Block.objects.last()
-        if not last_block:
-            block_height = 0
-        else:
-            block_height = last_block.number
+        block_height =max(list(Node.objects.values_list('block_heigth', flat=True)).append(0))
 
         # 今日交易总数
         today_start_time = int(time.mktime(datetime.datetime.fromtimestamp(time.time()).date().timetuple()))
@@ -179,6 +175,7 @@ def get_tps(request):
         if isBlock.exists():
             for tx in list(isBlock.values_list('tx_num', flat=True)):
                 data += tx
+        logger.info('one minute tx num: %s' % data)
         data /= 60
 
         result = {
