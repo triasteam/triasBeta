@@ -203,10 +203,7 @@ class RightPart extends React.Component {
             if (hour <= 9) hour = '0' + hour;
             if (minute <= 9) minute = '0' + minute;
             if (second <= 9) second = '0' + second;
-            // $('.swiper-slide').eq(index).find('p.eventInterval').html(hour + ":" + minute + ":" + second)
-            this.setState({
-                date: (hour + ":" + minute + ":" + second)
-            }) 
+            $('.time').html(hour + ":" + minute + ":" + second)
         }
         var intervalAdd = (times) => {
             this.timerChange = setInterval(() => {
@@ -228,8 +225,8 @@ class RightPart extends React.Component {
                         </p>
                         <p className="clearfix">
                             <span className="attr"><FormattedMessage id="simuLable2"/></span>
-                            <span className="value">
-                                {  this.state.currentInfo == -1 ? 0 : (transformTimeAdd(this.state.currentInfo.selectedEvent.time) || this.state.date)}
+                            <span className="value time">
+                                {  this.state.currentInfo == -1 ? 0 : transformTimeAdd(this.state.currentInfo.selectedEvent.time)}
                             </span>
                         </p>
                         <p className="clearfix">
