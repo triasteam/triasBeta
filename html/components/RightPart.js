@@ -22,7 +22,18 @@ class RightPart extends React.Component {
             RAM: "xxxxxxx",
             SSD: "xxxxxxx",
             time:"0",
-            activities:[]
+            activities:[],
+            currentInfo: {
+                selectedEvent: {  
+                    name: "",
+                    time: "",
+                    group: 0,
+                },
+                all_nodes_num: 0,  
+                fault_nodes_num: 0,  
+                current_index: -1, 
+            },
+            date: ''
         }
     }
     componentWillMount() {
@@ -39,6 +50,10 @@ class RightPart extends React.Component {
         this.getActivities();
 
         this.activitiesInterval = setInterval(this.getActivities.bind(this),10000);
+        console.log('rrrrrr',this.props.currentEventIndex)
+        this.setState({
+            currentInfo: this.props.currentInfo
+        })
     }
 
     /**
@@ -153,9 +168,51 @@ class RightPart extends React.Component {
      * @param {Object} nextProps new props
      */
     componentWillReceiveProps(nextProps) {
+        console.log('rrrrr',this.props.currentInfo,nextProps.currentInfo)
+        if (JSON.stringify(nextProps.currentInfo) != JSON.stringify(this.props.currentInfo)) {
+            this.setState({
+                currentInfo: nextProps.currentInfo
+            })
+        }
+        console.log('nextProps.src',nextProps.src);
+        console.log('this.props.src',this.props.src);
+        if (JSON.stringify(nextProps.src) != JSON.stringify(this.state.imgSrc) && JSON.stringify(nextProps.src)) {
+            this.setState({
+                imgSrc:nextProps.src
+            })
+        }
     }
 
     render() {
+        let text = ' ';
+        var transformTimeAdd = (times) => {
+            intervalAdd(times)
+        }
+        var changeTime = (times) => {
+            console.log('ttt222',times)
+            var day = 0,
+                hour = 0,
+                minute = 0,
+                second = 0;//时间默认值
+            if (times > 0) {
+                day = Math.floor(times / (60 * 60 * 24));
+                hour = Math.floor(times / (60 * 60)) - (day * 24);
+                minute = Math.floor(times / 60) - (day * 24 * 60) - (hour * 60);
+                second = Math.floor(times) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+            }
+            if (day <= 9) day = '0' + day;
+            if (hour <= 9) hour = '0' + hour;
+            if (minute <= 9) minute = '0' + minute;
+            if (second <= 9) second = '0' + second;
+            $('.time').html(hour + ":" + minute + ":" + second)
+        }
+        var intervalAdd = (times) => {
+            this.timerChange = setInterval(() => {
+                clearInterval(this.timerChange)
+                times++;
+                changeTime(times)
+            }, 1000)
+        }
         return (
             <div className="right-part">
                 <div className="simulations">
@@ -163,20 +220,41 @@ class RightPart extends React.Component {
                     <div className="sim-data">
                         <p className="clearfix">
                             <span className="attr"><FormattedMessage id="simuLable1"/></span>
-                            <span className="value">Haker Attack</span>
+                            <span className="value">
+                                {  this.state.currentInfo.selectedEvent.name }
+                            </span>
                         </p>
-                        <p className="clearfix">
-                            <span className="attr"><FormattedMessage id="simuLable2"/></span>
-                            <span className="value">00:48:04</span>
-                        </p>
+                        {
+                                this.state.currentEventIndex !== -1 &&
+                                <p className="clearfix">
+                                    <span className="attr"><FormattedMessage id="simuLable2"/></span>
+                                    <span className="value time">
+                                        {  this.state.currentInfo == -1 ? 0 : this.state.currentInfo.selectedEvent.time  ? transformTimeAdd(this.state.currentInfo.selectedEvent.time) : '00:00:00'}
+                                    </span>
+                                </p>
+                        }
+                        {
+                                this.state.currentEventIndex == -1 &&
+                                <p className="clearfix">
+                                    <span className="attr"><FormattedMessage id="simuLable2"/></span>
+                                    <span className="value time">
+                                        00:00:00
+                                    </span>
+                                </p>
+                        }
                         <p className="clearfix">
                             <span className="attr"><FormattedMessage id="simuLable3"/></span>
-                            <span className="value">1</span>
+                            <span className="value">
+                                { this.state.currentInfo.selectedEvent.group }
+                            </span>
                         </p>
                     </div>
-                    <p className="index">639 (38%)</p>
+                    <p className="index">
+                    { this.state.currentInfo.current_index == -1 ? 0 : 1}{text}
+                     ({ this.state.currentInfo.all_nodes_num == 0 ? '0%' : (1/this.state.currentInfo.all_nodes_num).toFixed(2) * 100 + '%'})</p>
                     <p className="note percent-note"><FormattedMessage id="simuLable4"/></p>
-                    <p className="index">437</p>
+                    <p className="index">{ this.state.currentInfo.current_index == -1 || !this.state.currentInfo.fault_nodes_num ? 0 : this.state.currentInfo.fault_nodes_num}{text}
+                    ({ this.state.currentInfo.all_nodes_num == 0 || !this.state.currentInfo.fault_nodes_num  ? '0%' : (this.state.currentInfo.fault_nodes_num/this.state.currentInfo.all_nodes_num).toFixed(4) * 100 + '%'})</p>
                     <p className="note"><FormattedMessage id="simuLable5"/></p>
                 </div>
 

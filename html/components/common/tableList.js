@@ -39,23 +39,12 @@ class TableList extends React.Component {
         })
         this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey,groupId)
     }
-    disabledDate(current) {
-        // Can not select days before today and today
-        return current > moment().endOf('day');
-    }
-
-    disabledEndDate = (endValue) => {
-        const startValue = this.state.startValue;
-        if (!endValue || !startValue) {
-            return false;
-        }
-        return endValue.valueOf() < startValue.valueOf();
-    }
 
     onChange = (field, value) => {
         this.setState({
             [field]: value,
         });
+        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey,this.state.testGroupId)
     }
 
     onStartChange = (value) => {
@@ -64,18 +53,19 @@ class TableList extends React.Component {
 
     onEndChange = (value) => {
         this.onChange('endValue', value);
+        
     }
 
     handleStartOpenChange = (open) => {
-        if (!open) {
-            this.setState({ endOpen: true });
-        }
-        // console.log(this.state.startValue)
+        // if (!open) {
+        //     this.setState({ endOpen: true });
+        // }
+        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey,this.state.testGroupId)
     }
 
     handleEndOpenChange = (open) => {
         this.setState({ endOpen: open });
-        // console.log(new Date(this.state.endValue).getTime())
+        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey,this.state.testGroupId)
     }
 
 
@@ -137,8 +127,6 @@ class TableList extends React.Component {
                         hostlist: data.result.nodes_list || data.result.activities_list
                     })
                 }
-
-
 
             }
         })
@@ -254,9 +242,8 @@ class TableList extends React.Component {
                         <div className="right-pick">
                             <span>from</span>
                             <DatePicker
-                                disabledDate={this.disabledDate}
                                 showTime
-                                format="YYYY/MM/DD HH:mm:ss"
+                                format="YYYY/MM/DD"
                                 value={this.state.startValue}
                                 placeholder="Start time"
                                 onChange={this.onStartChange}
@@ -264,9 +251,8 @@ class TableList extends React.Component {
                             />
                             <span>to</span>
                             <DatePicker
-                                disabledDate={this.disabledEndDate}
                                 showTime
-                                format="YYYY/MM/DD HH:mm:ss"
+                                format="YYYY/MM/DD"
                                 value={this.state.endValue}
                                 placeholder="End time"
                                 onChange={this.onEndChange}
@@ -332,7 +318,7 @@ class TableList extends React.Component {
                         }.bind(this))}
 
                         {
-                            (!this.state.hostlist.length || this.state.hostlist.length == 0) && <tr className="" style={{ width: '100%', height: '70px', lineHeight: '70px', background: 'transparent', border: 'none', }}><td style={{ paddingLeft: '40px', width: '100%' }}>当前没有匹配的数据。</td></tr>
+                            (!this.state.hostlist || this.state.hostlist.length == 0) && <tr className="" style={{ width: '100%', height: '70px', lineHeight: '70px', background: 'transparent', border: 'none', }}><td style={{ paddingLeft: '40px', width: '100%' }}>当前没有匹配的数据。</td></tr>
                         }
                     </tbody>
                 </table>
@@ -352,11 +338,11 @@ class TableList extends React.Component {
                     onChangePageInput={(e) => this.onChangeInputPage(e)}
                     onPageInputKeyDown={(e) => this.jumpPageKeyDown(e)}
                     onClickJumpButton={() => this.handleJumpPage()}
-                    rowsPerPageRange={[{ name: this.props.intl.locale == 'zh' ? '10 项/页' : '20 / page', value: 20 },
+                    rowsPerPageRange={[{ name: this.props.intl.locale == 'zh' ? '10 项/页' : '10 / page', value: 10 },
+                    { name: this.props.intl.locale == 'zh' ? '20 项/页' : '20 / page', value: 20 },
+                    { name: this.props.intl.locale == 'zh' ? '50 项/页' : '50 / page', value: 50 },
                     { name: this.props.intl.locale == 'zh' ? '100 项/页' : '100 / page', value: 100 },
-                    { name: this.props.intl.locale == 'zh' ? '150 项/页' : '150 / page', value: 150 },
-                    { name: this.props.intl.locale == 'zh' ? '200 项/页' : '200 / page', value: 200 },
-                    { name: this.props.intl.locale == 'zh' ? '250 项/页' : '250 / page', value: 250 }]}
+                    { name: this.props.intl.locale == 'zh' ? '200 项/页' : '200 / page', value: 200 }]}
                 />
             </div>
         )

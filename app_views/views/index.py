@@ -9,6 +9,7 @@ from app_views.models import Block, Node, Transaction, Activity, Hardware
 from app_views.view_utils.block_util import stamp2datetime
 from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration
 from app_views.view_utils.logger import logger
+from app_views.view_utils.block_util import url_data
 from app_views.view_utils.redis_util import get_monitoring
 
 jc = JsonConfiguration()
@@ -72,27 +73,35 @@ def cal(start, end):
 
 
 def get_visualization(request):
-    result =  {
-        "trias": {
-            "links": [ {"source": 0, "target": 2}, {"source": 2, "target": 1},
-                       {"source": 0, "target": 4}, {"source": 4, "target": 1},
-                       {"source": 1, "target": 0}, {"source": 0, "target": 3}],
 
-            "nodes": [ {"node_ip": "192.168.1.178", "status": "0"}, {"node_ip": "192.168.1.206", "status": "1"},
-                       {"node_ip": "192.168.1.207", "status": "0"}, {"node_ip": "192.168.1.208", "status": "1"},
-                       {"node_ip": "192.168.1.209", "status": "0"}]   # 0 正常    1 异常
-            },
-       "hyperledger": {
-           "links": [],
-            "nodes": []
-            },
-      "ethereum": {
-            "links": [],
-            "nodes": []
-            }
+    result = {
+        "trias": {"links": [], "nodes": []},
+        "hyperledger": {"links": [], "nodes": []},
+        "ethereum": {"links": [], "nodes": []}
     }
+    try:
+        response = url_data("http://192.168.1.209:8987/trias/getranking")
+        if response:
+            source_list = list(response.keys())
+            source_list.remove('timestamp')
+            source_list.remove('action')
+            source_list.remove('ranking')
+            links = []
+            all_nodes = list(Node.objects.order_by('-id').values_list('node_ip', flat=True))
+            nodes = list(Node.objects.order_by('-id').values('node_ip', 'status'))
+            for source_ip in source_list:
+                target_obj = response[source_ip]
+                target_ip_list = list(target_obj.keys())
+                for target_ip in target_ip_list:
+                    links.append({"source": all_nodes.index(source_ip), "target": all_nodes.index(target_ip)})
+            result['trias']['links'] = links
+            result['trias']['nodes'] = nodes
+        status = 'success'
+    except Exception as e:
+        logger.error(e)
+        status = 'failure'
 
-    return JsonResponse({'status': 'success', 'result': result})
+    return JsonResponse({'status': status, 'result': result})
 
 
 def get_instant_message(request):
@@ -125,11 +134,7 @@ def general_static(request):
         # 交易总数
         tx_num = Transaction.objects.count()
         # 最新块高
-        last_block = Block.objects.last()
-        if not last_block:
-            block_height = 0
-        else:
-            block_height = last_block.number
+        block_height =max(list(Node.objects.values_list('block_heigth', flat=True)).append(0))
 
         # 今日交易总数
         today_start_time = int(time.mktime(datetime.datetime.fromtimestamp(time.time()).date().timetuple()))
@@ -170,6 +175,7 @@ def get_tps(request):
         if isBlock.exists():
             for tx in list(isBlock.values_list('tx_num', flat=True)):
                 data += tx
+        logger.info('one minute tx num: %s' % data)
         data /= 60
 
         result = {

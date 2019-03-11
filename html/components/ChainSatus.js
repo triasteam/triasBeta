@@ -10,19 +10,25 @@ export default class ChainStatus extends React.Component {
     super(props);
   }
 
+  componentDidMount(){
+
+  }
+  componentWillReceiveProps(nextProps) {
+    console.log('rrrrrr111',this.props.currentInfo, nextProps.currentInfo)
+  }
   render() {
     return (
-      <div className="status-page">
-        <EventHappenSwiper/>
-        <NodesGraph />
-        <section className="bottom-group clearfix">
-          <div className="left-part">
-            <GeneralStatics />
-            <LineMarkCollection />
-          </div>
-          <RightPart />
-        </section>
-      </div>
+        <div className="status-page">
+          <EventHappenSwiper/>
+          <NodesGraph />
+          <section className="bottom-group clearfix">
+            <div className="left-part">
+              <GeneralStatics />
+              <LineMarkCollection />
+            </div>
+            <RightPart currentInfo = {this.props.currentInfo}/>
+          </section>
+        </div>
     );
   }
 }

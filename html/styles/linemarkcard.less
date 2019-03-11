@@ -3,7 +3,7 @@
   height: 584px;
   background: rgba(41, 42, 50, 1);
   border-radius: 4px;
-  margin:20px 0;
+  margin: 20px 0;
 }
 .lineMark-title {
   padding: 32px;
@@ -75,14 +75,8 @@
     bottom: 20px;
     transform-origin: right bottom;
     transform: rotate(45deg);
-    left: 30px;;
-    transition:1s;
-  }
-
-  .layer {
-    position: absolute;
-    bottom: 20px;
-    left: 47%;
+    left: 30px;
+    transition: 1s;
   }
 
   .layer-item {
@@ -91,6 +85,9 @@
     color: rgba(161, 166, 173, 1);
     line-height: 21px;
     margin-bottom: 6px;
+    position: absolute;
+    bottom: 50px;
+    left: 47%;
   }
 
   .num {
@@ -98,14 +95,16 @@
     font-weight: 600;
     color: rgba(255, 255, 255, 1);
     line-height: 30px;
-    position: relative;
+    position: absolute;
+    bottom: 20px;
+    left: 47%;
   }
 
   .num::after {
     content: "TPS";
     position: absolute;
     top: -2px;
-    right: -32px;
+    right: -40px;
     font-size: 15px;
     font-weight: 400;
     color: rgba(161, 166, 173, 1);

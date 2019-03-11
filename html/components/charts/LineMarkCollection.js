@@ -1,7 +1,10 @@
 import React from "react";
 import LineMark from "./LineMark";
 import $ from "jquery";
-import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
+import {
+  injectIntl,
+  intlShape,
+} from "react-intl"; /* react-intl imports */
 
 /**
  * Component for the line chart collection
@@ -10,7 +13,7 @@ class LineMarkCollection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      lang: this.props.intl.locale,    // current locale language
+      lang: this.props.intl.locale, // current locale language
       Monitoring: {
         tps_monitoring: {
           trias: null,
@@ -53,13 +56,13 @@ class LineMarkCollection extends React.Component {
    * Before a mounted component receives new props, reset some state.
    * @param {Object} nextProps new props
    */
-  componentWillReceiveProps(nextProps){
-      // if locale language will be changed, reset lang state
-      if(this.state.lang != nextProps.intl.locale){
-          this.setState({
-              lang: nextProps.intl.locale
-          })
-      }
+  componentWillReceiveProps(nextProps) {
+    // if locale language will be changed, reset lang state
+    if (this.state.lang != nextProps.intl.locale) {
+      this.setState({
+        lang: nextProps.intl.locale
+      });
+    }
   }
 
   /**
@@ -71,11 +74,13 @@ class LineMarkCollection extends React.Component {
       url: "/api/data_monitoring/",
       type: "get",
       dataType: "json",
-      data: {},
       success: function(data) {
         self.setState({
           Monitoring: data.result
         });
+      },
+      error(err) {
+        console.log(err);
       }
     });
   }
@@ -89,11 +94,13 @@ class LineMarkCollection extends React.Component {
       url: "/api/tps/",
       type: "get",
       dataType: "json",
-      data: {},
       success: function(data) {
         self.setState({
           tps_dial: data.result
         });
+      },
+      error(err) {
+        console.log(err);
       }
     });
   }
@@ -107,11 +114,13 @@ class LineMarkCollection extends React.Component {
       url: "/api/faulty_nodes/",
       type: "get",
       dataType: "json",
-      data: {},
       success: function(data) {
         self.setState({
           faulty_nodes_dial: data.result
         });
+      },
+      error(err) {
+        console.log(err);
       }
     });
   }
@@ -130,6 +139,9 @@ class LineMarkCollection extends React.Component {
         self.setState({
           fault_accetpance_rate_dial: data.result
         });
+      },
+      error(err) {
+        console.log(err);
       }
     });
   }
@@ -167,29 +179,28 @@ class LineMarkCollection extends React.Component {
     return (
       <div>
         <LineMark
-          name={this.state.lang=="zh"?"TPS 监控":"TPS Monitoring"}
-          data={this.state.Monitoring.tps_monitoring || null}
-          dial={this.state.tps_dial || null}
+          name={this.state.lang == "zh" ? "TPS 监控" : "TPS Monitoring"}
+          data={this.state.Monitoring.tps_monitoring}
+          dial={this.state.tps_dial}
         />
         <LineMark
-          name={this.state.lang=="zh"?"容错率":"Fault Acceptance Rate"}
-          data={this.state.Monitoring.fault_accetpance_rate || null}
-          dial={this.state.fault_accetpance_rate_dial || null}
+          name={this.state.lang == "zh" ? "容错率" : "Fault Acceptance Rate"}
+          data={this.state.Monitoring.fault_accetpance_rate}
+          dial={this.state.fault_accetpance_rate_dial}
         />
         <LineMark
-          name={this.state.lang=="zh"?"错误节点":"Faulty Nodes"}
-          data={this.state.Monitoring.faulty_nodes_list || null}
-          dial={this.state.faulty_nodes_dial || null}
+          name={this.state.lang == "zh" ? "错误节点" : "Faulty Nodes"}
+          data={this.state.Monitoring.faulty_nodes_list}
+          dial={this.state.faulty_nodes_dial}
         />
       </div>
     );
   }
 }
 
-
 /* Inject intl to LineMarkCollection props */
 const propTypes = {
-  intl: intlShape.isRequired,
+  intl: intlShape.isRequired
 };
-LineMarkCollection.propTypes = propTypes
-export default injectIntl(LineMarkCollection)
+LineMarkCollection.propTypes = propTypes;
+export default injectIntl(LineMarkCollection);

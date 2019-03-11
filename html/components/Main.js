@@ -19,7 +19,6 @@ import Activities from "./Activities";
 import NodeList from "./NodeList";
 
 
-import StaticsCard from "./common/StaticsCard";
 import HeadLine from "./common/HeadLine";
 
 export default class Main extends React.Component {
@@ -30,6 +29,16 @@ export default class Main extends React.Component {
             pathName: '',
             eventList: [],
             currentEventIndex: -1,
+            currentInfo: {
+                selectedEvent: {  
+                    name: "",
+                    time: "",
+                    group: 0,
+                },
+                all_nodes_num: 0,  
+                fault_nodes_num: 0,  
+                current_index: -1, 
+            }
         }
         // options for internationalisation
         this.languageList = [{
@@ -115,16 +124,55 @@ export default class Main extends React.Component {
             data: {
             },
             success: function (data) {
-                console.log(data)
+                console.log('this is',data)
                 if (data.status == 'success') {
                     self.setState({
                         currentEventIndex: data.result.current_index,
                         eventList: data.result.event_list
                     })
+                    if(data.result.current_index == -1){
+                        self.setState({
+                            currentInfo: {
+                                selectedEvent: {  
+                                    name: "",
+                                    time: "",
+                                    group: 0,
+                                },
+                                all_nodes_num: 0,  
+                                fault_nodes_num: 0,  
+                                current_index: -1, 
+                            }
+                
+                        })
+                    } else {
+                        let k = data.result.current_index;
+                        self.setState({
+                            currentInfo: {
+                                selectedEvent: {  
+                                    name: data.result.event_list[k].name,
+                                    time: data.result.event_list[k].interval,
+                                    group: 1,
+                                },
+                                all_nodes_num: data.result.all_nodes_num,  
+                                fault_nodes_num: data.result.fault_nodes_num,  
+                                current_index: data.result.current_index, 
+                            }
+                        })
+                    }
                 } else {
                     self.setState({
                         currentEventIndex: -1,
-                        eventList: []
+                        eventList: [],
+                        currentInfo: {
+                            selectedEvent: {  
+                                name: "",
+                                time: "",
+                                group: 0,
+                            },
+                            all_nodes_num: 0,  
+                            fault_nodes_num: 0,  
+                            current_index: -1, 
+                        }
                     })
                 }
             },
@@ -207,7 +255,7 @@ export default class Main extends React.Component {
             currentEventIndex = {this.state.currentEventIndex}/>
                         <section className="main">
                             <Switch>
-                                <Route exact path="/" component={ChainSatus} />
+                                <Route exact path="/"  render={props => <ChainSatus currentInfo = {this.state.currentInfo} {...props} />}  />
                                 <Route exact path="/activities" component={Activities} />
                                 <Route exact path="/nodes" component={NodeList} />
                                 <Redirect to="/" />{/* when no routes above matched, redirect to ChainStatus page */}

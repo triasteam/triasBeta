@@ -1,18 +1,31 @@
 import React, { PureComponent } from "react";
 import ReactEcharts from "echarts-for-react";
-
-export default class Lunar extends PureComponent {
+import { injectIntl, intlShape } from "react-intl"; /* react-intl imports */
+class LineMark extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      trias: [],                    //The line chart trias data
-      ethereum: [],                 //The line chart ethereum data
-      hyperledger: [],              //The line chart hyperledger data
-      time: [],                     //The line chart timeline
-      trias_dial: "",               //Trias dial data
-      ethereum_dial: "",            //Ethereum dial data
-      hyperledger_dial: "",         //Hyperledger dial data
-      event_list: []                //Histogram event data
+      lang: this.props.intl.locale, // current locale language
+      trias: [], //The line chart trias data
+      ethereum: [], //The line chart ethereum data
+      hyperledger: [], //The line chart hyperledger data
+      time: [], //The line chart timeline
+      //Trias dial data
+      trias_dial: {
+        rate: "",
+        value: ""
+      },
+      //Ethereum dial data
+      ethereum_dial: {
+        rate: "",
+        value: ""
+      },
+      //Hyperledger dial data
+      hyperledger_dial: {
+        rate: "",
+        value: ""
+      },
+      event_list: [] //Histogram event data
     };
     this.timeArr = [];
   }
@@ -40,19 +53,28 @@ export default class Lunar extends PureComponent {
     ) {
       return false;
     }
-    let getMonitoringTime = nextProps.data.trias.time;
+    let getMonitoringTime = nextProps.data.trias.time || [];
     for (var i = 0; i < getMonitoringTime.length; i++) {
       self.timeArr.push(self.formatDate(new Date(getMonitoringTime[i] * 1000)));
     }
-    setTimeout(function() {
+    setTimeout(() => {
       self.setState({
         time: self.timeArr || [],
         trias: nextProps.data.trias.value || [],
         ethereum: nextProps.data.ethereum.value || [],
         hyperledger: nextProps.data.hyperledger.value || [],
-        trias_dial: nextProps.dial.trias || null,
-        ethereum_dial: nextProps.dial.ethereum || null,
-        hyperledger_dial: nextProps.dial.hyperledger || null,
+        trias_dial: nextProps.dial.trias || {
+          rate: "",
+          value: ""
+        },
+        ethereum_dial: nextProps.dial.ethereum || {
+          rate: "",
+          value: ""
+        },
+        hyperledger_dial: nextProps.dial.hyperledger || {
+          rate: "",
+          value: ""
+        },
         event_list: nextProps.data.event_list || []
       });
     }, 0);
@@ -71,16 +93,16 @@ export default class Lunar extends PureComponent {
       let des = "";
       switch (this.state.event_list[i]) {
         case 1:
-          des = "Power Outage";
+          des = this.state.lang == "zh" ? "停电" : "Power Outage";
           break;
         case 4:
-          des = "攻击";
+          des = this.state.lang == "zh" ? "攻击" : "Attack";
           break;
         case 5:
-          des = "节点更新";
+          des = this.state.lang == "zh" ? "节点更新" : "Node Updates";
           break;
         case -1:
-          des = "没有事件";
+          des = this.state.lang == "zh" ? "没有事件" : "No Data";
           break;
       }
       event_list.push([
@@ -211,7 +233,7 @@ export default class Lunar extends PureComponent {
     return (
       <div className="lineMark-card">
         <div className="lineMark-title">
-          <div className="title-des">{this.props.name}</div>
+          <div className="title-des">{this.props.name || ""}</div>
           <ul>
             <li className="active">10 Min</li>
           </ul>
@@ -228,12 +250,20 @@ export default class Lunar extends PureComponent {
             <div
               className="line"
               style={{
-                transform: `rotate(${this.state.trias_dial.rate * 90}deg)`
+                transform: `rotate(${
+                  this.state.trias_dial.rate
+                    ? this.state.trias_dial.rate * 90
+                    : "0"
+                }deg)`
               }}
             />
             <div className="layer">
               <div className="layer-item">Trias</div>
-              <div className="num">{this.state.trias_dial.value}</div>
+              <div className="num">
+                {this.state.trias_dial.value + ""
+                  ? this.state.trias_dial.value
+                  : "N/A"}
+              </div>
             </div>
           </div>
           <div className="warpper">
@@ -241,12 +271,21 @@ export default class Lunar extends PureComponent {
             <div
               className="line"
               style={{
-                transform: `rotate(${this.state.ethereum_dial.rate * 90}deg)`
+                transform: `rotate(${
+                  this.state.ethereum_dial.rate
+                    ? this.state.ethereum_dial.rate * 90
+                    : "0"
+                }deg)`
               }}
             />
             <div className="layer">
+              {" "}
               <div className="layer-item">Ethereum</div>
-              <div className="num">{this.state.ethereum_dial.value}</div>
+              <div className="num">
+                {this.state.ethereum_dial.value + ""
+                  ? this.state.ethereum_dial.value
+                  : "N/A"}
+              </div>
             </div>
           </div>
           <div className="warpper">
@@ -254,12 +293,21 @@ export default class Lunar extends PureComponent {
             <div
               className="line"
               style={{
-                transform: `rotate(${this.state.hyperledger_dial.rate * 90}deg)`
+                transform: `rotate(${
+                  this.state.hyperledger_dial.rate
+                    ? this.state.hyperledger_dial.rate * 90
+                    : "0"
+                }deg)`
               }}
             />
             <div className="layer">
+              {" "}
               <div className="layer-item">Hyperledger</div>
-              <div className="num">{this.state.hyperledger_dial.value}</div>
+              <div className="num">
+                {this.state.hyperledger_dial.value + ""
+                  ? this.state.hyperledger_dial.value
+                  : "N/A"}
+              </div>
             </div>
           </div>
         </div>
@@ -267,3 +315,10 @@ export default class Lunar extends PureComponent {
     );
   }
 }
+
+/* Inject intl to LineMark props */
+const propTypes = {
+  intl: intlShape.isRequired
+};
+LineMark.propTypes = propTypes;
+export default injectIntl(LineMark);
