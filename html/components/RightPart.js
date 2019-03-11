@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
 import $ from 'jquery'
 import HomeActivities from './HomeActivities'
+import Timer from './common/Timer'
 
 import TimeAgo from 'javascript-time-ago'
 // Load locale-specific relative date/time formatting rules.
@@ -96,34 +97,7 @@ class RightPart extends React.Component {
 
     render() {
         let text = ' ';
-        var transformTimeAdd = (times) => {
-            intervalAdd(times)
-        }
-        var changeTime = (times) => {
-            // console.log('ttt222',times)
-            var day = 0,
-                hour = 0,
-                minute = 0,
-                second = 0;//时间默认值
-            if (times > 0) {
-                day = Math.floor(times / (60 * 60 * 24));
-                hour = Math.floor(times / (60 * 60)) - (day * 24);
-                minute = Math.floor(times / 60) - (day * 24 * 60) - (hour * 60);
-                second = Math.floor(times) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
-            }
-            if (day <= 9) day = '0' + day;
-            if (hour <= 9) hour = '0' + hour;
-            if (minute <= 9) minute = '0' + minute;
-            if (second <= 9) second = '0' + second;
-            $('.time').html(hour + ":" + minute + ":" + second)
-        }
-        var intervalAdd = (times) => {
-            this.timerChange = setInterval(() => {
-                clearInterval(this.timerChange)
-                times++;
-                changeTime(times)
-            }, 1000)
-        }
+       
         return (
             <div className="right-part">
                 <div className="simulations">
@@ -140,7 +114,7 @@ class RightPart extends React.Component {
                                 <p className="clearfix">
                                     <span className="attr"><FormattedMessage id="simuLable2"/></span>
                                     <span className="value time">
-                                        {  this.state.currentInfo == -1 ? 0 : this.state.currentInfo.selectedEvent.time  ? transformTimeAdd(this.state.currentInfo.selectedEvent.time) : '00:00:00'}
+                                        {  this.state.currentInfo == -1 ? 0 : this.state.currentInfo.selectedEvent.time  ? <Timer interval={this.state.currentInfo.selectedEvent.time} TimeChange={'add'} /> : '00:00:00'}
                                     </span>
                                 </p>
                         }
