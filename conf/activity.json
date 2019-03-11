@@ -3,63 +3,65 @@
     {
       "name": "Hacker Attack 0",
       "start": "12:16:50",
-      "ip": "",
+      "ip": "192.168.1.178",
       "type": 4
     }, {
       "name": "Power AgeOut 1",
-      "start": "12:17:00",
-      "ip": "",
+      "start": "12:20:00",
+      "ip": "192.168.1.178",
       "type": 1
     }, {
       "name": "Power AgeOut 2",
       "start": "13:20:00",
-      "ip": "",
+      "ip": "192.168.1.178",
       "type": 1
     }, {
       "name": "Power AgeOut 3",
       "start": "14:30:00",
-      "ip": "",
+      "ip": "192.168.1.178",
       "type": 1
     }, {
       "name": "Power AgeOut 4",
       "start": "14:40:00",
-      "ip": "",
+      "ip": "192.168.1.178",
       "type": 1
     }, {
       "name": "Power AgeOut 5",
       "start": "15:09:00",
-      "ip": "",
+      "ip": "192.168.1.178",
       "type": 1
     }, {
       "name": "Hacker Attack 6",
       "start": "15:15:00",
-      "ip": "",
+      "ip": "192.168.1.178",
       "type": 4
     }, {
       "name": "Power AgeOut 7",
       "start": "15:20:00",
-      "ip": "",
+      "ip": "192.168.1.178",
       "type": 1
     }, {
       "name": "Power AgeOut 8",
       "start": "15:25:00",
-      "ip": "",
+      "ip": "192.168.1.178",
       "type": 1
     }, {
       "name": "Power AgeOut 9",
-      "start": "15:30:00",
-      "ip": "",
+      "start": "17:55:00",
+      "ip": "192.168.1.178",
       "type": 1
     }, {
       "name": "Power AgeOut 10",
-      "start": "18:40:00",
-      "ip": "",
+      "start": "18:49:00",
+      "ip": "192.168.1.178",
       "type": 1
     }, {
       "name": "Power AgeOut 11",
-      "start": "18:50:00",
-      "ip": "",
+      "start": "19:13:00",
+      "ip": "192.168.1.178",
       "type": 1
     }
-  ]
+  ],
+  "activity_port": 8880,
+  "restart_interval": 60
 }
