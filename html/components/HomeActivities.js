@@ -48,7 +48,7 @@ class HomeActivities extends React.Component {
             type:"GET",
             dataType:"json",
             success: function(data){
-                console.log("kiki",data)
+                // console.log("kiki",data)
                 if(data.status == "success") {
                     let time = data.result.node_time * 1000;
                     let overview = {
@@ -77,7 +77,7 @@ class HomeActivities extends React.Component {
                         activities = activities.slice(0,20);
                     }
                     // let arr1 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
-                    console.log('kikikiki',activities);
+                    // console.log('kikikiki',activities);
                     self.setState({
                         activities: activities,
                     })

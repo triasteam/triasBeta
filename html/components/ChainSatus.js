@@ -14,7 +14,7 @@ export default class ChainStatus extends React.Component {
 
   }
   componentWillReceiveProps(nextProps) {
-    console.log('rrrrrr111',this.props.currentInfo, nextProps.currentInfo)
+    // console.log('rrrrrr111',this.props.currentInfo, nextProps.currentInfo)
   }
   render() {
     return (

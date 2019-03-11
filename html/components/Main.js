@@ -124,7 +124,7 @@ export default class Main extends React.Component {
             data: {
             },
             success: function (data) {
-                console.log('this is',data)
+                // console.log('this is',data)
                 if (data.status == 'success') {
                     self.setState({
                         currentEventIndex: data.result.current_index,

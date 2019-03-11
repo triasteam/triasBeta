@@ -42,7 +42,7 @@ class RightPart extends React.Component {
     componentDidMount() {
         this.getSpecifications();
 
-        console.log('rrrrrr',this.props.currentEventIndex)
+        // console.log('rrrrrr',this.props.currentEventIndex)
         this.setState({
             currentInfo: this.props.currentInfo
         })
@@ -86,7 +86,7 @@ class RightPart extends React.Component {
      * @param {Object} nextProps new props
      */
     componentWillReceiveProps(nextProps) {
-        console.log('rrrrr',this.props.currentInfo,nextProps.currentInfo)
+        // console.log('rrrrr',this.props.currentInfo,nextProps.currentInfo)
         if (JSON.stringify(nextProps.currentInfo) != JSON.stringify(this.props.currentInfo)) {
             this.setState({
                 currentInfo: nextProps.currentInfo
@@ -100,7 +100,7 @@ class RightPart extends React.Component {
             intervalAdd(times)
         }
         var changeTime = (times) => {
-            console.log('ttt222',times)
+            // console.log('ttt222',times)
             var day = 0,
                 hour = 0,
                 minute = 0,
