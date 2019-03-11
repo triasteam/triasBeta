@@ -6,7 +6,6 @@ import datetime
 from django.http import JsonResponse
 from django.db.models import Q
 from app_views.models import Block, Node, Transaction, Activity, Hardware
-from app_views.view_utils.block_util import stamp2datetime
 from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration
 from app_views.view_utils.logger import logger
 from app_views.view_utils.block_util import url_data
@@ -134,7 +133,9 @@ def general_static(request):
         # 交易总数
         tx_num = Transaction.objects.count()
         # 最新块高
-        block_height =max(list(Node.objects.values_list('block_heigth', flat=True)).append(0))
+        block_heigth_list = list(Node.objects.values_list('block_heigth', flat=True))
+        block_heigth_list.append(0)
+        block_height =max(block_heigth_list)
 
         # 今日交易总数
         today_start_time = int(time.mktime(datetime.datetime.fromtimestamp(time.time()).date().timetuple()))
@@ -142,7 +143,6 @@ def general_static(request):
         today_tx = Transaction.objects.filter(Q(time__gte=today_start_time) & Q(time__lte=today_end_time)).count()
 
         # 交易峰值(Peak Tx) (前30s)的每个块里的最高交易数
-        nowtime = int(time.time())
         start = today_start_time - 86400  # yesterday start timestamp
         end = today_start_time  # today start timestamp
         # >= 2019-02-26 00:00:00 & < 2019-02-27 00:00:00
