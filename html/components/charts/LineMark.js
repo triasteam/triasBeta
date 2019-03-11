@@ -1,9 +1,6 @@
 import React, { PureComponent } from "react";
 import ReactEcharts from "echarts-for-react";
-import {
-  injectIntl,
-  intlShape,
-} from "react-intl"; /* react-intl imports */
+import { injectIntl, intlShape } from "react-intl"; /* react-intl imports */
 class LineMark extends PureComponent {
   constructor(props) {
     super(props);
@@ -13,9 +10,21 @@ class LineMark extends PureComponent {
       ethereum: [], //The line chart ethereum data
       hyperledger: [], //The line chart hyperledger data
       time: [], //The line chart timeline
-      trias_dial: "", //Trias dial data
-      ethereum_dial: "", //Ethereum dial data
-      hyperledger_dial: "", //Hyperledger dial data
+      //Trias dial data
+      trias_dial: {
+        rate: "",
+        value: ""
+      },
+      //Ethereum dial data
+      ethereum_dial: {
+        rate: "",
+        value: ""
+      },
+      //Hyperledger dial data
+      hyperledger_dial: {
+        rate: "",
+        value: ""
+      },
       event_list: [] //Histogram event data
     };
     this.timeArr = [];
@@ -75,16 +84,16 @@ class LineMark extends PureComponent {
       let des = "";
       switch (this.state.event_list[i]) {
         case 1:
-          des = this.state.lang=="zh"?"停电":"Power Outage";
+          des = this.state.lang == "zh" ? "停电" : "Power Outage";
           break;
         case 4:
-          des = this.state.lang=="zh"?"攻击":"Attack";
+          des = this.state.lang == "zh" ? "攻击" : "Attack";
           break;
         case 5:
-          des =  this.state.lang=="zh"?"节点更新":"Node Updates";
+          des = this.state.lang == "zh" ? "节点更新" : "Node Updates";
           break;
         case -1:
-          des = this.state.lang=="zh"?"没有事件":"No Data";
+          des = this.state.lang == "zh" ? "没有事件" : "No Data";
           break;
       }
       event_list.push([
@@ -233,7 +242,9 @@ class LineMark extends PureComponent {
               className="line"
               style={{
                 transform: `rotate(${
-                  this.state.trias_dial ? this.state.trias_dial.rate * 90 : "0"
+                  this.state.trias_dial.rate
+                    ? this.state.trias_dial.rate * 90
+                    : "0"
                 }deg)`
               }}
             />
