@@ -4,7 +4,6 @@ import $ from "jquery";
 import {
   injectIntl,
   intlShape,
-  FormattedMessage
 } from "react-intl"; /* react-intl imports */
 
 /**
@@ -81,10 +80,7 @@ class LineMarkCollection extends React.Component {
         });
       },
       error(err) {
-        console.log(err)
-        self.setState({
-          Monitoring: null
-        });
+        console.log(err);
       }
     });
   }
@@ -104,10 +100,7 @@ class LineMarkCollection extends React.Component {
         });
       },
       error(err) {
-        console.log(err)
-        self.setState({
-          tps_dial: null
-        });
+        console.log(err);
       }
     });
   }
@@ -127,10 +120,7 @@ class LineMarkCollection extends React.Component {
         });
       },
       error(err) {
-        console.log(err)
-        self.setState({
-          faulty_nodes_dial: null
-        });
+        console.log(err);
       }
     });
   }
@@ -151,10 +141,7 @@ class LineMarkCollection extends React.Component {
         });
       },
       error(err) {
-        console.log(err)
-        self.setState({
-          fault_accetpance_rate_dial: null
-        });
+        console.log(err);
       }
     });
   }
@@ -193,18 +180,18 @@ class LineMarkCollection extends React.Component {
       <div>
         <LineMark
           name={this.state.lang == "zh" ? "TPS 监控" : "TPS Monitoring"}
-          data={this.state.Monitoring.tps_monitoring || null}
-          dial={this.state.tps_dial || null}
+          data={this.state.Monitoring.tps_monitoring}
+          dial={this.state.tps_dial}
         />
         <LineMark
           name={this.state.lang == "zh" ? "容错率" : "Fault Acceptance Rate"}
-          data={this.state.Monitoring.fault_accetpance_rate || null}
-          dial={this.state.fault_accetpance_rate_dial || null}
+          data={this.state.Monitoring.fault_accetpance_rate}
+          dial={this.state.fault_accetpance_rate_dial}
         />
         <LineMark
           name={this.state.lang == "zh" ? "错误节点" : "Faulty Nodes"}
-          data={this.state.Monitoring.faulty_nodes_list || null}
-          dial={this.state.faulty_nodes_dial || null}
+          data={this.state.Monitoring.faulty_nodes_list}
+          dial={this.state.faulty_nodes_dial}
         />
       </div>
     );

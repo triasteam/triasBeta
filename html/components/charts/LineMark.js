@@ -63,9 +63,18 @@ class LineMark extends PureComponent {
         trias: nextProps.data.trias.value || [],
         ethereum: nextProps.data.ethereum.value || [],
         hyperledger: nextProps.data.hyperledger.value || [],
-        trias_dial: nextProps.dial.trias || null,
-        ethereum_dial: nextProps.dial.ethereum || null,
-        hyperledger_dial: nextProps.dial.hyperledger || null,
+        trias_dial: nextProps.dial.trias || {
+          rate: "",
+          value: ""
+        },
+        ethereum_dial: nextProps.dial.ethereum || {
+          rate: "",
+          value: ""
+        },
+        hyperledger_dial: nextProps.dial.hyperledger || {
+          rate: "",
+          value: ""
+        },
         event_list: nextProps.data.event_list || []
       });
     }, 0);
@@ -248,11 +257,13 @@ class LineMark extends PureComponent {
                 }deg)`
               }}
             />
-            <div className="layer-item">Trias</div>
-            <div className="num">
-              {this.state.trias_dial.value + ""
-                ? this.state.trias_dial.value
-                : "N/A"}
+            <div className="layer">
+              <div className="layer-item">Trias</div>
+              <div className="num">
+                {this.state.trias_dial.value + ""
+                  ? this.state.trias_dial.value
+                  : "N/A"}
+              </div>
             </div>
           </div>
           <div className="warpper">
@@ -267,11 +278,14 @@ class LineMark extends PureComponent {
                 }deg)`
               }}
             />
-            <div className="layer-item">Ethereum</div>
-            <div className="num">
-              {this.state.ethereum_dial.value + ""
-                ? this.state.ethereum_dial.value
-                : "N/A"}
+            <div className="layer">
+              {" "}
+              <div className="layer-item">Ethereum</div>
+              <div className="num">
+                {this.state.ethereum_dial.value + ""
+                  ? this.state.ethereum_dial.value
+                  : "N/A"}
+              </div>
             </div>
           </div>
           <div className="warpper">
@@ -286,11 +300,14 @@ class LineMark extends PureComponent {
                 }deg)`
               }}
             />
-            <div className="layer-item">Hyperledger</div>
-            <div className="num">
-              {this.state.hyperledger_dial.value + ""
-                ? this.state.hyperledger_dial.value
-                : "N/A"}
+            <div className="layer">
+              {" "}
+              <div className="layer-item">Hyperledger</div>
+              <div className="num">
+                {this.state.hyperledger_dial.value + ""
+                  ? this.state.hyperledger_dial.value
+                  : "N/A"}
+              </div>
             </div>
           </div>
         </div>
