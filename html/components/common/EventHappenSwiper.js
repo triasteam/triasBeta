@@ -96,7 +96,7 @@ export default class EventHappenSwiper extends React.Component {
             }, 1000)
         }
         var changeTime = (times, index) => {
-            console.log('ttt',times)
+            // console.log('ttt',times)
             var day = 0,
                 hour = 0,
                 minute = 0,
