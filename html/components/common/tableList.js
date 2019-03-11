@@ -338,11 +338,11 @@ class TableList extends React.Component {
                     onChangePageInput={(e) => this.onChangeInputPage(e)}
                     onPageInputKeyDown={(e) => this.jumpPageKeyDown(e)}
                     onClickJumpButton={() => this.handleJumpPage()}
-                    rowsPerPageRange={[{ name: this.props.intl.locale == 'zh' ? '10 项/页' : '20 / page', value: 20 },
+                    rowsPerPageRange={[{ name: this.props.intl.locale == 'zh' ? '10 项/页' : '10 / page', value: 10 },
+                    { name: this.props.intl.locale == 'zh' ? '20 项/页' : '20 / page', value: 20 },
+                    { name: this.props.intl.locale == 'zh' ? '50 项/页' : '50 / page', value: 50 },
                     { name: this.props.intl.locale == 'zh' ? '100 项/页' : '100 / page', value: 100 },
-                    { name: this.props.intl.locale == 'zh' ? '150 项/页' : '150 / page', value: 150 },
-                    { name: this.props.intl.locale == 'zh' ? '200 项/页' : '200 / page', value: 200 },
-                    { name: this.props.intl.locale == 'zh' ? '250 项/页' : '250 / page', value: 250 }]}
+                    { name: this.props.intl.locale == 'zh' ? '200 项/页' : '200 / page', value: 200 }]}
                 />
             </div>
         )
