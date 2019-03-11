@@ -2,24 +2,10 @@ import React from "react"
 
 import Swiper from 'swiper/dist/js/swiper.js'
 import 'swiper/dist/css/swiper.min.css'
-
+import TimeInterval from './TimeInterval'
 import $ from "jquery";
 /**
- * Custom toggle list component.
- * Usage:
- * <ToggleList
- * listID="langlist"
- * itemsToSelect={[{
-      ele: <span onClick={()=>this.changeLanguage('zh')}>中文</span>
-    }, {
-        ele: <span  onClick={()=>this.changeLanguage('en')}>English</span>
-    }]}
- * name={<i className="fas fa-globe-americas"></i>} />
- * 
- * Attributes:
- * - listID: id of the outer container
- * - itemsToSelect: a list of elements( ele: element shows in the drop-down list )
- * - name: shows in the toggle button
+
  */
 export default class EventHappenSwiper extends React.Component {
     constructor(props) {
@@ -54,7 +40,7 @@ export default class EventHappenSwiper extends React.Component {
         $.ajax({
             url: '/api/event_list/ ',
             type: 'get',
-            dataType: 'json',               //GET方式时,表单数据被转换成请求格式作为URL地址的参数进行传递
+            dataType: 'json',
             data: {
             },
             success: function (data) {
@@ -72,7 +58,10 @@ export default class EventHappenSwiper extends React.Component {
                 }
             },
             error: function () {
-
+                self.setState({
+                    currentEventIndex: -1,
+                    eventList: []
+                })
             }
         })
     }
@@ -82,44 +71,7 @@ export default class EventHappenSwiper extends React.Component {
     }
 
     render() {
-        var transformTime = (times, index) => {
-            interval(times, index)
-        }
-        var transformTimeAdd = (times, index) => {
-            intervalAdd(times, index)
-        }
-        var interval = (times, index) => {
-            this.timerChange = setInterval(() => {
-                clearInterval(this.timerChange)
-                times--;
-                changeTime(times, index)
-            }, 1000)
-        }
-        var changeTime = (times, index) => {
-            // console.log('ttt',times)
-            var day = 0,
-                hour = 0,
-                minute = 0,
-                second = 0;//时间默认值
-            if (times > 0) {
-                day = Math.floor(times / (60 * 60 * 24));
-                hour = Math.floor(times / (60 * 60)) - (day * 24);
-                minute = Math.floor(times / 60) - (day * 24 * 60) - (hour * 60);
-                second = Math.floor(times) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
-            }
-            if (day <= 9) day = '0' + day;
-            if (hour <= 9) hour = '0' + hour;
-            if (minute <= 9) minute = '0' + minute;
-            if (second <= 9) second = '0' + second;
-            $('.swiper-slide').eq(index).find('p.eventInterval').html(hour + ":" + minute + ":" + second)
-        }
-        var intervalAdd = (times, index) => {
-            this.timerChange = setInterval(() => {
-                clearInterval(this.timerChange)
-                times++;
-                changeTime(times, index)
-            }, 1000)
-        }
+
         return (
             <div className="eventSwiper">
                 <div className="swiper-container">
@@ -135,8 +87,7 @@ export default class EventHappenSwiper extends React.Component {
                                             <div className="eventCurrent">
                                                 <p className="startTime">{event.start}</p>
                                                 <p className="eventName">{event.name}</p>
-                                                <p className="eventInterval">{transformTimeAdd(event.interval, index)}</p>
-
+                                                <TimeInterval interval={event.interval} TimeChange={'add'} />
                                             </div>
                                         }
                                         {
@@ -146,17 +97,21 @@ export default class EventHappenSwiper extends React.Component {
                                                 <p className="eventName">{event.name}</p>
                                                 {
                                                     this.state.currentEventIndex > index &&
-                                                    <p className="eventInterval">{transformTimeAdd(event.interval, index)}</p>
+                                                    <TimeInterval interval={event.interval} TimeChange={'add'} />
                                                 }
                                                 {
                                                     this.state.currentEventIndex < index &&
-                                                    <p className="eventInterval">{transformTime(event.interval, index)}</p>
+                                                    <TimeInterval interval={event.interval} TimeChange={'decrease'} />
                                                 }
                                             </div>
                                         }
                                     </div>
                                 )
                             })
+                        }
+
+                        {
+                            (!this.state.eventList || this.state.eventList.length == 0) && <p style={{ paddingLeft: '40px', width: '100%' }}>当前没有匹配的数据。</p>
                         }
 
 
