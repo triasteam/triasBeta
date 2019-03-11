@@ -14,16 +14,16 @@ from app_views.view_utils.logger import logger
 
 def get_node_list(request):
 
-    status = request.GET.get('status', '')
-    search = request.GET.get('search', '')
-    page = request.GET.get('page', 1)
-    size = request.GET.get('size', 10)
-
     try:
+        node_status = request.GET.get('status', '')
+        search = request.GET.get('search', '')
+        page = int(request.GET.get('curr_page', 1))
+        size = int(request.GET.get('page_size', 10))
+
         nodes = Node.objects.all().order_by('-block_heigth', '-status')
 
-        if status:
-            nodes = nodes.filter(status=status)
+        if node_status:
+            nodes = nodes.filter(status=node_status)
 
         if search:
             nodes = nodes.filter(node_ip__contains=search)
