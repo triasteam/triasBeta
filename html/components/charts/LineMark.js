@@ -45,6 +45,11 @@ class LineMark extends PureComponent {
    */
   componentWillReceiveProps(nextProps) {
     let self = this;
+    if (self.state.lang != nextProps.intl.locale) {
+      self.setState({
+        lang: nextProps.intl.locale
+      });
+    }
     self.timeArr = [];
     if (
       !nextProps.data.trias ||
