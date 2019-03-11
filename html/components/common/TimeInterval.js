@@ -55,9 +55,9 @@ export default class TimeInterval extends React.Component {
     }
     componentDidMount() {
         if(this.props.TimeChange == 'add'){
-            this.transformTimeAdd(this.props.interval, this.props.HtmlIndex)
+            this.transformTimeAdd(this.props.interval)
         }else{
-            this.transformTime(this.props.interval, this.props.HtmlIndex)
+            this.transformTime(this.props.interval)
         }
     }
 
