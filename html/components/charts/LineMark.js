@@ -1,10 +1,14 @@
 import React, { PureComponent } from "react";
 import ReactEcharts from "echarts-for-react";
-
-export default class LineMark extends PureComponent {
+import {
+  injectIntl,
+  intlShape,
+} from "react-intl"; /* react-intl imports */
+class LineMark extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      lang: this.props.intl.locale, // current locale language
       trias: [], //The line chart trias data
       ethereum: [], //The line chart ethereum data
       hyperledger: [], //The line chart hyperledger data
@@ -71,16 +75,16 @@ export default class LineMark extends PureComponent {
       let des = "";
       switch (this.state.event_list[i]) {
         case 1:
-          des = "Power Outage";
+          des = this.state.lang=="zh"?"停电":"Power Outage";
           break;
         case 4:
-          des = "攻击";
+          des = this.state.lang=="zh"?"攻击":"Attack";
           break;
         case 5:
-          des = "节点更新";
+          des =  this.state.lang=="zh"?"节点更新":"Node Updates";
           break;
         case -1:
-          des = "没有事件";
+          des = this.state.lang=="zh"?"没有事件":"No Data";
           break;
       }
       event_list.push([
@@ -211,7 +215,7 @@ export default class LineMark extends PureComponent {
     return (
       <div className="lineMark-card">
         <div className="lineMark-title">
-          <div className="title-des">{this.props.name||''}</div>
+          <div className="title-des">{this.props.name || ""}</div>
           <ul>
             <li className="active">10 Min</li>
           </ul>
@@ -233,13 +237,11 @@ export default class LineMark extends PureComponent {
                 }deg)`
               }}
             />
-            <div className="layer">
-              <div className="layer-item">Trias</div>
-              <div className="num">
-                {this.state.trias_dial.value + ""
-                  ? this.state.trias_dial.value
-                  : "N/A"}
-              </div>
+            <div className="layer-item">Trias</div>
+            <div className="num">
+              {this.state.trias_dial.value + ""
+                ? this.state.trias_dial.value
+                : "N/A"}
             </div>
           </div>
           <div className="warpper">
@@ -254,13 +256,11 @@ export default class LineMark extends PureComponent {
                 }deg)`
               }}
             />
-            <div className="layer">
-              <div className="layer-item">Ethereum</div>
-              <div className="num">
-                {this.state.ethereum_dial.value + ""
-                  ? this.state.ethereum_dial.value
-                  : "N/A"}
-              </div>
+            <div className="layer-item">Ethereum</div>
+            <div className="num">
+              {this.state.ethereum_dial.value + ""
+                ? this.state.ethereum_dial.value
+                : "N/A"}
             </div>
           </div>
           <div className="warpper">
@@ -275,13 +275,11 @@ export default class LineMark extends PureComponent {
                 }deg)`
               }}
             />
-            <div className="layer">
-              <div className="layer-item">Hyperledger</div>
-              <div className="num">
-                {this.state.hyperledger_dial.value + ""
-                  ? this.state.hyperledger_dial.value
-                  : "N/A"}
-              </div>
+            <div className="layer-item">Hyperledger</div>
+            <div className="num">
+              {this.state.hyperledger_dial.value + ""
+                ? this.state.hyperledger_dial.value
+                : "N/A"}
             </div>
           </div>
         </div>
@@ -289,3 +287,10 @@ export default class LineMark extends PureComponent {
     );
   }
 }
+
+/* Inject intl to LineMark props */
+const propTypes = {
+  intl: intlShape.isRequired
+};
+LineMark.propTypes = propTypes;
+export default injectIntl(LineMark);
