@@ -20,7 +20,7 @@ def get_monitoring():
 def get_single_data(client, key):
     try:
         redis_saved_list_exist = client.llen(key)
-        if redis_saved_list_exist == 8:
+        if redis_saved_list_exist == 11:
             return client.lrange(key, 0, -1)
     except Exception as e:
         logger.error(e)
