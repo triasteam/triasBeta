@@ -1,5 +1,15 @@
 import React from "react"
-
+/**
+ * Timer components which displays:
+ *
+ * Params: 
+ *      interval: the number to count down
+ *      TimeChange: the type of the countdown
+ * 
+ *      eg: 
+ *      <Timer interval={this.state.currentInfo.selectedEvent.time} TimeChange={'add'} /> 
+ * 
+ */
 export default class Timer extends React.Component {
     constructor(props) {
         super(props);
@@ -7,7 +17,7 @@ export default class Timer extends React.Component {
             timeCount: ''
         }
     }
-
+    // Countdown function groups
     transformTime(times) {
         this.interval(times)
     }
@@ -51,8 +61,10 @@ export default class Timer extends React.Component {
         }, 1000)
     }
 
-    
-
+    /**
+     * When the component will be mounted.
+     * Set the intervals 
+     */
     componentDidMount() {
         if(this.props.TimeChange == 'add'){
             this.transformTimeAdd(this.props.interval)
@@ -61,6 +73,9 @@ export default class Timer extends React.Component {
         }
     }
 
+    /**
+     * Clear time interval when the component will be unmounted
+     */
     componentWillUnmount(){
         this.timerChange = clearInterval(this.timerChange)
     }

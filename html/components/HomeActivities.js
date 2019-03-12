@@ -10,7 +10,7 @@ import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 
 /**
- * RightPart components which displays:
+ * HomeActivities components which displays:
  */
 class HomeActivities extends React.Component {
     constructor(props) {
@@ -48,7 +48,6 @@ class HomeActivities extends React.Component {
             type:"GET",
             dataType:"json",
             success: function(data){
-                // console.log("kiki",data)
                 if(data.status == "success") {
                     let time = data.result.node_time * 1000;
                     let overview = {
@@ -109,17 +108,6 @@ class HomeActivities extends React.Component {
                     <p className="main-title"><FormattedMessage id="termActivities"/></p>
                     <div className="transparent-bg"></div>
                     <div className="node-list">
-                        {/* <section className="item clearfix">
-                            <div className="left">
-                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
-                                <p></p>
-                            </div>
-                            <div className="right">
-                                <p className="line1">{this.state.time}</p>
-                                <p className="line2">3 Nodes Recovered</p>
-                                <p className="line3">Ethereum</p>
-                            </div>
-                        </section> */}
                         {
                             this.state.activities.map(function(item, index){
                                 return (
@@ -154,17 +142,6 @@ class HomeActivities extends React.Component {
                                 )
                             })
                         }
-                        {/* <section className="item clearfix">
-                            <div className="left">
-                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
-                                <p></p>
-                            </div>
-                            <div className="right">
-                                <p className="line1">Less than a minute</p>
-                                <p className="line2">3 Nodes Recovered</p>
-                                <p className="line3">Ethereum</p>
-                            </div>
-                        </section> */}
                     </div>
                     <Link to="/activities" className="view-all"><FormattedMessage id="btnViewAll"/></Link>
                 </div>

@@ -1,6 +1,15 @@
 import React from "react"
 /**
  * StaticsCard components which displays:
+ * 
+ * Params: 
+ *      cardInfo
+ *      src
+ *      title
+ * 
+ *      eg: 
+ *      <StaticsCard cardInfo={this.state.nodes} src={require("../img/icon/general-statics/icon_gs_nodes@2x.png")} title={this.state.lang=="zh"?"节点":"Nodes"} />
+ * 
  */
 export default class StaticsCard extends React.Component {
     constructor(props) {
