@@ -109,7 +109,7 @@ class HomeActivities extends React.Component {
                     <div className="transparent-bg"></div>
                     <div className="node-list">
                         {
-                            this.state.activities.map(function(item, index){
+                            this.state.activities && this.state.activities.map(function(item, index){
                                 return (
                                     <section className="item clearfix" key={"item"+index}>
                                         <div className="left">
