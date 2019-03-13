@@ -75,8 +75,8 @@ WSGI_APPLICATION = 'trias_beta.wsgi.application'
 
 WEBPACK_LOADER = {
     'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'bundles/prod/',  # change when production
-        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats-prod.json'),  # change when production
+        'BUNDLE_DIR_NAME': 'bundles/local/',  # change when production
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats-local.json'),  # change when production
     }
 }
 

@@ -379,13 +379,14 @@ export default class NodesGraph extends React.Component {
                     {
                         this.state.triasData && this.state.triasData.nodes && this.state.triasData.nodes.map(function(item,index){
                             return (
-                                <li key={"host"+index}>
+                                <li key={"host"+index}  className={item.level===0?"normal":(item.level===1?"premium":"problem")} >
+                                    <span className="label">
+                                        <FormattedMessage id="termRanking"/>
+                                        <div className={item.trend===0?"trend":(item.trend===1?"trend up":"trend down")}></div>
+                                    </span>
                                     <span className="label"><FormattedMessage id="termNode"/> IP</span>
-                                    <span className="label"><FormattedMessage id="termStatus"/></span>
-                                    <span className="label"><FormattedMessage id="termLevel"/></span>
-                                    <span className="value">{item.node_ip}</span>
-                                    <span className="value"><div className={item.status==="0"?"circle green":"circle red"}></div></span>
-                                    <span className="value">{item.level || 'High'}</span>
+                                    <span className="value">#{index+1}</span>
+                                    <span className="value">{item.node_ip}<div className="circle"></div></span>
                                 </li>
                             )
                         })
