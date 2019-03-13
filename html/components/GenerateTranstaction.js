@@ -54,8 +54,7 @@ export default class GenerateTranstaction extends React.Component {
                     </div>
                     <div className="check-btn">
                         <img src={require("../img/icon/inline/icon_check_disable@2x.png")} />
-                        <span>Check Transtaction</span>
-                        {/* <Link to="/activities">Check Transtaction</Link> */}
+                        <Link to="/activities">Check Transtaction</Link>
                     </div>
                 </div>
                 <div className="tran-card">
@@ -65,8 +64,7 @@ export default class GenerateTranstaction extends React.Component {
                     </div>
                     <div className="check-btn success">
                         <img src={require("../img/icon/inline/icon_check_enable@2x.png")} />
-                        <span>Check Transtaction</span>
-                        {/* <Link to="/activities">Check Transtaction</Link> */}
+                        <Link to="/activities">Check Transtaction</Link>
                     </div>
                 </div>
                 {/* <Modal/> */}
