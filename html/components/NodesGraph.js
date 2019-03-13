@@ -165,6 +165,7 @@ export default class NodesGraph extends React.Component {
                 },
                 "x" : -base_node_width/2,
                 "y" : -base_node_height/2,
+                "width" : base_node_width,
                 "height" : base_node_height,
             });
         
