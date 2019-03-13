@@ -6,7 +6,6 @@ import datetime
 from django.http import JsonResponse
 from django.db.models import Q
 from app_views.models import Block, Node, Transaction, Activity, Hardware
-from app_views.view_utils.block_util import stamp2datetime
 from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration
 from app_views.view_utils.logger import logger
 from app_views.view_utils.block_util import url_data
@@ -134,7 +133,9 @@ def general_static(request):
         # 交易总数
         tx_num = Transaction.objects.count()
         # 最新块高
-        block_height =max(list(Node.objects.values_list('block_heigth', flat=True)).append(0))
+        block_heigth_list = list(Node.objects.values_list('block_heigth', flat=True))
+        block_heigth_list.append(0)
+        block_height =max(block_heigth_list)
 
         # 今日交易总数
         today_start_time = int(time.mktime(datetime.datetime.fromtimestamp(time.time()).date().timetuple()))
@@ -142,7 +143,6 @@ def general_static(request):
         today_tx = Transaction.objects.filter(Q(time__gte=today_start_time) & Q(time__lte=today_end_time)).count()
 
         # 交易峰值(Peak Tx) (前30s)的每个块里的最高交易数
-        nowtime = int(time.time())
         start = today_start_time - 86400  # yesterday start timestamp
         end = today_start_time  # today start timestamp
         # >= 2019-02-26 00:00:00 & < 2019-02-27 00:00:00
@@ -242,7 +242,7 @@ def get_data_monitoring(request):
         if faulty_nodes_list:
             new_faulty_nodes_list = [eval(i) for i in faulty_nodes_list]
             start_time = new_faulty_nodes_list[0]
-            a_x_time = [(start_time-i*60) for i in range(7)][::-1]
+            a_x_time = [(start_time-i*60) for i in range(10)][::-1]
 
             # Get recent events
             event_list = []
@@ -260,14 +260,14 @@ def get_data_monitoring(request):
             result['faulty_nodes_list']['trias']['time'] = a_x_time
             result['faulty_nodes_list']['trias']['value'] = new_faulty_nodes_list[1:][::-1]
             result['faulty_nodes_list']['ethereum']['time'] = a_x_time
-            result['faulty_nodes_list']['ethereum']['value'] = [0,0,0,0,0,0,0]
+            result['faulty_nodes_list']['ethereum']['value'] = [0,0,0,0,0,0,0,0,0,0]
             result['faulty_nodes_list']['hyperledger']['time'] = a_x_time
-            result['faulty_nodes_list']['hyperledger']['value'] = [0,0,0,0,0,0,0,]
+            result['faulty_nodes_list']['hyperledger']['value'] = [0,0,0,0,0,0,0,0,0,0]
 
         if fault_accetpance_rate:
             new_fault_accetpance_rate = [eval(i) for i in fault_accetpance_rate]
             start_time = new_fault_accetpance_rate[0]
-            b_x_time = [(start_time - i * 60) for i in range(7)][::-1]
+            b_x_time = [(start_time - i * 60) for i in range(10)][::-1]
 
             # Get recent events
             event_list = []
@@ -285,14 +285,14 @@ def get_data_monitoring(request):
             result['fault_accetpance_rate']['trias']['time'] = b_x_time
             result['fault_accetpance_rate']['trias']['value'] = new_fault_accetpance_rate[1:][::-1]
             result['fault_accetpance_rate']['ethereum']['time'] = b_x_time
-            result['fault_accetpance_rate']['ethereum']['value'] = [0,0,0,0,0,0,0]
+            result['fault_accetpance_rate']['ethereum']['value'] = [0,0,0,0,0,0,0,0,0,0]
             result['fault_accetpance_rate']['hyperledger']['time'] = b_x_time
-            result['fault_accetpance_rate']['hyperledger']['value'] = [0,0,0,0,0,0,0]
+            result['fault_accetpance_rate']['hyperledger']['value'] = [0,0,0,0,0,0,0,0,0,0]
 
         if tps_monitoring:
             new_tps_monitoring = [eval(i) for i in tps_monitoring]
             start_time = new_tps_monitoring[0]
-            c_x_time = [(start_time - i * 60) for i in range(7)][::-1]
+            c_x_time = [(start_time - i * 60) for i in range(10)][::-1]
 
             # Get recent events
             event_list = []
@@ -310,9 +310,9 @@ def get_data_monitoring(request):
             result['tps_monitoring']['trias']['time'] = c_x_time
             result['tps_monitoring']['trias']['value'] = new_tps_monitoring[1:][::-1]
             result['tps_monitoring']['ethereum']['time'] = c_x_time
-            result['tps_monitoring']['ethereum']['value'] = [0,0,0,0,0,0,0]
+            result['tps_monitoring']['ethereum']['value'] = [0,0,0,0,0,0,0,0,0,0]
             result['tps_monitoring']['hyperledger']['time'] = c_x_time
-            result['tps_monitoring']['hyperledger']['value'] = [0,0,0,0,0,0,0]
+            result['tps_monitoring']['hyperledger']['value'] = [0,0,0,0,0,0,0,0,0,0]
 
         status = 'success'
 

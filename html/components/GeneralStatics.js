@@ -62,6 +62,10 @@ class GeneralStatics extends React.Component {
         this.getGeneralStatics();
     }
 
+    /**
+     * Get General Statics
+     * 
+     */
     getGeneralStatics() {
         var self = this;
         $.ajax({

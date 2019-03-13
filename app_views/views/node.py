@@ -1,14 +1,10 @@
 """
 Node list message
 """
-import time
-import datetime
+
 from django.http import JsonResponse
-from django.db.models import Q
 from django.core.paginator import Paginator
-from app_views.models import Block, Node, Transaction
-from app_views.view_utils.block_util import stamp2datetime
-from app_views.view_utils.localconfig import JsonConfiguration
+from app_views.models import Node
 from app_views.view_utils.logger import logger
 
 

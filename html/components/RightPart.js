@@ -4,25 +4,23 @@ import { Link } from 'react-router-dom'
 // ES6Promise.polyfill() //关键代码,让ie识别promise对象!
 import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
 import $ from 'jquery'
-
-import TimeAgo from 'javascript-time-ago'
-// Load locale-specific relative date/time formatting rules.
-import en from 'javascript-time-ago/locale/en'
+import HomeActivities from './HomeActivities'
+import Timer from './common/Timer'
+import GenerateTranstaction from './GenerateTranstaction'
 
 /**
  * RightPart components which displays:
  */
-class RightPart extends React.Component {
+export default class RightPart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            CPU: "xxxxxxx",
-            GPU: "xxxxxxx",
-            Motherboard: "xxxxxxx",
-            RAM: "xxxxxxx",
-            SSD: "xxxxxxx",
+            CPU: "",
+            GPU: "",
+            Motherboard: "",
+            RAM: "",
+            SSD: "",
             time:"0",
-            activities:[],
             currentInfo: {
                 selectedEvent: {  
                     name: "",
@@ -36,102 +34,16 @@ class RightPart extends React.Component {
             date: ''
         }
     }
-    componentWillMount() {
-        // Add locale-specific relative date/time formatting rules.
-        TimeAgo.addLocale(en)
-        
-        // Create relative date/time formatter.
-        const timeAgo = new TimeAgo('en-US')
-        this.timeAgo = timeAgo;
-    }
 
     componentDidMount() {
         this.getSpecifications();
-        this.getActivities();
 
-        this.activitiesInterval = setInterval(this.getActivities.bind(this),10000);
-        console.log('rrrrrr',this.props.currentEventIndex)
+        // console.log('rrrrrr',this.props.currentEventIndex)
         this.setState({
             currentInfo: this.props.currentInfo
         })
     }
-
-    /**
-     * 
-     * Get the data for Simulations part
-     *  
-     */
-    getSimulations() {
-        var self = this;
-        $.ajax({
-            url:"/api/instant_message/",
-            type:"GET",
-            dataType:"json",
-            success: function(data){
-                // console.log("kiki",data)
-                if(data.status == "success") {
-                    self.setState({
-                        CPU: data.result.CPU,
-                        GPU: data.result.GPU,
-                        Motherboard: data.result.Motherboard,
-                        RAM: data.result.RAM,
-                        SSD: data.result.SSD,
-                    })
-                }
-            }
-        })
-    }
-
-    /**
-     * 
-     * Get the data for Activities part
-     *  
-     */
-    getActivities() {
-        var self = this;
-        let activities = []
-        $.ajax({
-            url:"/api/instant_message/",
-            type:"GET",
-            dataType:"json",
-            success: function(data){
-                console.log("kiki",data)
-                if(data.status == "success") {
-                    let time = data.result.node_time * 1000;
-                    let overview = {
-                        type: "overview",
-                        time: self.timeAgo.format(time),
-                        normal: data.result.normal_nodes.length,
-                        offline: data.result.fault_nodes.length
-                    }
-                    // console.log("kiki",new Date().getTime(),data.result.node_time * 1000,time)
-                    activities.push(overview);
-
-                    let details = data.result.event;
-                    for (let i = 0; i < details.length; i++){
-                        let detail_time = details[i].time * 1000;
-                        let detail = {
-                                type: "detail",
-                                time: self.timeAgo.format(detail_time),
-                                info: details[i].event,
-                                group: details[i].group,
-                            
-                        }
-                        activities.push(detail);
-                    }
-                    activities = activities.concat(self.state.activities);
-                    if (activities.length > 20) {
-                        activities = activities.slice(0,20);
-                    }
-                    // let arr1 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
-                    console.log('kikikiki',activities);
-                    self.setState({
-                        activities: activities,
-                    })
-                }
-            }
-        })
-    }
+ 
 
     /**
      * 
@@ -145,9 +57,14 @@ class RightPart extends React.Component {
             type:"GET",
             dataType:"json",
             success: function(data){
-                // console.log("kiki",data)
                 if(data.status == "success") {
+                    // console.log("kiki",data)
                     self.setState({
+                        CPU: data.result.CPU,
+                        GPU: data.result.GPU,
+                        Motherboard: data.result.Motherboard,
+                        RAM: data.result.RAM,
+                        SSD: data.result.SSD,
                     })
                 }
             }
@@ -155,64 +72,21 @@ class RightPart extends React.Component {
     }
     
     /**
-     * When the component will unmount.
-     * Clear the intervals 
-     */
-    componentWillUnmount() {
-        if(this.activitiesInterval) {
-            clearInterval(this.activitiesInterval);
-        }
-    }
-    /**
      * Before a mounted component receives new props, reset some state.
      * @param {Object} nextProps new props
      */
     componentWillReceiveProps(nextProps) {
-        console.log('rrrrr',this.props.currentInfo,nextProps.currentInfo)
+        // console.log('rrrrr',this.props.currentInfo,nextProps.currentInfo)
         if (JSON.stringify(nextProps.currentInfo) != JSON.stringify(this.props.currentInfo)) {
             this.setState({
                 currentInfo: nextProps.currentInfo
-            })
-        }
-        console.log('nextProps.src',nextProps.src);
-        console.log('this.props.src',this.props.src);
-        if (JSON.stringify(nextProps.src) != JSON.stringify(this.state.imgSrc) && JSON.stringify(nextProps.src)) {
-            this.setState({
-                imgSrc:nextProps.src
             })
         }
     }
 
     render() {
         let text = ' ';
-        var transformTimeAdd = (times) => {
-            intervalAdd(times)
-        }
-        var changeTime = (times) => {
-            console.log('ttt222',times)
-            var day = 0,
-                hour = 0,
-                minute = 0,
-                second = 0;//时间默认值
-            if (times > 0) {
-                day = Math.floor(times / (60 * 60 * 24));
-                hour = Math.floor(times / (60 * 60)) - (day * 24);
-                minute = Math.floor(times / 60) - (day * 24 * 60) - (hour * 60);
-                second = Math.floor(times) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
-            }
-            if (day <= 9) day = '0' + day;
-            if (hour <= 9) hour = '0' + hour;
-            if (minute <= 9) minute = '0' + minute;
-            if (second <= 9) second = '0' + second;
-            $('.time').html(hour + ":" + minute + ":" + second)
-        }
-        var intervalAdd = (times) => {
-            this.timerChange = setInterval(() => {
-                clearInterval(this.timerChange)
-                times++;
-                changeTime(times)
-            }, 1000)
-        }
+       
         return (
             <div className="right-part">
                 <div className="simulations">
@@ -229,7 +103,7 @@ class RightPart extends React.Component {
                                 <p className="clearfix">
                                     <span className="attr"><FormattedMessage id="simuLable2"/></span>
                                     <span className="value time">
-                                        {  this.state.currentInfo == -1 ? 0 : this.state.currentInfo.selectedEvent.time  ? transformTimeAdd(this.state.currentInfo.selectedEvent.time) : '00:00:00'}
+                                        {  this.state.currentInfo == -1 ? 0 : this.state.currentInfo.selectedEvent.time  ? <Timer interval={this.state.currentInfo.selectedEvent.time} TimeChange={'add'} /> : '00:00:00'}
                                     </span>
                                 </p>
                         }
@@ -258,70 +132,7 @@ class RightPart extends React.Component {
                     <p className="note"><FormattedMessage id="simuLable5"/></p>
                 </div>
 
-                <div className="activities">
-                    <p className="main-title"><FormattedMessage id="termActivities"/></p>
-                    <div className="transparent-bg"></div>
-                    <div className="node-list">
-                        {/* <section className="item clearfix">
-                            <div className="left">
-                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
-                                <p></p>
-                            </div>
-                            <div className="right">
-                                <p className="line1">{this.state.time}</p>
-                                <p className="line2">3 Nodes Recovered</p>
-                                <p className="line3">Ethereum</p>
-                            </div>
-                        </section> */}
-                        {
-                            this.state.activities.map(function(item, index){
-                                return (
-                                    <section className="item clearfix" key={"item"+index}>
-                                        <div className="left">
-                                            <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
-                                            <p></p>
-                                        </div>
-                                        {
-                                            item.type == "overview" && 
-                                            <div className="right">
-                                                <p className="line1">{item.time}</p>
-                                                <p className="line2">{item.normal} Nodes Normal</p>
-                                                <p className="line2">{item.offline} Nodes Offline</p>
-                                                {/* <p className="line3">Ethereum</p> */}
-                                            </div> 
-                                        }
-                                        {
-                                            item.type == "detail" && 
-                                            <div className="right">
-                                                <p className="line1">{item.time}</p>
-                                                <p className="line2">{item.info}</p>
-                                                <p className="line3">
-                                                    {item.group == 1 ?  "Ethereum" : (item.group == 0 ? "Trias": "Hyperledger")     
-                                                        // 0 trias   1 eth    2 hyperledger 
-                                                    }
-                                                </p>
-                                            </div> 
-                                        }
-                                       
-                                    </section>
-                                )
-                            })
-                        }
-                        {/* <section className="item clearfix">
-                            <div className="left">
-                                <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
-                                <p></p>
-                            </div>
-                            <div className="right">
-                                <p className="line1">Less than a minute</p>
-                                <p className="line2">3 Nodes Recovered</p>
-                                <p className="line3">Ethereum</p>
-                            </div>
-                        </section> */}
-                    </div>
-                    <Link to="/activities" className="view-all"><FormattedMessage id="btnViewAll"/></Link>
-                </div>
-
+                <HomeActivities />
                 <div className="specifications">
                     <p className="main-title"><FormattedMessage id="titleHardwareSpecifications" /></p>
                     <section>
@@ -345,14 +156,10 @@ class RightPart extends React.Component {
                         <p className="detail">{ this.state.SSD }</p>
                     </section>
                 </div>
+            
+                
+                <GenerateTranstaction />
             </div>
         )
     }
 }
-
-/* Inject intl to RightPart props */
-const propTypes = {
-    intl: intlShape.isRequired,
-};
-RightPart.propTypes = propTypes
-export default injectIntl(RightPart)

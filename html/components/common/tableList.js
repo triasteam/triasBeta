@@ -5,46 +5,58 @@ import { injectIntl, intlShape, FormattedMessage } from 'react-intl' /* react-in
 import { DatePicker } from 'antd';
 import moment from 'moment';
 import "antd/dist/antd.css";
+
+/**
+ * The Subcomponent of the nodeList page and Activities page -----  List of components
+ * 
+ */
 class TableList extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            nodeSearchKey: '',//节点列表搜索关键字
-            totalItemsCount: 0,
-            pageCount: 0,　　　　　　　　　　　　　　　 //总页数
-            hostlist: [],
-            rowsPerPage: 10,
-            currentPage: 1,
-            startValue: null,
-            endValue: null,
-            endOpen: false,
-            testGroup:'All Test Groups',
-            toggleTestGroup:false,
-            testGroupId: 3,
+            nodeSearchKey: '',// Node list search keywords
+            totalItemsCount: 0, // Number of each page
+            pageCount: 0,  // number of total pages
+            hostlist: [], // List of Data
+            rowsPerPage: 10, // Initialize to get the number of pages per page
+            currentPage: 1, // current page number
+            startValue: null, // start date 
+            endValue: null, //end date
+            endOpen: false, // end date select box
+            testGroup: 'All Test Groups', // Initialize the test group
+            toggleTestGroup: false, // Select test group
+            testGroupId: 3, // Initialize the ID of test group 
         }
     }
-    handleToggleTestGroup(){
+    /**
+     * Toggle test group drop-down box
+     * @param {boolen} this.state.toggleTestGroup
+     */
+    handleToggleTestGroup() {
         this.setState({
-            toggleTestGroup:!this.state.toggleTestGroup,
+            toggleTestGroup: !this.state.toggleTestGroup,
         })
     }
-    handleChangeTestGroup(e){
+    /**
+     * Select test group
+     * @param {e} event
+     */
+    handleChangeTestGroup(e) {
         let groupId = $(e.target).index();
         this.setState({
-            testGroupId:groupId,
-            toggleTestGroup:false,
-            testGroup:$(e.target).text()
+            testGroupId: groupId,
+            toggleTestGroup: false,
+            testGroup: $(e.target).text()
         })
-        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey,groupId)
+        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey, groupId)
     }
-
     onChange = (field, value) => {
         this.setState({
             [field]: value,
         });
-        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey,this.state.testGroupId)
+        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
     }
 
     onStartChange = (value) => {
@@ -53,58 +65,65 @@ class TableList extends React.Component {
 
     onEndChange = (value) => {
         this.onChange('endValue', value);
-        
+
     }
 
     handleStartOpenChange = (open) => {
         // if (!open) {
         //     this.setState({ endOpen: true });
         // }
-        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey,this.state.testGroupId)
+        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
     }
 
     handleEndOpenChange = (open) => {
         this.setState({ endOpen: open });
-        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey,this.state.testGroupId)
+        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
     }
 
 
     componentDidMount() {
-        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey,this.state.testGroupId)
+        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
     }
 
     /**
-      * 搜索输入框内容变化时的监听
-      */
+     * Listen for changes in the search field
+     * @param {e} event
+     */
     onChangeSearchInput(e) {
         this.setState({
             nodeSearchKey: e.target.value
         })
-        this.getHostList(this.state.currentPage, this.state.rowsPerPage, e.target.value,this.state.testGroupId)
-    }
-
-
-    handleSearchNode(e) {
-        e.preventDefault();
-        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey,this.state.testGroupId)
+        this.getHostList(this.state.currentPage, this.state.rowsPerPage, e.target.value, this.state.testGroupId)
     }
 
     /**
-     * 获取列表数据
-     * @param {int} currentPage 
-     * @param {int} rowsPerPage 
+     * keyword search
+     * @param {e} event
      */
-    getHostList(currentPage, rowsPerPage, searchKey,testGroupId) {
+    handleSearchNode(e) {
+        e.preventDefault();
+        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
+    }
+
+    /**
+     * Get list data
+     * @param {number} currentPage --- current page 
+     * @param {number} rowsPerPage --- the number of pages per page
+     * @param {string} searchKey   --- keyWord 
+     * @param {number} testGroupId --- the ID of testGroup
+     */
+    getHostList(currentPage, rowsPerPage, searchKey, testGroupId) {
         let self = this
+        // Whether to pass in a time parameter
         let data = self.state.startValue && self.state.endValue ? {
-            group:testGroupId,
+            group: testGroupId,
             curr_page: currentPage,
             page_size: rowsPerPage,
             search: searchKey,
             start: new Date(self.state.startValue).getTime(),
             end: new Date(self.state.endValue).getTime()
         } : {
-                group:testGroupId,
+                group: testGroupId,
                 curr_page: currentPage,
                 page_size: rowsPerPage,
                 search: searchKey,
@@ -113,7 +132,7 @@ class TableList extends React.Component {
         $.ajax({
             url: self.props.searchListApi,
             type: 'get',
-            dataType: 'json',               //GET方式时,表单数据被转换成请求格式作为URL地址的参数进行传递
+            dataType: 'json',
             data: data,
             success: function (data) {
                 if (data.status == 'success') {
@@ -133,62 +152,66 @@ class TableList extends React.Component {
     }
 
     /**
-     * 设置列表每页最多显示行数
+     * Sets the maximum number of rows per page to be displayed in the list
      * @param {int} num 
      */
     setRowsPerPage(num) {
         this.setState({
             rowsPerPage: num
         })
-        this.getHostList(this.state.currentPage, num, this.state.nodeSearchKey,this.state.testGroupId)
-        //console.log(num)
+        this.getHostList(this.state.currentPage, num, this.state.nodeSearchKey, this.state.testGroupId)
     }
 
     /**
-     * 点击页码、前一页、后一页按钮时的操作
+     * Click the page number, the previous page, the next page when the button operation
      * @param {int} pagenum 
      */
     handleSelectPage(pagenum) {
         this.setState({
             currentPage: pagenum
         })
-        this.getHostList(pagenum, this.state.rowsPerPage, this.state.nodeSearchKey,this.state.testGroupId)
+        this.getHostList(pagenum, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
         //console.log(pagenum)
     }
 
     /**
-     * 跳转输入框的onChange监听
+     * Jump to the input box onChange listening
      */
     onChangeInputPage(e) {
         var re = /^[0-9]+$/
-        var hostlistPage = e.target.value      //获取输入的页码
-        //如果输入的页码不为空,并且如果输入的页码不符合规范(不是正整数，或者大于最大页码)
+        var hostlistPage = e.target.value      //get input page number
+        /*
+        * If the entered page number is not empty, and if the entered page number does not conform to the specification 
+        * (not a positive integer, or greater than the maximum page number)
+        */
         if (hostlistPage != "" && (!re.test(hostlistPage) || hostlistPage == 0 || hostlistPage > this.state.pageCount)) {
-            $('#inputPageNum').val('');   //清空输入框的内容                       
+            $('#inputPageNum').val('');   //clear input value                      
         }
     }
     /**
-     * 跳转输入框的按键事件监听
+     * Jump to the input box of the key event monitoring
      * @return {[type]} [description]
      */
     jumpPageKeyDown(e) {
-        if (e.keyCode === 13) {           //当按下的键是回车键
+        if (e.keyCode === 13) {           //when enter key
             this.handleJumpPage()
         }
     }
 
     /**
-     * 点击跳转按钮的监听
+     * Click the jump button to listen
      */
     handleJumpPage() {
         var pagenum = parseInt($('#inputPageNum').val())
         this.setState({
             currentPage: pagenum
         })
-        this.getHostList(pagenum, this.state.rowsPerPage, this.state.nodeSearchKey,this.state.testGroupId)
-        //console.log('jump')
+        this.getHostList(pagenum, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
     }
-
+    /**
+     * Timestamp format conversion
+     * @param {timestamp} inputTime 
+     */
     getTimeFormat(inputTime) {
         var date = new Date(inputTime);
         var y = date.getFullYear();
@@ -228,7 +251,7 @@ class TableList extends React.Component {
                             <div className="select-group">
                                 <h5 onClick={this.handleToggleTestGroup.bind(this)}>{this.state.testGroup}</h5>
                                 {
-                                    this.state.toggleTestGroup && 
+                                    this.state.toggleTestGroup &&
                                     <div className="selevt-list" onClick={this.handleChangeTestGroup.bind(this)}>
                                         <p>Trias</p>
                                         <p>Eth</p>
@@ -236,7 +259,7 @@ class TableList extends React.Component {
                                         <p>All Test Groups</p>
                                     </div>
                                 }
-                               
+
                             </div>
                         </div>
                         <div className="right-pick">
