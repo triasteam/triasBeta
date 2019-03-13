@@ -25,7 +25,7 @@ const en_US = {
     termNode: "Node",
     termVisualization: "Visualization",
     termStatus: "Status",
-    termLevel: "Level",
+    termRanking: "Ranking",
     termNodeList: "Node list",
     /* Table head: 'th...' */
     thBlockHeight: "Block height",

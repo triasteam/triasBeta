@@ -25,7 +25,7 @@ const zh_CN = {
     termNode: "节点",    
     termVisualization: "节点可视化",
     termStatus: "状态",
-    termLevel: "级别",
+    termRanking: "排名",
     termNodeList: "节点列表",
     /* 表头，'th...' */
     thBlockHeight: "区块高度",
