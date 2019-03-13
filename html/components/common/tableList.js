@@ -227,6 +227,11 @@ class TableList extends React.Component {
         second = second < 10 ? ('0' + second) : second;
         return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
     }
+    componentWillUnmount = () => {
+        this.setState = (state,callback)=>{
+          return;
+        };
+    }
     render() {
         return (
             <div className="table-list customTableWarp">

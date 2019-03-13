@@ -206,6 +206,11 @@ export default class Main extends React.Component {
             },shouldUpdateTime * 1000)
         }
     }
+    componentWillUnmount = () => {
+        this.setState = (state,callback)=>{
+          return;
+        };
+    }
     render() {
         let messages = {}
         messages['en'] = en_US;
