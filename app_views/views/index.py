@@ -3,12 +3,13 @@ Index message
 """
 import time
 import datetime
+import redis
 from django.http import JsonResponse
 from django.db.models import Q
 from app_views.models import Block, Node, Transaction, Activity, Hardware
 from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration
 from app_views.view_utils.logger import logger
-from app_views.view_utils.block_util import url_data
+from app_views.view_utils.block_util import url_data, get_ranking, get_validators
 from app_views.view_utils.redis_util import get_monitoring
 
 jc = JsonConfiguration()
@@ -79,22 +80,60 @@ def get_visualization(request):
         "ethereum": {"links": [], "nodes": []}
     }
     try:
-        response = url_data("http://192.168.1.209:8987/trias/getranking")
+        response = get_ranking()
         if response:
+            ranking = response['ranking']
             source_list = list(response.keys())
             source_list.remove('timestamp')
             source_list.remove('action')
             source_list.remove('ranking')
             links = []
             all_nodes = list(Node.objects.order_by('-id').values_list('node_ip', flat=True))
-            nodes = list(Node.objects.order_by('-id').values('node_ip', 'status'))
             for source_ip in source_list:
                 target_obj = response[source_ip]
                 target_ip_list = list(target_obj.keys())
                 for target_ip in target_ip_list:
                     links.append({"source": all_nodes.index(source_ip), "target": all_nodes.index(target_ip)})
             result['trias']['links'] = links
-            result['trias']['nodes'] = nodes
+            result['trias']['nodes'] = []
+
+            # get validators
+            validators = get_validators()
+            validators_ips = []
+            if validators:
+                for validator in validators['result']['validators']:
+                    validator_ip = Node.objects.filter(pub_key=validator['pub_key']['data'])
+                    if validator_ip.exists():
+                        validators_ips.append(validator_ip[0].node_ip)
+
+            # save ranking to redis
+            redis_client = redis.Redis(jc.redis_ip, jc.redis_port)
+            saved_ranking = redis_client.get('ranking')
+            logger.info('previous ranking %s' % saved_ranking)
+
+            for index, item in enumerate(ranking):
+                node_ip = item[1]
+                status = Node.objects.get(node_ip=node_ip).status
+                level = 1
+                if node_ip in validators_ips:
+                    level = 0
+
+                trend = 0
+                if saved_ranking:
+                    pre_ranking = eval(saved_ranking)
+                    if node_ip not in pre_ranking:
+                        trend = 1
+                    else:
+                        if index < pre_ranking.index(node_ip):
+                            trend = 1
+                        elif index > pre_ranking.index(node_ip):
+                            trend = -1
+
+                result['trias']['nodes'].append({"node_ip": node_ip, "status": status, 'level': level, 'trend': trend})
+
+            redis_client.delete('ranking')
+            redis_client.set('ranking', str([i[1] for i in ranking]))
+
         status = 'success'
     except Exception as e:
         logger.error(e)

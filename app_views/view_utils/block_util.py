@@ -3,6 +3,9 @@ import requests
 import json
 from requests.adapters import HTTPAdapter
 from app_views.view_utils.logger import logger
+from app_views.view_utils.localconfig import JsonConfiguration
+
+jc = JsonConfiguration()
 
 
 def url_data(url, params=None):
@@ -24,4 +27,24 @@ def stamp2datetime(stamp):
     tl = time.localtime(int(stamp))
     format_time = time.strftime("%Y-%m-%d %H:%M:%S", tl)
     return format_time
+
+
+def get_ranking():
+    for node in jc.node_list:
+        url = "http://%s:%s/trias/getranking" % (node['ip'], jc.ranking_port)
+        result = url_data(url)
+        if result:
+            return result
+
+
+def get_validators():
+    try:
+        for node in jc.node_list:
+            url = "http://%s:%s/validators" % (node['ip'], node['port'])
+            result = url_data(url)
+            if result and (result['error'] == ""):
+                return result
+    except Exception as e:
+        logger.error(e)
+        return
 
