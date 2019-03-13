@@ -6,10 +6,7 @@ import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-in
 import $ from 'jquery'
 import HomeActivities from './HomeActivities'
 import Timer from './common/Timer'
-
-import TimeAgo from 'javascript-time-ago'
-// Load locale-specific relative date/time formatting rules.
-import en from 'javascript-time-ago/locale/en'
+import GenerateTranstaction from './GenerateTranstaction'
 
 /**
  * RightPart components which displays:
@@ -167,6 +164,9 @@ class RightPart extends React.Component {
                         <p className="detail">{ this.state.SSD }</p>
                     </section>
                 </div>
+            
+                
+                <GenerateTranstaction />
             </div>
         )
     }

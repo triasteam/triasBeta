@@ -1,0 +1,250 @@
+/****** style of Simulations & Activities & Hardware Specifications ******/
+.bottom-group {
+    width: 1080px;
+    margin: 20px auto;
+    .main-title {
+        font-size:20px;
+        font-weight:600;
+        color:rgba(161,166,173,1);
+        line-height:28px;
+        margin-bottom: 36px;
+    }
+    .left-part {
+        width: 770px;
+        margin-right: 20px;
+        display: inline-block;
+        .general-statics {
+            background:rgba(41,42,50,1);
+            border-radius:4px;
+            padding: 32px;
+            padding-bottom: 18px;
+            .card-group {
+                display: -webkit-flex; /* Safari */
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+        }
+    }
+    .right-part {
+        width: 290px;
+        float: right;
+        .simulations {
+            height:415px;
+            background:rgba(41,42,50,1);
+            border-radius:4px;
+            padding: 32px 16px 24px;
+            margin-bottom: 21px;
+            .main-title {
+                margin-bottom: 28px;
+            }
+            .sim-data {
+                height:112px;
+                background:rgba(50,51,60,1);
+                border-radius:6px;
+                padding: 12px;
+                padding-bottom: 0;
+                margin-bottom: 33px;
+                p {
+                    font-size:15px;
+                    font-weight:400;
+                    color:rgba(161,166,173,1);
+                    line-height:22px;
+                    margin-bottom: 12px;
+                    .value {
+                        float: right;
+                        color:rgba(161,252,58,1);
+                        line-height:21px;
+                    }
+                }
+            }
+            .index {
+                font-size:24px;
+                font-weight:600;
+                color:rgba(255,255,255,1);
+                line-height:38px;
+                margin-bottom: 4px;
+            }
+            .note {
+                font-size:15px;
+                font-weight:400;
+                color:rgba(161,166,173,1);
+                line-height:22px
+            }
+            .percent-note {
+                margin-bottom: 32px;
+            }
+        }
+        .activities {
+            height:778px;
+            background:rgba(41,42,50,1);
+            border-radius:4px;
+            padding: 32px 16px 24px;
+            margin-bottom: 21px;
+            position: relative;
+            .transparent-bg {
+                width:242px;
+                height:90px;
+                background:linear-gradient(180deg,rgba(41,42,50,0) 0%,rgba(41,42,50,1) 100%);
+                position: absolute;
+                bottom: 54px;
+            }
+            .node-list {
+                height: 628px;
+                overflow-y: scroll;
+                .item {
+                    height: 133px;
+                    .left {
+                        float: left;
+                        img {
+                            width: 30px;
+                            height: 30px;
+                            margin-bottom: 8px;
+                        }
+                        p {
+                            width:4px;
+                            height:84px;
+                            background:rgba(68,72,81,1);
+                            margin-left: 12px;
+                        }
+                    }
+                    .right {
+                            font-size:15px;
+                            font-weight:400;
+                            color:rgba(161,166,173,1);
+                            line-height:22px;
+                            margin-left: 46px;
+                        .line2 {
+                            font-weight:600;
+                            margin: 2px 0 5px;
+                            color:rgba(255,255,255,1);
+                        }
+                        .line3 {
+                            width:83px;
+                            height:20px;
+                            background:rgba(68,72,81,1);
+                            border-radius:4px;
+                            line-height:16px;
+                            padding: 2px 8px;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+            .view-all {
+                width:242px;
+                height:28px;
+                display: inline-block;
+                margin: 0 auto;
+                background:rgba(39,65,8,1);
+                border-radius:4px;
+                border:1px solid rgba(161,252,58,1);
+                text-align: center;
+                padding: 5px 0px;
+                margin-top: 12px;
+                font-size:15px;
+                font-weight:400;
+                color:rgba(254,254,254,1);
+            }
+        }
+        .specifications {
+            height:500px;
+            background:rgba(41,42,50,1);
+            border-radius:6px;
+            padding: 32px 16px 24px;
+            margin-bottom: 20px;
+            .main-title {
+                margin-bottom: 28px;
+            }
+            section {
+                padding: 16px 0;
+                font-size:15px;
+                font-weight:600;
+                color:rgba(255,255,255,1);
+                line-height:22px;
+                border-bottom: 1px solid rgba(68,72,81,1);
+                .name {
+                    font-weight:400;
+                    color:rgba(161,166,173,1);
+                }
+            }
+        }
+        .generate-transaction {
+            background:rgba(41,42,50,1);
+            border-radius:6px;
+            padding: 32px 16px 0px;
+            overflow: hidden;
+            .main-title {
+                margin-bottom: 12px;
+            }
+            .explaination {
+                font-size:15px;
+                font-weight:400;
+                color:rgba(161,166,173,1);
+                line-height:22px;
+            }
+            .generate-btn {
+                width:242px;
+                height:28px;
+                display: inline-block;
+                margin: 0 auto;
+                background:rgba(39,65,8,1);
+                border-radius:4px;
+                border:1px solid rgba(161,252,58,1);
+                text-align: center;
+                padding: 5px 0px;
+                margin-top: 12px;
+                font-size:15px;
+                font-weight:400;
+                color:rgba(254,254,254,1);
+                margin-bottom: 36px;
+            }
+            .tran-card {
+                font-size:15px;
+                line-height:22px;
+                background:rgba(50,51,60,1);
+                border-radius:6px;
+                margin-bottom: 24px;
+                .text {
+                    padding: 14px 12px 0;
+                    .tran-name {
+                        font-weight:400;
+                        color:rgba(161,166,173,1);
+                        margin-bottom: 8px;
+                    }
+                    .tran-hint {
+                        font-weight:600;
+                        color:rgba(255,255,255,1);
+                        margin-bottom: 12px;
+                    }
+                }
+                .check-btn {
+                    height:34px;
+                    background:rgba(32,33,41,1);
+                    border-radius:0px 0px 6px 6px;
+                    padding: 6px 12px;
+                    img {
+                        width:15px;
+                        height:22px;  
+                        margin-top: -4px;
+                        margin-right: 4px;  
+                        vertical-align:middle;
+                    }
+                    span {
+                        font-size:15px;
+                        font-weight:500;
+                        color:rgba(71,72,86,1);
+                        line-height:22px;
+                    }
+                }
+                
+                .check-btn.success {
+                    span {
+                        color:rgba(161,252,58,1);
+                    }
+                }
+ 
+            }
+        }
+    }
+}
