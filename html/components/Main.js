@@ -130,6 +130,8 @@ export default class Main extends React.Component {
                         currentEventIndex: data.result.current_index,
                         eventList: data.result.event_list
                     })
+                    // Call the function that refreshes the next event
+                    self.getRefreshEventTime()
                     if(data.result.current_index == -1){
                         self.setState({
                             currentInfo: {
@@ -188,7 +190,22 @@ export default class Main extends React.Component {
         this.onLoadHeadNameBar();
         this.getTimeEvent();
     }
-
+    /**
+     * Deal with the next thing to a certain point in time
+     */
+    getRefreshEventTime(){
+        // The list is not empty && What is happening is not the last event
+        if(this.state.eventList.length >0 && this.state.currentEventIndex < this.state.eventList.length -1 ){
+            // Gets the timestamp when the next event occurs
+            let shouldUpdateTime = this.state.eventList[this.state.currentEventIndex+1].interval + 30
+            // Called at the point in time that the next event occurs
+            this.timeOut = setTimeout(()=>{
+                // update headLine 
+                this.getTimeEvent()
+                clearTimeout(this.timeOut)
+            },shouldUpdateTime * 1000)
+        }
+    }
     render() {
         let messages = {}
         messages['en'] = en_US;
@@ -251,8 +268,10 @@ export default class Main extends React.Component {
                                 </ul>
                             </div>
                         </header>
-                        <HeadLine headBarName = {this.state.pathName} eventList = {this.state.eventList}
-            currentEventIndex = {this.state.currentEventIndex}/>
+                        <HeadLine 
+                            headBarName = {this.state.pathName} 
+                            eventList = {this.state.eventList}
+                            currentEventIndex = {this.state.currentEventIndex}/>
                         <section className="main">
                             <Switch>
                                 <Route exact path="/"  render={props => <ChainSatus currentInfo = {this.state.currentInfo} {...props} />}  />
