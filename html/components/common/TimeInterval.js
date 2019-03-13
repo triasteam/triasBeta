@@ -39,7 +39,7 @@ export default class TimeInterval extends React.Component {
             times--;
             this.changeTime(times)
             
-            if (times <= 0) {
+            if (times < 0) {
                 // Refresh event list
                 this.props.refreshEventList();
                 clearInterval(this.timerChange)
