@@ -84,6 +84,11 @@ export default class EventHappenSwiper extends React.Component {
   refreshEventList = () =>{
     this.getTimeEvent();
   }
+  componentWillUnmount = () => {
+    this.setState = (state,callback)=>{
+      return;
+    };
+}
   render() {
     return (
       <div className="eventSwiper">

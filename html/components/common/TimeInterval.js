@@ -95,7 +95,10 @@ export default class TimeInterval extends React.Component {
         this.timerChange = clearInterval(this.timerChange)
     }
 
-    componentWillUnmount() {
+    componentWillUnmount = () => {
+        this.setState = (state,callback)=>{
+          return;
+        };
         this.clearInterval()
     }
 
