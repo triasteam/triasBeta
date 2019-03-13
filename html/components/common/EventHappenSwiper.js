@@ -78,7 +78,12 @@ export default class EventHappenSwiper extends React.Component {
   componentDidMount() {
     this.getTimeEvent();
   }
-
+  /**
+   * Refresh event list
+   */
+  refreshEventList = () =>{
+    this.getTimeEvent();
+  }
   render() {
     return (
       <div className="eventSwiper">
@@ -118,6 +123,7 @@ export default class EventHappenSwiper extends React.Component {
                           <TimeInterval
                             interval={event.interval}
                             TimeChange={"decrease"}
+                            refreshEventList = {this.refreshEventList}
                           />
                         )}
                       </div>

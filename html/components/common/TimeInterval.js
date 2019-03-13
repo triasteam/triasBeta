@@ -38,7 +38,10 @@ export default class TimeInterval extends React.Component {
         this.timerChange = setInterval(() => {
             times--;
             this.changeTime(times)
+            
             if (times <= 0) {
+                // Refresh event list
+                this.props.refreshEventList();
                 clearInterval(this.timerChange)
             }
         }, 1000)
@@ -86,10 +89,14 @@ export default class TimeInterval extends React.Component {
             this.transformTime(this.props.interval)
         }
     }
-
-    componentWillUnmount() {
+    
+    clearInterval(){
         // clear timer
         this.timerChange = clearInterval(this.timerChange)
+    }
+
+    componentWillUnmount() {
+        this.clearInterval()
     }
 
     render() {
