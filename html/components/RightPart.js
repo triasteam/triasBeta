@@ -11,7 +11,7 @@ import GenerateTranstaction from './GenerateTranstaction'
 /**
  * RightPart components which displays:
  */
-class RightPart extends React.Component {
+export default class RightPart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -33,8 +33,6 @@ class RightPart extends React.Component {
             },
             date: ''
         }
-    }
-    componentWillMount() {
     }
 
     componentDidMount() {
@@ -73,12 +71,6 @@ class RightPart extends React.Component {
         })
     }
     
-    /**
-     * When the component will unmount.
-     * Clear the intervals 
-     */
-    componentWillUnmount() {
-    }
     /**
      * Before a mounted component receives new props, reset some state.
      * @param {Object} nextProps new props
@@ -171,10 +163,3 @@ class RightPart extends React.Component {
         )
     }
 }
-
-/* Inject intl to RightPart props */
-const propTypes = {
-    intl: intlShape.isRequired,
-};
-RightPart.propTypes = propTypes
-export default injectIntl(RightPart)

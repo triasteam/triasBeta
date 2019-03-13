@@ -10,7 +10,7 @@ import $ from 'jquery'
 /**
  * RightPart components which displays:
  */
-class GenerateTranstaction extends React.Component {
+export default class GenerateTranstaction extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -22,43 +22,10 @@ class GenerateTranstaction extends React.Component {
 
     componentDidMount() {
         // console.log('rrrrrr',this.props.currentEventIndex)
-        this.setState({
-        })
+        // this.setState({
+        // })
     }
  
-
-    /**
-     * 
-     * Get the data for Hardware Specifications part
-     *  
-     */
-    getSpecifications() {
-        var self = this;
-        $.ajax({
-            url:"/api/hardware_specifications/",
-            type:"GET",
-            dataType:"json",
-            success: function(data){
-                if(data.status == "success") {
-                    // console.log("kiki",data)
-                    self.setState({
-                        CPU: data.result.CPU,
-                        GPU: data.result.GPU,
-                        Motherboard: data.result.Motherboard,
-                        RAM: data.result.RAM,
-                        SSD: data.result.SSD,
-                    })
-                }
-            }
-        })
-    }
-    
-    /**
-     * When the component will unmount.
-     * Clear the intervals 
-     */
-    componentWillUnmount() {
-    }
 
     /**
      * Before a mounted component receives new props, reset some state.
@@ -66,11 +33,11 @@ class GenerateTranstaction extends React.Component {
      */
     componentWillReceiveProps(nextProps) {
         // console.log('rrrrr',this.props.currentInfo,nextProps.currentInfo)
-        if (JSON.stringify(nextProps.currentInfo) != JSON.stringify(this.props.currentInfo)) {
-            this.setState({
-                currentInfo: nextProps.currentInfo
-            })
-        }
+        // if (JSON.stringify(nextProps.currentInfo) != JSON.stringify(this.props.currentInfo)) {
+        //     this.setState({
+        //         currentInfo: nextProps.currentInfo
+        //     })
+        // }
     }
 
     render() {
@@ -102,15 +69,8 @@ class GenerateTranstaction extends React.Component {
                         {/* <Link to="/activities">Check Transtaction</Link> */}
                     </div>
                 </div>
-                <Modal/>
+                {/* <Modal/> */}
             </div>
         )
     }
 }
-
-/* Inject intl to RightPart props */
-const propTypes = {
-    intl: intlShape.isRequired,
-};
-GenerateTranstaction.propTypes = propTypes
-export default injectIntl(GenerateTranstaction)

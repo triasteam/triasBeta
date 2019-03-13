@@ -12,7 +12,7 @@ import en from 'javascript-time-ago/locale/en'
 /**
  * HomeActivities components which displays:
  */
-class HomeActivities extends React.Component {
+export default class HomeActivities extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -148,10 +148,3 @@ class HomeActivities extends React.Component {
         )
     }
 }
-
-/* Inject intl to RightPart props */
-const propTypes = {
-    intl: intlShape.isRequired,
-};
-HomeActivities.propTypes = propTypes
-export default injectIntl(HomeActivities)
