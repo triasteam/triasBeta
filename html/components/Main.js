@@ -197,7 +197,7 @@ export default class Main extends React.Component {
         // The list is not empty && What is happening is not the last event
         if(this.state.eventList.length >0 && this.state.currentEventIndex < this.state.eventList.length -1 ){
             // Gets the timestamp when the next event occurs
-            let shouldUpdateTime = this.state.eventList[this.state.currentEventIndex+1].interval + 30
+            let shouldUpdateTime = this.state.eventList[this.state.currentEventIndex+1].interval + 3
             // Called at the point in time that the next event occurs
             this.timeOut = setTimeout(()=>{
                 // update headLine 

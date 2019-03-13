@@ -1,10 +1,7 @@
 import React from "react";
 import LineMark from "./LineMark";
 import $ from "jquery";
-import {
-  injectIntl,
-  intlShape,
-} from "react-intl"; /* react-intl imports */
+import { injectIntl, intlShape } from "react-intl"; /* react-intl imports */
 
 /**
  * Component for the line chart collection
@@ -153,18 +150,16 @@ class LineMarkCollection extends React.Component {
    */
   componentDidMount() {
     var self = this;
+    self.getMonitoring();
+    self.getTpsDial();
+    self.getFaultyDial();
+    self.getAccetpanceDial();
     self.getMonitoringInterval = setInterval(function() {
       self.getMonitoring();
       self.getTpsDial();
       self.getFaultyDial();
       self.getAccetpanceDial();
     }, 5000);
-    setTimeout(() => {
-      self.getMonitoring();
-      self.getTpsDial();
-      self.getFaultyDial();
-      self.getAccetpanceDial();
-    }, 0);
   }
 
   /**
@@ -172,7 +167,13 @@ class LineMarkCollection extends React.Component {
    * Clear the intervals
    */
   componentWillUnmount() {
-    clearInterval(this.getMonitoringInterval);
+    if (this.getMonitoringInterval) {
+      clearInterval(this.getMonitoringInterval);
+    }
+    this.setState = (state,callback)=>{
+      return;
+    };
+    
   }
 
   render() {
