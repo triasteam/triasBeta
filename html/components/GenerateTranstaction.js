@@ -20,6 +20,9 @@ export default class GenerateTranstaction extends React.Component {
             showNullModal: false,
             showDetailModal: false,
             tranContent: '',
+            tranCardGroup:[],
+           
+
         }
     }
     componentWillMount() {
@@ -31,8 +34,13 @@ export default class GenerateTranstaction extends React.Component {
         // })
     }
     sendTransaction() {
-        console.log(this.state.tranContent)
-        let info = this.state.tranContent;
+        console.log(this.state.tranCardGroup);
+        let self = this;
+        let group = [];
+        // let itemName = 'item' + this.state.tranCardGroup.length;
+        let info = self.state.tranContent;
+        let item = {};
+       
         $.ajax({
             url: "/api/send_transaction/",
             type: "POST",
@@ -41,11 +49,51 @@ export default class GenerateTranstaction extends React.Component {
                 content: info
             },
             success: function(data){
-                console.log(data)
+                // console.log(data)
+                if( data.status == "success" ) {
+                    // let tranCardGroup = {...this.state.tranCardGroup}
+                    // let statusCopy = Object.assign({}, this.state);
+                    // statusCopy.tranCardGroup[itemName].id = data.result.id;
+                    // this.setState(statusCopy);
+
+                    // tranCardGroup[itemName].id = data.result.id;
+                    // this.setState({tranCardGroup});
+                    // const { stateOpt } = { ...this.state };
+                    // const currentState = stateOpt;
+                    // const { name, value } = e.target;
+                    // currentState.tranCardGroup[itemName].id = data.result.id;
+                  
+                    // this.setState({ stateOpt: currentState });
+                    // console.log( stateOpt )
+                    item = { 
+                        status: 1,
+                        id: data.result.id
+                    }
+                    group.push(item);
+                    group = group.concat(self.state.tranCardGroup);
+                    if (group.length > 3) {
+                        group = group.slice(0,3);
+                    }
+                    self.setState({
+                        tranCardGroup: group,
+                        showInputModal: !self.state.showInputModal,
+                    })
+                    
+                    // this.setstate({
+                    //     ...this.state.tranCardGroup[0],
+                    //     id: data.result.id
+                    // })
+                    console.log( self.state.tranCardGroup)
+
+                }
             }
         })
     }
-
+    showInput() {
+        this.setState({showInputModal: !this.state.showInputModal})
+        $("#user-input").val("");
+        console.log($("#user-input").val(""))
+    }
     
     handleText(e) {
         let content = e.target.value;
@@ -68,13 +116,13 @@ export default class GenerateTranstaction extends React.Component {
     }
 
     render() {
-       
+    //    let self = this;
         return (
             <div className="generate-transaction">
                 <p className="main-title">Transaction Test</p>
                 <p className="explaination">Generate new transtactions to start. When transactions is finished, you’ll be able to check the details.</p>
-                <a className="generate-btn" onClick={()=>{this.setState({showInputModal: !this.state.showInputModal})}}>Generate New Transtaction</a>
-                <div className="tran-card">
+                <a className="generate-btn" onClick={this.showInput.bind(this)}>Generate New Transtaction</a>
+                {/* <div className="tran-card">
                     <div className="text">
                         <p className="tran-name">Transaction #01</p>
                         <p className="tran-hint">Pending…</p>
@@ -83,17 +131,23 @@ export default class GenerateTranstaction extends React.Component {
                         <img src={require("../img/icon/inline/icon_check_disable@2x.png")} />
                         <Link to="/activities">Check Transtaction</Link>
                     </div>
-                </div>
-                <div className="tran-card">
-                    <div className="text">
-                        <p className="tran-name">Transaction #01</p>
-                        <p className="tran-hint">Succeed!</p>
-                    </div>
-                    <div className="check-btn success">
-                        <img src={require("../img/icon/inline/icon_check_enable@2x.png")} />
-                        <Link to="/activities">Check Transtaction</Link>
-                    </div>
-                </div>
+                </div> */}
+                {
+                    this.state.tranCardGroup && this.state.tranCardGroup.map(function(item, index) {
+                        return (
+                            <div className="tran-card" key={"item"+index}>
+                                <div className="text">
+                                    <p className="tran-name">Transaction #01</p>
+                                    <p className="tran-hint">Succeed!</p>
+                                </div>
+                                <div className="check-btn success">
+                                    <img src={require("../img/icon/inline/icon_check_enable@2x.png")} />
+                                    <Link to="/activities">Check Transtaction</Link>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
                 { this.state.showDetailModal &&
                     <section className="modal-layer">
                         <div className="modal detail-modal">
@@ -138,8 +192,8 @@ export default class GenerateTranstaction extends React.Component {
                             <h2>Enter Your Content</h2>
                             <p>You can enter up to 255 characters, UTF-8 format only.</p>
                             <h5>Content Included</h5>
-                            <textarea placeholder="Please enter your content."
-                             value={this.state.tranContent} onChange={this.handleText.bind(this)}>
+                            <textarea id="user-input" placeholder="Please enter your content."
+                             onChange={this.handleText.bind(this)}>
                             </textarea>                       
                             <button onClick={this.sendTransaction.bind(this)}>Send Transaction</button>
                         </div>
