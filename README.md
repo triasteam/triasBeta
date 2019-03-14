@@ -1,13 +1,18 @@
-# trias_beta
+# Trais Beta
+
+This project is a web portal which displays statistics and data of the Trias Beta system.
 
 ## Requirements
- - python: 3.4 or later.
- - Django: 1.9.7 or later.
- - django-webpack-loader: 0.2.4
- - react: 16.3.2
- - webpack: 2.7.0
+|Requirement|Notes|
+|-----|---|
+|python|3.4 or later|
+|Django|1.10.4 or later|
+|django-webpack-loader|0.2.4|
+|react|16.3.2|
+|webpack|2.7.0|
 
-## Contributions
+## Documentation
+### Install
 Install dependencies: 
 
 ```
@@ -17,7 +22,7 @@ pip3 install -r requirements.txt
 npm install
 ```
 
-Next,
+### Quick Start
 - Development mode, run `webpack-dev-server`: 
   
   `npm start`
@@ -32,11 +37,10 @@ Then, start the django server:
 
 Finally, open http://localhost:8000 .
 
-## Directory Description
-**app_views/**: This directory is used for Django custom application *app*.
-
-**conf/**: This directory contains Django configuration files for deployment.
-
-**html/**: This directory contains source code of web views such as web page assets files, react components, bundles and so on.
-
-**trias_beta/**: This directory is used for Django custom peject.
+### Directory Description
+|Directory|Description|
+|-----|---|
+|**app_views/**|This directory is used for Django custom application *app*.|
+|**conf/**|This directory contains Django configuration files for deployment.|
+|**html/**|This directory contains source code of web views such as web page assets files, react components, bundles and so on.|
+|**trias_beta/**|This directory is used for Django custom peject.|
