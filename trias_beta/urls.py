@@ -31,6 +31,8 @@ urlpatterns = [
     url(r'^api/instant_message/', index.get_instant_message),  # Instant Message
     url(r'^api/hardware_specifications/', index.get_hardware_specifications),  # Hardware Specifications
     url(r'^api/nodes_num/', index.get_nodes_num),  # Nodes Number
+    url(r'^api/send_transaction/', index.send_transaction),  # Send Transaction
+    url(r'^api/query_transactions/', index.query_transactions),  # Query Transactions
 
     url(r'^api/activity_list/', activity.get_activity_list),  # Activity List
 

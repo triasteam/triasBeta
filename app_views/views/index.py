@@ -4,12 +4,15 @@ Index message
 import time
 import datetime
 import redis
+import uuid
+import hashlib
+import threading
 from django.http import JsonResponse
 from django.db.models import Q
-from app_views.models import Block, Node, Transaction, Activity, Hardware
+from app_views.models import Block, Node, Transaction, Activity, Hardware, TransactionLog
 from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration
 from app_views.view_utils.logger import logger
-from app_views.view_utils.block_util import url_data, get_ranking, get_validators
+from app_views.view_utils.block_util import url_data, get_ranking, get_validators, send_transaction_util
 from app_views.view_utils.redis_util import get_monitoring
 
 jc = JsonConfiguration()
@@ -109,30 +112,29 @@ def get_visualization(request):
             # save ranking to redis
             redis_client = redis.Redis(jc.redis_ip, jc.redis_port)
             saved_ranking = redis_client.get('ranking')
-            logger.info('previous ranking %s' % saved_ranking)
+            logger.info('previous ranking %s' % validators_ips)
 
-            for index, item in enumerate(ranking):
-                node_ip = item[1]
-                status = Node.objects.get(node_ip=node_ip).status
-                level = 1
-                if node_ip in validators_ips:
-                    level = 0
-
+            for index, item in enumerate(validators_ips):
+                status = Node.objects.get(node_ip=item).status
                 trend = 0
                 if saved_ranking:
                     pre_ranking = eval(saved_ranking)
-                    if node_ip not in pre_ranking:
+                    if item not in pre_ranking:
                         trend = 1
                     else:
-                        if index < pre_ranking.index(node_ip):
+                        if index < pre_ranking.index(item):
                             trend = 1
-                        elif index > pre_ranking.index(node_ip):
+                        elif index > pre_ranking.index(item):
                             trend = -1
+                result['trias']['nodes'].append({"node_ip": item, "status": status, 'level': 0, 'trend': trend})
+                all_nodes.remove(item)
 
-                result['trias']['nodes'].append({"node_ip": node_ip, "status": status, 'level': level, 'trend': trend})
+            for item in all_nodes:
+                status = Node.objects.get(node_ip=item).status
+                result['trias']['nodes'].append({"node_ip": item, "status": status, 'level': 1, 'trend': 0})
 
             redis_client.delete('ranking')
-            redis_client.set('ranking', str([i[1] for i in ranking]))
+            redis_client.set('ranking', str([i for i in validators_ips]))
 
         status = 'success'
     except Exception as e:
@@ -281,7 +283,7 @@ def get_data_monitoring(request):
         if faulty_nodes_list:
             new_faulty_nodes_list = [eval(i) for i in faulty_nodes_list]
             start_time = new_faulty_nodes_list[0]
-            a_x_time = [(start_time-i*60) for i in range(10)][::-1]
+            a_x_time = [(start_time-i*60) for i in range(11)][::-1]
 
             # Get recent events
             event_list = []
@@ -299,14 +301,14 @@ def get_data_monitoring(request):
             result['faulty_nodes_list']['trias']['time'] = a_x_time
             result['faulty_nodes_list']['trias']['value'] = new_faulty_nodes_list[1:][::-1]
             result['faulty_nodes_list']['ethereum']['time'] = a_x_time
-            result['faulty_nodes_list']['ethereum']['value'] = [0,0,0,0,0,0,0,0,0,0]
+            result['faulty_nodes_list']['ethereum']['value'] = [0,0,0,0,0,0,0,0,0,0,0]
             result['faulty_nodes_list']['hyperledger']['time'] = a_x_time
-            result['faulty_nodes_list']['hyperledger']['value'] = [0,0,0,0,0,0,0,0,0,0]
+            result['faulty_nodes_list']['hyperledger']['value'] = [0,0,0,0,0,0,0,0,0,0,0]
 
         if fault_accetpance_rate:
             new_fault_accetpance_rate = [eval(i) for i in fault_accetpance_rate]
             start_time = new_fault_accetpance_rate[0]
-            b_x_time = [(start_time - i * 60) for i in range(10)][::-1]
+            b_x_time = [(start_time - i * 60) for i in range(11)][::-1]
 
             # Get recent events
             event_list = []
@@ -324,14 +326,14 @@ def get_data_monitoring(request):
             result['fault_accetpance_rate']['trias']['time'] = b_x_time
             result['fault_accetpance_rate']['trias']['value'] = new_fault_accetpance_rate[1:][::-1]
             result['fault_accetpance_rate']['ethereum']['time'] = b_x_time
-            result['fault_accetpance_rate']['ethereum']['value'] = [0,0,0,0,0,0,0,0,0,0]
+            result['fault_accetpance_rate']['ethereum']['value'] = [0,0,0,0,0,0,0,0,0,0,0]
             result['fault_accetpance_rate']['hyperledger']['time'] = b_x_time
-            result['fault_accetpance_rate']['hyperledger']['value'] = [0,0,0,0,0,0,0,0,0,0]
+            result['fault_accetpance_rate']['hyperledger']['value'] = [0,0,0,0,0,0,0,0,0,0,0]
 
         if tps_monitoring:
             new_tps_monitoring = [eval(i) for i in tps_monitoring]
             start_time = new_tps_monitoring[0]
-            c_x_time = [(start_time - i * 60) for i in range(10)][::-1]
+            c_x_time = [(start_time - i * 60) for i in range(11)][::-1]
 
             # Get recent events
             event_list = []
@@ -349,9 +351,9 @@ def get_data_monitoring(request):
             result['tps_monitoring']['trias']['time'] = c_x_time
             result['tps_monitoring']['trias']['value'] = new_tps_monitoring[1:][::-1]
             result['tps_monitoring']['ethereum']['time'] = c_x_time
-            result['tps_monitoring']['ethereum']['value'] = [0,0,0,0,0,0,0,0,0,0]
+            result['tps_monitoring']['ethereum']['value'] = [0,0,0,0,0,0,0,0,0,0,0]
             result['tps_monitoring']['hyperledger']['time'] = c_x_time
-            result['tps_monitoring']['hyperledger']['value'] = [0,0,0,0,0,0,0,0,0,0]
+            result['tps_monitoring']['hyperledger']['value'] = [0,0,0,0,0,0,0,0,0,0,0]
 
         status = 'success'
 
@@ -393,3 +395,54 @@ def get_nodes_num(request):
         status, result = 'failure', {}
 
     return JsonResponse({'status': status, 'result': result})
+
+
+def send_transaction(request):
+    try:
+        content = request.POST.get('content', '')
+        if not content:
+            return JsonResponse({'status': 'failure', 'result': 'parameter error'})
+        id = str(uuid.uuid1())
+        sha256 = hashlib.sha256()
+        sha256.update(id.encode('utf-8'))
+        sha256_id = sha256.hexdigest()
+        t = threading.Thread(target=send_transaction_util, args=[sha256_id, content])
+        t.start()
+        logger.info('create transaction sha256_id %s' % sha256_id)
+        status, result = 'success', {'id': sha256_id}
+    except Exception as e:
+        logger.error(e)
+        status, result = 'failure', 'connect error'
+
+    return JsonResponse({'status': status, 'result': result})
+
+
+def query_transactions(request):
+    try:
+        id = request.GET.get('id', '')
+        if not id:
+            return JsonResponse({'status': 'failure', 'result': 'parameter error'})
+
+        transaction_log = TransactionLog.objects.filter(trias_hash=id)
+        if not transaction_log.exists():
+            return JsonResponse({'status': 'failure', 'result': 'trade not exists'})
+
+        tx = transaction_log[0]
+        id = tx.trias_hash
+        hash = tx.hash
+        block_height = tx.block_heigth
+        content = tx.content
+        log = tx.log
+        result = {'id': id, 'hash': hash, 'block_height': block_height, 'content': content, 'log': log}
+        if tx.status == 0:
+            # tx success
+            status = 'tx_success'
+        else:
+            status = 'tx_failure'
+
+    except Exception as e:
+        logger.error(e)
+        status, result = 'failure', 'connect error'
+
+    return JsonResponse({'status': status, 'result': result})
+

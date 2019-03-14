@@ -54,3 +54,16 @@ class Hardware(models.Model):
 
     class Meta:
         db_table = "hardware_info"
+
+
+class TransactionLog(models.Model):
+    status = models.IntegerField(default=2)  # transaction status: 0 success  1 error
+    trias_hash = models.CharField(max_length=255)
+    hash = models.CharField(max_length=255, default='')
+    block_heigth = models.BigIntegerField(default=0)
+    content = models.TextField(default='')
+    log = models.CharField(max_length=255, default='')
+    time = models.BigIntegerField(default=0)
+
+    class Meta:
+        db_table = "transaction_log"
