@@ -14,25 +14,14 @@ export default class Timer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            timeCount: ''
+            timeCount: '',
         }
     }
-    // Countdown function groups
-    transformTime(times) {
-        this.interval(times)
-    }
+   
     transformTimeAdd(times) {
         this.intervalAdd(times)
     }
-    interval(times) {
-        this.timerChange = setInterval(() => {
-            times--;
-            this.changeTime(times)
-            if(times<=0){
-                clearInterval(this.timerChange)
-            }
-        }, 1000)
-    }
+    
     changeTime(times) {
         var day = 0,
             hour = 0,
@@ -66,13 +55,15 @@ export default class Timer extends React.Component {
      * Set the intervals 
      */
     componentDidMount() {
-        if(this.props.TimeChange == 'add'){
-            this.transformTimeAdd(this.props.interval)
-        }else{
-            this.transformTime(this.props.interval)
-        }
+        this.transformTimeAdd(this.props.interval)
     }
 
+    componentWillReceiveProps(nextProps){
+        if(this.props.interval!=nextProps.interval){
+            this.timerChange = clearInterval(this.timerChange)
+            this.transformTimeAdd(nextProps.interval)
+        }
+    }
     /**
      * Clear time interval when the component will be unmounted
      */
@@ -86,7 +77,7 @@ export default class Timer extends React.Component {
 
             <span className="eventInterval">
                 {
-                    this.props.interval > 0 &&
+                    this.props.interval &&
                     <span >{this.state.timeCount}</span>
                 }
                 
