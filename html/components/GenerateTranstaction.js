@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 // ES6Promise.polyfill() //关键代码,让ie识别promise对象!
 import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
 import $ from 'jquery'
+import { func } from "prop-types";
 
 
 /**
@@ -14,7 +15,11 @@ export default class GenerateTranstaction extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+            showInputModal: false,
+            showErrorModal: false,
+            showNullModal: false,
+            showDetailModal: false,
+            tranContent: '',
         }
     }
     componentWillMount() {
@@ -25,7 +30,29 @@ export default class GenerateTranstaction extends React.Component {
         // this.setState({
         // })
     }
- 
+    sendTransaction() {
+        console.log(this.state.tranContent)
+        let info = this.state.tranContent;
+        $.ajax({
+            url: "/api/send_transaction/",
+            type: "POST",
+            dataType:"json",
+            data: {
+                content: info
+            },
+            success: function(data){
+                console.log(data)
+            }
+        })
+    }
+
+    
+    handleText(e) {
+        let content = e.target.value;
+        this.setState({
+            tranContent: content,
+        })
+    }
 
     /**
      * Before a mounted component receives new props, reset some state.
@@ -46,7 +73,7 @@ export default class GenerateTranstaction extends React.Component {
             <div className="generate-transaction">
                 <p className="main-title">Transaction Test</p>
                 <p className="explaination">Generate new transtactions to start. When transactions is finished, you’ll be able to check the details.</p>
-                <a className="generate-btn">Generate New Transtaction</a>
+                <a className="generate-btn" onClick={()=>{this.setState({showInputModal: !this.state.showInputModal})}}>Generate New Transtaction</a>
                 <div className="tran-card">
                     <div className="text">
                         <p className="tran-name">Transaction #01</p>
@@ -67,7 +94,75 @@ export default class GenerateTranstaction extends React.Component {
                         <Link to="/activities">Check Transtaction</Link>
                     </div>
                 </div>
-                {/* <Modal/> */}
+                { this.state.showDetailModal &&
+                    <section className="modal-layer">
+                        <div className="modal detail-modal">
+                            <div className="close-btn"><img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" /></div>
+                            <h2>Transactions Detail</h2>
+                            <p>Check complete, the transaction is complete</p>
+                            <div className="detail-part1">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td width="33%">Transactions Hash</td>
+                                            <td width="66%">b09a57d476ea01c7f91756adff1d560e5d004b146095f94d3ef3e7500f6e5d2b4459fdf5f568439c10fc6615dbea1479057ac99a28d3f30e259b30ecc9dc7</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="33%">Block Height</td>
+                                            <td width="66%">#98738</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="33%">Merkle Proofs</td>
+                                            <td width="66%">b09a57d476ea01c7f91756adff1d560e579057ac99a28d3f30e259b30ecc9dc7</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h5>Content Included</h5>
+                            <div className="detail-part2">
+                                In order to validate the inclusivity of K, K doesn’t have to be revealed, 
+                                similarly the hash of data L can be revealed without any implicit security 
+                                repercussions and so on.
+                            </div>
+                        </div>
+                    </section>
+                }
+
+                { this.state.showInputModal &&
+                    <section className="modal-layer">
+                        <div className="modal input-modal">
+                            <div className="close-btn">
+                                <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗"
+                                    onClick={()=>{this.setState({showInputModal: !this.state.showInputModal})}} />
+                            </div>
+                            <h2>Enter Your Content</h2>
+                            <p>You can enter up to 255 characters, UTF-8 format only.</p>
+                            <h5>Content Included</h5>
+                            <textarea placeholder="Please enter your content."
+                             value={this.state.tranContent} onChange={this.handleText.bind(this)}>
+                            </textarea>                       
+                            <button onClick={this.sendTransaction.bind(this)}>Send Transaction</button>
+                        </div>
+                    </section>
+                }
+
+                {/* <section className="modal-layer">
+                    <div className="modal error-modal">
+                        <div className="close-btn"><img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" /></div>
+                        <img src={require('../img/icon/button_icon/icon_error_title@2x.png')} alt="查询错误" />
+                        <h2>Transaction Not Found.</h2>
+                        <p>The transaction you’re checking may not exist, try checking another one.</p>
+                    </div>
+                </section> */}
+
+                {/* <section className="modal-layer">
+                    <div className="modal error-modal">
+                        <div className="close-btn"><img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" /></div>
+                        <img src={require('../img/icon/button_icon/icon_error_title@2x.png')} alt="查询错误" />
+                        <h2>Error Occurred!</h2>
+                        <p>Check your internet connection, try reloading the webpage then check transactions again.</p>
+                    </div>
+                </section> */}
             </div>
         )
     }
