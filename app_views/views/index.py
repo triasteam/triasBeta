@@ -5,10 +5,11 @@ import time
 import datetime
 import redis
 import uuid
+import hashlib
 import threading
 from django.http import JsonResponse
 from django.db.models import Q
-from app_views.models import Block, Node, Transaction, Activity, Hardware
+from app_views.models import Block, Node, Transaction, Activity, Hardware, TransactionLog
 from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration
 from app_views.view_utils.logger import logger
 from app_views.view_utils.block_util import url_data, get_ranking, get_validators, send_transaction_util
@@ -402,10 +403,13 @@ def send_transaction(request):
         if not content:
             return JsonResponse({'status': 'failure', 'result': 'parameter error'})
         id = str(uuid.uuid1())
-        t = threading.Thread(target=send_transaction_util, args=[id, content])
+        sha256 = hashlib.sha256()
+        sha256.update(id.encode('utf-8'))
+        sha256_id = sha256.hexdigest()
+        t = threading.Thread(target=send_transaction_util, args=[sha256_id, content])
         t.start()
-        logger.info('create transaction uuid %s' % id)
-        status, result = 'success', {'id': id}
+        logger.info('create transaction sha256_id %s' % sha256_id)
+        status, result = 'success', {'id': sha256_id}
     except Exception as e:
         logger.error(e)
         status, result = 'failure', 'connect error'
@@ -418,18 +422,23 @@ def query_transactions(request):
         id = request.GET.get('id', '')
         if not id:
             return JsonResponse({'status': 'failure', 'result': 'parameter error'})
-        redis_client = redis.Redis(jc.redis_ip, jc.redis_port)
-        tx_result = redis_client.get(id)
-        if not tx_result:
+
+        transaction_log = TransactionLog.objects.filter(trias_hash=id)
+        if not transaction_log.exists():
             return JsonResponse({'status': 'failure', 'result': 'trade not exists'})
 
-        tx_info = eval(tx_result)
-        if tx_info[0] == 'success':
-            status, result = 'tx_success', {'tx_hash': tx_info[1], 'block_height': tx_info[2],
-                                            'proof': tx_info[3], 'content': tx_info[4]}
+        tx = transaction_log[0]
+        id = tx.trias_hash
+        hash = tx.hash
+        block_height = tx.block_heigth
+        content = tx.content
+        log = tx.log
+        result = {'id': id, 'hash': hash, 'block_height': block_height, 'content': content, 'log': log}
+        if tx.status == 0:
+            # tx success
+            status = 'tx_success'
         else:
-            logger.warning('Trade Error: %s' % tx_info[1])
-            status, result = 'tx_failure', tx_info[1]
+            status = 'tx_failure'
 
     except Exception as e:
         logger.error(e)

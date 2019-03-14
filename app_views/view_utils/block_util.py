@@ -1,10 +1,10 @@
 import time
 import requests
 import json
-import redis
 from requests.adapters import HTTPAdapter
 from app_views.view_utils.logger import logger
 from app_views.view_utils.localconfig import JsonConfiguration
+from app_views.models import TransactionLog
 
 jc = JsonConfiguration()
 
@@ -52,30 +52,26 @@ def get_validators():
 
 def send_transaction_util(id, content):
     params = {"tx": content}
-    redis_client = redis.Redis(jc.redis_ip, jc.redis_port)
+    nowtime = int(time.time())
     try:
         for node in jc.node_list:
-            url = "http://%s:%s/broadcast_tx_commit" % (node['ip'], node['port'])
+            url = "http://%s:%s/tri_bc_tx_commit" % (node['ip'], node['port'])
             result = url_data(url, params=params, time_out=120)
             if result:
                 # save tx hash
                 if result['error'] == "":
                     # tx success
-                    query_url = "http://%s:%s/abci_query" % (node['ip'], node['port'])
-                    query_params = {"path": "", "data": content, "prove": True}
-                    query_result = url_data(query_url, query_params, time_out=10)
-                    if query_result['error'] == "":
-                        proof = query_result['result']['response']['proof']
-                        # ["success", hash, height, proof, content]
-                        redis_client.set(id, str(['success', result['result']['hash'],
-                                                  result['result']['height'], proof, content]), 600)
-                    else:
-                        redis_client.set(id, str(['failure', query_result['error']]), 600)
+                    hash = result['result']['hash']
+                    height = result['result']['height']
+                    TransactionLog.objects.create(status=0, hash=hash, block_heigth=height,
+                                                  content=content, trias_hash=id, log='', time=nowtime)
                 else:
-                    # failure
-                    redis_client.set(id, str(['failure', result['error']]), 600)
-                return result
+                    log = result['error']
+                    TransactionLog.objects.create(status=1, content=content, trias_hash=id, log=log, time=nowtime)
+
+                return
+
+        TransactionLog.objects.create(status=1, content=content, trias_hash=id, log='transaction handling exception', time=nowtime)
     except Exception as e:
         logger.error(e)
-        return
 
