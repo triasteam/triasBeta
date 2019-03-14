@@ -4,12 +4,14 @@ Index message
 import time
 import datetime
 import redis
+import uuid
+import threading
 from django.http import JsonResponse
 from django.db.models import Q
 from app_views.models import Block, Node, Transaction, Activity, Hardware
 from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration
 from app_views.view_utils.logger import logger
-from app_views.view_utils.block_util import url_data, get_ranking, get_validators
+from app_views.view_utils.block_util import url_data, get_ranking, get_validators, send_transaction_util
 from app_views.view_utils.redis_util import get_monitoring
 
 jc = JsonConfiguration()
@@ -109,30 +111,29 @@ def get_visualization(request):
             # save ranking to redis
             redis_client = redis.Redis(jc.redis_ip, jc.redis_port)
             saved_ranking = redis_client.get('ranking')
-            logger.info('previous ranking %s' % saved_ranking)
+            logger.info('previous ranking %s' % validators_ips)
 
-            for index, item in enumerate(ranking):
-                node_ip = item[1]
-                status = Node.objects.get(node_ip=node_ip).status
-                level = 1
-                if node_ip in validators_ips:
-                    level = 0
-
+            for index, item in enumerate(validators_ips):
+                status = Node.objects.get(node_ip=item).status
                 trend = 0
                 if saved_ranking:
                     pre_ranking = eval(saved_ranking)
-                    if node_ip not in pre_ranking:
+                    if item not in pre_ranking:
                         trend = 1
                     else:
-                        if index < pre_ranking.index(node_ip):
+                        if index < pre_ranking.index(item):
                             trend = 1
-                        elif index > pre_ranking.index(node_ip):
+                        elif index > pre_ranking.index(item):
                             trend = -1
+                result['trias']['nodes'].append({"node_ip": item, "status": status, 'level': 0, 'trend': trend})
+                all_nodes.remove(item)
 
-                result['trias']['nodes'].append({"node_ip": node_ip, "status": status, 'level': level, 'trend': trend})
+            for item in all_nodes:
+                status = Node.objects.get(node_ip=item).status
+                result['trias']['nodes'].append({"node_ip": item, "status": status, 'level': 1, 'trend': 0})
 
             redis_client.delete('ranking')
-            redis_client.set('ranking', str([i[1] for i in ranking]))
+            redis_client.set('ranking', str([i for i in validators_ips]))
 
         status = 'success'
     except Exception as e:
@@ -393,3 +394,46 @@ def get_nodes_num(request):
         status, result = 'failure', {}
 
     return JsonResponse({'status': status, 'result': result})
+
+
+def send_transaction(request):
+    try:
+        content = request.POST.get('content', '')
+        if not content:
+            return JsonResponse({'status': 'failure', 'result': 'parameter error'})
+        id = str(uuid.uuid1())
+        t = threading.Thread(target=send_transaction_util, args=[id, content])
+        t.start()
+        logger.info('create transaction uuid %s' % id)
+        status, result = 'success', {'id': id}
+    except Exception as e:
+        logger.error(e)
+        status, result = 'failure', 'connect error'
+
+    return JsonResponse({'status': status, 'result': result})
+
+
+def query_transactions(request):
+    try:
+        id = request.GET.get('id', '')
+        if not id:
+            return JsonResponse({'status': 'failure', 'result': 'parameter error'})
+        redis_client = redis.Redis(jc.redis_ip, jc.redis_port)
+        tx_result = redis_client.get(id)
+        if not tx_result:
+            return JsonResponse({'status': 'failure', 'result': 'trade not exists'})
+
+        tx_info = eval(tx_result)
+        if tx_info[0] == 'success':
+            status, result = 'tx_success', {'tx_hash': tx_info[1], 'block_height': tx_info[2],
+                                            'proof': tx_info[3], 'content': tx_info[4]}
+        else:
+            logger.warning('Trade Error: %s' % tx_info[1])
+            status, result = 'tx_failure', tx_info[1]
+
+    except Exception as e:
+        logger.error(e)
+        status, result = 'failure', 'connect error'
+
+    return JsonResponse({'status': status, 'result': result})
+
