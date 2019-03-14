@@ -4,7 +4,7 @@ This project is a web portal which displays statistics and data of the Trias Bet
 
 ## Requirements
 |Requirement|Notes|
-|-----|---|
+|:-----|:---|
 |python|3.4 or later|
 |Django|1.10.4 or later|
 |django-webpack-loader|0.2.4|
@@ -39,7 +39,7 @@ Finally, open http://localhost:8000 .
 
 ### Directory Description
 |Directory|Description|
-|-----|---|
+|:-----|:---|
 |**app_views/**|This directory is used for Django custom application *app*.|
 |**conf/**|This directory contains Django configuration files for deployment.|
 |**html/**|This directory contains source code of web views such as web page assets files, react components, bundles and so on.|
