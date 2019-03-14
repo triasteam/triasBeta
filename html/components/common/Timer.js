@@ -67,10 +67,13 @@ export default class Timer extends React.Component {
     /**
      * Clear time interval when the component will be unmounted
      */
-    componentWillUnmount(){
+    
+    componentWillUnmount = () => {
+        this.setState = (state,callback)=>{
+          return;
+        };
         this.timerChange = clearInterval(this.timerChange)
     }
-    
     render() {
 
         return (
