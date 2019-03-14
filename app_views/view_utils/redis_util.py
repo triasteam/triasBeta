@@ -14,13 +14,13 @@ def get_monitoring():
         return faulty_nodes_list, fault_accetpance_rate, tps_monitoring
     except Exception as e:
         logger.error(e)
-    return []
+    return None, None, None
 
 
 def get_single_data(client, key):
     try:
         redis_saved_list_exist = client.llen(key)
-        if redis_saved_list_exist == 11:
+        if redis_saved_list_exist == 12:
             return client.lrange(key, 0, -1)
     except Exception as e:
         logger.error(e)
