@@ -55,15 +55,17 @@ export default class Timer extends React.Component {
      * Set the intervals 
      */
     componentDidMount() {
-        this.transformTimeAdd(this.props.interval)
+        this.dealTime()
     }
-
-    componentWillReceiveProps(nextProps){
-        if(this.props.interval!=nextProps.interval){
-            this.timerChange = clearInterval(this.timerChange)
-            this.transformTimeAdd(nextProps.interval)
-        }
+    dealTime(){
+        let hour = this.props.interval.split(':')
+        let currentTime = (new Date().getHours() - Number(hour[0]))*3600 +
+                          (new Date().getMinutes() - Number(hour[1])) * 60 + 
+                          (new Date().getSeconds() - Number(hour[2])) 
+      
+       this.transformTimeAdd(currentTime)
     }
+    
     /**
      * Clear time interval when the component will be unmounted
      */

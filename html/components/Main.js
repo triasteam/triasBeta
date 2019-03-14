@@ -152,7 +152,7 @@ export default class Main extends React.Component {
                             currentInfo: {
                                 selectedEvent: {  
                                     name: data.result.event_list[k].name,
-                                    time: data.result.event_list[k].interval,
+                                    time: data.result.event_list[k].start,
                                     group: 1,
                                 },
                                 all_nodes_num: data.result.all_nodes_num,  
