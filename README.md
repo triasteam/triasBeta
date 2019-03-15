@@ -1,4 +1,4 @@
-# Trais Beta
+# Trias Beta
 [![GitHub license](https://img.shields.io/badge/license-GPL3.0-blue.svg)](https://github.com/triasteam/triasBeta/blob/master/LICENSE.md)
 [![Build Status](https://travis-ci.org/triasteam/triasBeta.svg)](https://travis-ci.org/triasteam/triasBeta)
 
