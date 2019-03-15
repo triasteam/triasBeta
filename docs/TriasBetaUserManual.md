@@ -53,11 +53,11 @@ Toggle different tabs to switch time range. Click "Return to Now" will reset the
 
 ## Fault Acceptance Rate
 
-Similar to [TPS Monitoring](## TPS Monitoring).
+Similar to [TPS Monitoring](##tps-monitoring).
 
 ## Faulty Nodes
 
-Similar to [TPS Monitoring](## TPS Monitoring).
+Similar to [TPS Monitoring](##tps-monitoring).
 
 ## Simulations
 
