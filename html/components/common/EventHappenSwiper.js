@@ -103,7 +103,7 @@ export default class EventHappenSwiper extends React.Component {
                         <p className="startTime">{event.start}</p>
                         <p className="eventName">{event.name}</p>
                         <TimeInterval
-                          interval={event.interval}
+                          interval={event.start}
                           TimeChange={"add"}
                         />
                       </div>
@@ -120,13 +120,13 @@ export default class EventHappenSwiper extends React.Component {
                         <p className="eventName">{event.name}</p>
                         {this.state.currentEventIndex > index && (
                           <TimeInterval
-                            interval={event.interval}
+                            interval={event.start}
                             TimeChange={"add"}
                           />
                         )}
                         {this.state.currentEventIndex < index && (
                           <TimeInterval
-                            interval={event.interval}
+                            interval={event.start}
                             TimeChange={"decrease"}
                             refreshEventList = {this.refreshEventList}
                           />

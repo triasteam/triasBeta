@@ -6,7 +6,7 @@ import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-in
 import $ from 'jquery'
 import HomeActivities from './HomeActivities'
 import Timer from './common/Timer'
-import GenerateTranstaction from './GenerateTranstaction'
+import GenerateTransaction from './GenerateTransaction'
 
 /**
  * RightPart components which displays:
@@ -158,7 +158,7 @@ export default class RightPart extends React.Component {
                 </div>
             
                 
-                <GenerateTranstaction />
+                <GenerateTransaction />
             </div>
         )
     }
