@@ -11,7 +11,7 @@ import { func } from "prop-types";
 /**
  * RightPart components which displays:
  */
-export default class GenerateTranstaction extends React.Component {
+export default class GenerateTransaction extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -173,7 +173,7 @@ export default class GenerateTranstaction extends React.Component {
             <div className="generate-transaction">
                 <p className="main-title">Transaction Test</p>
                 <p className="explaination">Generate new transtactions to start. When transactions is finished, you’ll be able to check the details.</p>
-                <a className="generate-btn" onClick={self.showInput.bind(self)}>Generate New Transtaction</a>
+                <a className="generate-btn" onClick={self.showInput.bind(self)}>Generate New Transaction</a>
                 {/* <div className="tran-card">
                     <div className="text">
                         <p className="tran-name">Transaction #01</p>
