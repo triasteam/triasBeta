@@ -34,7 +34,6 @@ export default class GenerateTranstaction extends React.Component {
         // })
     }
     sendTransaction() {
-        console.log(this.state.tranCardGroup);
         let self = this;
         let group = [];
         // let itemName = 'item' + this.state.tranCardGroup.length;
@@ -83,7 +82,6 @@ export default class GenerateTranstaction extends React.Component {
                     //     ...this.state.tranCardGroup[0],
                     //     id: data.result.id
                     // })
-                    console.log( self.state.tranCardGroup)
 
                 }
             }
@@ -92,7 +90,6 @@ export default class GenerateTranstaction extends React.Component {
     showInput() {
         this.setState({showInputModal: !this.state.showInputModal})
         $("#user-input").val("");
-        console.log($("#user-input").val(""))
     }
     
     handleText(e) {
@@ -102,6 +99,23 @@ export default class GenerateTranstaction extends React.Component {
         })
     }
 
+    checkDetail(id){
+        let self = this;
+        $.ajax({
+            url: "/api/send_transaction/",
+            type: "POST",
+            dataType:"json",
+            data: {
+                id: id
+            },
+            success: function(data){
+                if( data.status == "success" ) {
+                    console.log(data)
+
+                }
+            }
+        })
+    }
     /**
      * Before a mounted component receives new props, reset some state.
      * @param {Object} nextProps new props
@@ -116,12 +130,12 @@ export default class GenerateTranstaction extends React.Component {
     }
 
     render() {
-    //    let self = this;
+       let self = this;
         return (
             <div className="generate-transaction">
                 <p className="main-title">Transaction Test</p>
                 <p className="explaination">Generate new transtactions to start. When transactions is finished, you’ll be able to check the details.</p>
-                <a className="generate-btn" onClick={this.showInput.bind(this)}>Generate New Transtaction</a>
+                <a className="generate-btn" onClick={self.showInput.bind(self)}>Generate New Transtaction</a>
                 {/* <div className="tran-card">
                     <div className="text">
                         <p className="tran-name">Transaction #01</p>
@@ -133,7 +147,7 @@ export default class GenerateTranstaction extends React.Component {
                     </div>
                 </div> */}
                 {
-                    this.state.tranCardGroup && this.state.tranCardGroup.map(function(item, index) {
+                    self.state.tranCardGroup && self.state.tranCardGroup.map(function(item, index) {
                         return (
                             <div className="tran-card" key={"item"+index}>
                                 <div className="text">
@@ -142,13 +156,13 @@ export default class GenerateTranstaction extends React.Component {
                                 </div>
                                 <div className="check-btn success">
                                     <img src={require("../img/icon/inline/icon_check_enable@2x.png")} />
-                                    <Link to="/activities">Check Transtaction</Link>
+                                    <a onClick={self.checkDetail.bind(self, item.id)}>Check Transtaction</a>
                                 </div>
                             </div>
                         )
                     })
                 }
-                { this.state.showDetailModal &&
+                { self.state.showDetailModal &&
                     <section className="modal-layer">
                         <div className="modal detail-modal">
                             <div className="close-btn"><img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" /></div>
@@ -182,20 +196,20 @@ export default class GenerateTranstaction extends React.Component {
                     </section>
                 }
 
-                { this.state.showInputModal &&
+                { self.state.showInputModal &&
                     <section className="modal-layer">
                         <div className="modal input-modal">
                             <div className="close-btn">
                                 <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗"
-                                    onClick={()=>{this.setState({showInputModal: !this.state.showInputModal})}} />
+                                    onClick={()=>{self.setState({showInputModal: !self.state.showInputModal})}} />
                             </div>
                             <h2>Enter Your Content</h2>
                             <p>You can enter up to 255 characters, UTF-8 format only.</p>
                             <h5>Content Included</h5>
                             <textarea id="user-input" placeholder="Please enter your content."
-                             onChange={this.handleText.bind(this)}>
+                             onChange={self.handleText.bind(self)}>
                             </textarea>                       
-                            <button onClick={this.sendTransaction.bind(this)}>Send Transaction</button>
+                            <button onClick={self.sendTransaction.bind(self)}>Send Transaction</button>
                         </div>
                     </section>
                 }
