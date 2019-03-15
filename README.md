@@ -12,6 +12,8 @@ This project is a web portal which displays statistics and data of the Trias Bet
 |webpack|2.7.0|
 
 ## Documentation
+For more documention about Trias, see [Trias Whitepaper](https://www.trias.one/whitepaper).
+
 ### Install
 Install dependencies: 
 
