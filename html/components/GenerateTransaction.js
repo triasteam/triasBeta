@@ -185,7 +185,7 @@ export default class GenerateTransaction extends React.Component {
                     </div>
                     <div className="check-btn">
                         <img src={require("../img/icon/inline/icon_check_disable@2x.png")} />
-                        <Link to="/activities">Check Transtaction</Link>
+                        <Link to="/activities">Check Transaction</Link>
                     </div>
                 </div> */}
                 {
@@ -198,7 +198,7 @@ export default class GenerateTransaction extends React.Component {
                                 </div>
                                 <div className="check-btn success">
                                     <img src={require("../img/icon/inline/icon_check_enable@2x.png")} />
-                                    <a onClick={self.checkDetail.bind(self, item.id)}>Check Transtaction</a>
+                                    <a onClick={self.checkDetail.bind(self, item.id)}>Check Transaction</a>
                                 </div>
                             </div>
                         )
