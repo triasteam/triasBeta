@@ -183,11 +183,11 @@ class GenerateTransaction extends React.Component {
                     </div>
                 </div> */}
                 {
-                    self.state.tranCardGroup && self.state.tranCardGroup.map(function(item, index) {
+                    self.state.tranCardGroup && self.state.tranCardGroup.map(function(item, index, list) {
                         return (
                             <div className="tran-card" key={"item"+index}>
                                 <div className="text">
-                                    <p className="tran-name">{'Transaction #0' + (index+1)}</p>
+                                    <p className="tran-name">{'Transaction #0' + (list.length-index)}</p>
                                     <p className="tran-hint"><FormattedMessage id="termSucceed"/></p>
                                 </div>
                                 <div className="check-btn success">
