@@ -12,7 +12,7 @@ This project is a web portal which displays statistics and data of the Trias Bet
 |webpack|2.7.0|
 
 ## Documentation
-For more documention about Trias, see [Trias Whitepaper](https://www.trias.one/whitepaper).
+For more documention about Trias, see [Trias White Paper](https://www.trias.one/whitepaper).
 
 ### Install
 Install dependencies: 
@@ -38,6 +38,9 @@ Then, start the django server:
 `python3 manage.py runserver`
 
 Finally, open http://localhost:8000 .
+
+### How To Use?
+See [Trias Beta User Manual](https://github.com/triasteam/triasBeta/blob/master/docs/TriasBetaUserManual.md).
 
 ### Directory Description
 |Directory|Description|
