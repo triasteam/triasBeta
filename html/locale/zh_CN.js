@@ -32,7 +32,7 @@ const zh_CN = {
     thBlockHash: "当前区块哈希值",
     thBlockUpdateTime: "区块产生时间",
     thTime: "时间",
-    thTestGruop:'测试组',
+    thTestGroup:'测试组',
     thEvent:'事件'
 }
 

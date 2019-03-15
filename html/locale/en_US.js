@@ -32,7 +32,7 @@ const en_US = {
     thBlockHash: "Current block hash",
     thBlockUpdateTime: "Block Generated time",
     thTime: "Time",
-    thTestGruop:'Test Gruop',
+    thTestGroup:'Test Group',
     thEvent:'Event',
 }
 

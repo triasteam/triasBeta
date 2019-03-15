@@ -308,7 +308,7 @@ class TableList extends React.Component {
                         {
                             this.props.searchListApi == '/api/activity_list/' &&
                             <tr>
-                                <FormattedMessage id="thTestGruop" tagName="th" />
+                                <FormattedMessage id="thTestGroup" tagName="th" />
                                 <FormattedMessage id="thTime" tagName="th" />
                                 <FormattedMessage id="thEvent" tagName="th" />
                             </tr>
