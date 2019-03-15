@@ -91,6 +91,17 @@ class LineMark extends PureComponent {
    */
   componentDidMount() {}
 
+   /**
+   * When the component will be unmounted.
+   * Clear the intervals
+   */
+  componentWillUnmount() {
+    this.setState = (state,callback)=>{
+      return;
+    };
+    
+  }
+
   getOption = () => {
     const event_list = [];
     // -1: 没有事件  1: Power Outage  4: 攻击  5: 节点更新         只有这四种情况
