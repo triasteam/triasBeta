@@ -57,13 +57,16 @@ export default class Timer extends React.Component {
     componentDidMount() {
         this.dealTime()
     }
+    /**
+     * Gets the current time and calculates the time countdown
+     */
     dealTime(){
         let hour = this.props.interval.split(':')
         let currentTime = (new Date().getHours() - Number(hour[0]))*3600 +
                           (new Date().getMinutes() - Number(hour[1])) * 60 + 
                           (new Date().getSeconds() - Number(hour[2])) 
-      
-       this.transformTimeAdd(currentTime)
+        // Countdown update
+        this.transformTimeAdd(currentTime)
     }
     
     /**
@@ -74,6 +77,7 @@ export default class Timer extends React.Component {
         this.setState = (state,callback)=>{
           return;
         };
+        // clear Countdown timer
         this.timerChange = clearInterval(this.timerChange)
     }
     render() {

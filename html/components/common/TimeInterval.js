@@ -69,6 +69,7 @@ export default class TimeInterval extends React.Component {
         this.setState({
             timeCount: hour + ":" + minute + ":" + second
         })
+
     }
     /**
      * setInterval function of time increased
@@ -82,14 +83,24 @@ export default class TimeInterval extends React.Component {
         }, 1000)
     }
     componentDidMount() {
+        this.dealTime()
+    }
+    /**
+     * Gets the current time and calculates the time countdown
+     */
+    dealTime(){
+        let hour = this.props.interval.split(':')
+        let currentTime =Math.abs( (new Date().getHours() - Number(hour[0]))*3600 +
+                          (new Date().getMinutes() - Number(hour[1])) * 60 + 
+                          (new Date().getSeconds() - Number(hour[2])) )
+        // Countdown update
         // Time to increase or decrease , execute different functions
         if (this.props.TimeChange == 'add') {
-            this.transformTimeAdd(this.props.interval)
+            this.transformTimeAdd(currentTime)
         } else {
-            this.transformTime(this.props.interval)
+            this.transformTime(currentTime)
         }
     }
-    
     clearInterval(){
         // clear timer
         this.timerChange = clearInterval(this.timerChange)
@@ -101,14 +112,14 @@ export default class TimeInterval extends React.Component {
         };
         this.clearInterval()
     }
-
+    
     render() {
 
         return (
 
             <p className="eventInterval">
                 {
-                    this.props.interval > 0 &&
+                    this.props.interval &&
                     <span >{this.state.timeCount}</span>
                 }
 

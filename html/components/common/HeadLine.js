@@ -1,5 +1,5 @@
 import React from "react"
-
+import Timer from './Timer'
 import { FormattedMessage } from 'react-intl' /* react-intl imports */
 /**
  * Custom headline component.
@@ -53,9 +53,9 @@ export default class HeadLine extends React.Component {
                                     <FormattedMessage id="subHeaderP2"/>
                                 </p>
                                 {
-                                    this.props.eventList.length>0 && this.props.currentEventIndex > -1 && 
+                                    this.props.eventList.length > 0 && this.props.currentEventIndex > -1 && 
                                     <p className="sub-sub">
-                                        {this.props.eventList[this.props.currentEventIndex].start}
+                                        <Timer interval={this.props.eventList[this.props.currentEventIndex].start} TimeChange={'add'} />
                                     </p>
                                 }
                                 {
