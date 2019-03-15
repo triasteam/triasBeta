@@ -157,9 +157,10 @@ class TableList extends React.Component {
      */
     setRowsPerPage(num) {
         this.setState({
-            rowsPerPage: num
+            rowsPerPage: num,
+            currentPage:1,
         })
-        this.getHostList(this.state.currentPage, num, this.state.nodeSearchKey, this.state.testGroupId)
+        this.getHostList(1, num, this.state.nodeSearchKey, this.state.testGroupId)
     }
 
     /**
