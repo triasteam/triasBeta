@@ -368,8 +368,9 @@
                         font-weight:500;
                         color:rgba(254,254,254,1);
                         line-height:22px;
+                        outline: none;
                     }
-                }
+                }   
                 .error-modal {
                     width:476px;
                     height:fit-content;
@@ -399,7 +400,22 @@
             }
 
           
-           
+            .modal-layer-enter {
+                opacity: 0.01;
+                // transform: translateY(-100%) scale(0.75);
+            }
+            .modal-layer-enter-active {
+                opacity: 1;
+                // transform: translateY(0%) scale(1.25);
+                transition: all 300ms ease-out;
+            }
+            .modal-layer-exit {
+                opacity: 1;
+            }
+            .modal-layer-exit-active {
+                opacity: 0;
+                transition: all 300ms ease-in;
+            }
         }
     }
 }

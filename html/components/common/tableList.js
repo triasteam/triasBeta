@@ -214,7 +214,7 @@ class TableList extends React.Component {
      * @param {timestamp} inputTime 
      */
     getTimeFormat(inputTime) {
-        var date = new Date(inputTime);
+        var date = new Date(inputTime*1000);
         var y = date.getFullYear();
         var m = date.getMonth() + 1;
         m = m < 10 ? ('0' + m) : m;
@@ -259,9 +259,9 @@ class TableList extends React.Component {
                                 {
                                     this.state.toggleTestGroup &&
                                     <div className="selevt-list" onClick={this.handleChangeTestGroup.bind(this)}>
-                                        <p>Trias</p>
-                                        <p>Eth</p>
-                                        <p>Super Books</p>
+                                        <p>Group Trias</p>
+                                        <p>Group Ethereum</p>
+                                        <p>Group Hyperledger</p>
                                         <p>All Test Groups</p>
                                     </div>
                                 }
@@ -308,7 +308,7 @@ class TableList extends React.Component {
                         {
                             this.props.searchListApi == '/api/activity_list/' &&
                             <tr>
-                                <FormattedMessage id="thTestGruop" tagName="th" />
+                                <FormattedMessage id="thTestGroup" tagName="th" />
                                 <FormattedMessage id="thTime" tagName="th" />
                                 <FormattedMessage id="thEvent" tagName="th" />
                             </tr>
@@ -338,7 +338,27 @@ class TableList extends React.Component {
                             return (
 
                                 <tr className="" key={index}>
-                                    <td className="">{i.group}</td>
+                                {
+                                    i.group == 0 &&
+                                    <td className="activity-groupName">
+                                        <img src={require("../../img/icon/inline/icon_inline_trias@2x.png")} alt=""/>
+                                        Group Trias
+                                    </td>
+                                }
+                                {
+                                    i.group == 1 &&
+                                    <td className="activity-groupName">
+                                        <img src={require("../../img/icon/inline/icon_inline_eth@2x.png")} alt=""/>
+                                        Group Ethereum
+                                    </td>
+                                }
+                                {
+                                    i.group == 2 &&
+                                    <td className="activity-groupName">
+                                        <img src={require("../../img/icon/inline/icon_inline_hyperledger@2x.png")} alt=""/>
+                                        Group Hyperledger
+                                    </td>
+                                }
                                     <td className="">{this.getTimeFormat(i.time)}</td>
                                     <td className="">{i.event}</td>
                                 </tr>

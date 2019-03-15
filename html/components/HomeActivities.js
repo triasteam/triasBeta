@@ -94,6 +94,9 @@ export default class HomeActivities extends React.Component {
         if(this.activitiesInterval) {
             clearInterval(this.activitiesInterval);
         }
+        this.setState = (state,callback)=>{
+            return;
+        };  
     }
     /**
      * Before a mounted component receives new props, reset some state.

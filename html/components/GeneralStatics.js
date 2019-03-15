@@ -110,7 +110,11 @@ class GeneralStatics extends React.Component {
             }
         })
     }
-
+    componentWillUnmount() {
+        this.setState = (state,callback)=>{
+          return;
+        };
+    }
     render() {
         return (
             <div className="general-statics">

@@ -402,6 +402,9 @@ def send_transaction(request):
         content = request.POST.get('content', '')
         if not content:
             return JsonResponse({'status': 'failure', 'result': 'parameter error'})
+        if len(content) > 255:
+            return JsonResponse({'status': 'failure', 'result': 'the maximum length of the characters is 255'})
+
         id = str(uuid.uuid1())
         sha256 = hashlib.sha256()
         sha256.update(id.encode('utf-8'))
