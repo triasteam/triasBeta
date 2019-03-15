@@ -214,7 +214,7 @@ class TableList extends React.Component {
      * @param {timestamp} inputTime 
      */
     getTimeFormat(inputTime) {
-        var date = new Date(inputTime);
+        var date = new Date(inputTime*1000);
         var y = date.getFullYear();
         var m = date.getMonth() + 1;
         m = m < 10 ? ('0' + m) : m;
