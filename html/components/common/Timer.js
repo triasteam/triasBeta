@@ -87,6 +87,11 @@ export default class Timer extends React.Component {
             this.dealTime(nextProps.interval);
         }
     }
+    componentWillUnmount() {
+        this.setState = (state,callback)=>{
+          return;
+        };
+    }
     render() {
 
         return (

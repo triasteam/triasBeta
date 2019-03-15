@@ -41,7 +41,11 @@ export default class StaticsCard extends React.Component {
             })
         }
     }
-
+    componentWillUnmount() {
+        this.setState = (state,callback)=>{
+          return;
+        };
+    }
     render() {
         return (
             <div className="card-container">

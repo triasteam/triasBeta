@@ -6,8 +6,7 @@ import { Link } from 'react-router-dom'
 import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
 import $ from 'jquery'
 import { func } from "prop-types";
-
-
+import { CSSTransition } from 'react-transition-group';
 /**
  * RightPart components which displays:
  */
@@ -167,12 +166,17 @@ export default class GenerateTransaction extends React.Component {
         // }
     }
 
+    componentWillUnmount() {
+        this.setState = (state,callback)=>{
+          return;
+        };
+    }
     render() {
        let self = this;
         return (
             <div className="generate-transaction">
                 <p className="main-title">Transaction Test</p>
-                <p className="explaination">Generate new transtactions to start. When transactions is finished, you’ll be able to check the details.</p>
+                <p className="explaination">Generate a new transaction to get started. When the transaction is finished, you’ll be able to check the details.</p>
                 <a className="generate-btn" onClick={self.showInput.bind(self)}>Generate New Transaction</a>
                 {/* <div className="tran-card">
                     <div className="text">
@@ -200,42 +204,51 @@ export default class GenerateTransaction extends React.Component {
                         )
                     })
                 }
-                { self.state.showDetailModal &&
-                    <section className="modal-layer">
-                        <div className="modal detail-modal">
-                            <div className="close-btn" onClick={()=>{self.setState({showDetailModal: !self.state.showDetailModal})}}>
-                                <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
+                 <CSSTransition
+                        in={self.state.showDetailModal}
+                        timeout={300}
+                        classNames="modal-layer"
+                        unmountOnExit
+                        >
+                        <section className="modal-layer">
+                            <div className="modal detail-modal">
+                                <div className="close-btn" onClick={()=>{self.setState({showDetailModal: !self.state.showDetailModal})}}>
+                                    <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
+                                </div>
+                                <h2>Transactions Detail</h2>
+                                <p>Check complete, the transaction is complete</p>
+                                <div className="detail-part1">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td width="33%">Transaction ID</td>
+                                                <td width="66%">{self.state.successID}</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="33%">Transactions Hash</td>
+                                                <td width="66%">{self.state.successHash}</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="33%">Block Height</td>
+                                                <td width="66%">{self.state.successHeight}</td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <h5>Content Included</h5>
+                                <div className="detail-part2">
+                                    {self.state.successContent}
+                                </div>
                             </div>
-                            <h2>Transactions Detail</h2>
-                            <p>Check complete, the transaction is complete</p>
-                            <div className="detail-part1">
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td width="33%">Transaction ID</td>
-                                            <td width="66%">{self.state.successID}</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="33%">Transactions Hash</td>
-                                            <td width="66%">{self.state.successHash}</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="33%">Block Height</td>
-                                            <td width="66%">{self.state.successHeight}</td>
-                                        </tr>
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
-                            <h5>Content Included</h5>
-                            <div className="detail-part2">
-                                {self.state.successContent}
-                            </div>
-                        </div>
-                    </section>
-                }
-
-                { self.state.showInputModal &&
+                        </section>
+                </CSSTransition>
+                <CSSTransition
+                        in={self.state.showInputModal}
+                        timeout={300}
+                        classNames="modal-layer"
+                        unmountOnExit
+                        >
                     <section className="modal-layer">
                         <div className="modal input-modal">
                             <div className="close-btn" onClick={()=>{self.setState({showInputModal: !self.state.showInputModal})}}>
@@ -245,13 +258,18 @@ export default class GenerateTransaction extends React.Component {
                             <p>You can enter up to 255 characters.</p>
                             <h5>Content Included</h5>
                             <textarea id="user-input" placeholder="Please enter your content."
-                             onChange={self.handleText.bind(self)}>
+                            onChange={self.handleText.bind(self)}>
                             </textarea>                       
                             <button onClick={self.sendTransaction.bind(self)}>Send Transaction</button>
                         </div>
                     </section>
-                }
-                { self.state.showFailureModal &&
+                </CSSTransition>
+                <CSSTransition
+                        in={self.state.showFailureModal}
+                        timeout={300}
+                        classNames="modal-layer"
+                        unmountOnExit
+                        >
                     <section className="modal-layer">
                         <div className="modal fail-modal error-modal">
                             <div className="close-btn" onClick={()=>{self.setState({showFailureModal:!self.state.showFailureModal})}}>
@@ -270,8 +288,13 @@ export default class GenerateTransaction extends React.Component {
                             </div>
                         </div>
                     </section>
-                }
-                { self.state.showErrorModal &&
+                </CSSTransition>
+                <CSSTransition
+                        in={self.state.showErrorModal}
+                        timeout={300}
+                        classNames="modal-layer"
+                        unmountOnExit
+                        >
                     <section className="modal-layer">
                         <div className="modal error-modal">
                             <div className="close-btn" onClick={()=>{self.setState({showErrorModal:!self.state.showErrorModal})}}>
@@ -282,7 +305,7 @@ export default class GenerateTransaction extends React.Component {
                             <p>{self.state.errorInfo}</p>
                         </div>
                     </section>
-                }
+                </CSSTransition>
 
                 {/* <section className="modal-layer">
                     <div className="modal error-modal">
