@@ -406,7 +406,7 @@ def send_transaction(request):
         sha256 = hashlib.sha256()
         sha256.update(id.encode('utf-8'))
         sha256_id = sha256.hexdigest()
-        t = threading.Thread(target=send_transaction_util, args=[sha256_id, content])
+        t = threading.Thread(target=send_transaction_util, args=[sha256_id, content.encode()])
         t.start()
         logger.info('create transaction sha256_id %s' % sha256_id)
         status, result = 'success', {'id': sha256_id}
