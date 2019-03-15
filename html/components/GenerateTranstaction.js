@@ -19,9 +19,11 @@ export default class GenerateTranstaction extends React.Component {
             showErrorModal: false,
             showNullModal: false,
             showDetailModal: false,
+            showFailureModal: false,
             tranContent: '',
             tranCardGroup:[],
-           
+            failContent:'',
+            failLog:'',
 
         }
     }
@@ -111,7 +113,13 @@ export default class GenerateTranstaction extends React.Component {
             success: function(data){
                 if( data.status == "success" ) {
                     console.log(data)
-
+                    
+                } else if ( data.status == "tx_failure") {
+                    self.setState({
+                        showFailureModal: !self.state.showFailureModal,
+                        failContent: data.result.content,
+                        failLog: data.result.log,
+                    })
                 }
             }
         })
@@ -210,6 +218,24 @@ export default class GenerateTranstaction extends React.Component {
                              onChange={self.handleText.bind(self)}>
                             </textarea>                       
                             <button onClick={self.sendTransaction.bind(self)}>Send Transaction</button>
+                        </div>
+                    </section>
+                }
+                { self.state.showFailureModal &&
+                    <section className="modal-layer">
+                        <div className="modal fail-modal error-modal">
+                            <div className="close-btn" onClick={()=>{self.setState({showFailureModal:!self.state.showFailureModal})}}><img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" /></div>
+                            <img src={require('../img/icon/button_icon/icon_error_title@2x.png')} alt="查询错误" />
+                            <h2>Transaction Failed.</h2>
+                            <p>Please review the transaction log then try again.</p>
+                            <h5>Content Included</h5>
+                            <div className="detail-part2 top">
+                                {self.state.failContent}
+                            </div>
+                            <h5>Transaction Log</h5>
+                            <div className="detail-part2">
+                                {self.state.failLog}
+                            </div>
                         </div>
                     </section>
                 }
