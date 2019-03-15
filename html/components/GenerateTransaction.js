@@ -11,7 +11,7 @@ import { func } from "prop-types";
 /**
  * RightPart components which displays:
  */
-export default class GenerateTranstaction extends React.Component {
+export default class GenerateTransaction extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,10 +19,17 @@ export default class GenerateTranstaction extends React.Component {
             showErrorModal: false,
             showNullModal: false,
             showDetailModal: false,
+            showFailureModal: false,
             tranContent: '',
             tranCardGroup:[],
-           
-
+            successID:'',
+            successHash:'',
+            successHeight:'',
+            successContent:'',
+            failContent:'',
+            failLog:'',
+            errorTitle:'',
+            errorInfo:''
         }
     }
     componentWillMount() {
@@ -109,9 +116,40 @@ export default class GenerateTranstaction extends React.Component {
                 id: id
             },
             success: function(data){
-                if( data.status == "success" ) {
+                if( data.status == "tx_success" ) {
                     console.log(data)
-
+                    self.setState({
+                        showDetailModal: !self.state.showDetailModal,
+                        successID: data.result.id,
+                        successHash: data.result.hash,
+                        successHeight: data.result.block_height,
+                        successContent: data.result.content,
+                    })
+                    
+                } else if ( data.status == "tx_failure" ) {
+                    self.setState({
+                        showFailureModal: !self.state.showFailureModal,
+                        failContent: data.result.content,
+                        failLog: data.result.log,
+                    })
+                } else if ( data.status == "failure" ) {
+                    if ( data.result == "trade not exists" ) {
+                        self.setState({
+                            showErrorModal: !self.state.showErrorModal,
+                            errorTitle: 'Try Again Latter.',
+                            errorInfo: 'The transaction is being generated in the background, please wait a few seconds.'
+                        })
+                    } else {
+                        let info = data.result;
+                        info = info.replace(info[0],info[0].toUpperCase());
+                        self.setState({
+                            showErrorModal: !self.state.showErrorModal,
+                            errorTitle: 'Error Occurred!',
+                            errorInfo: info
+                        })
+                        
+                    }
+                    
                 }
             }
         })
@@ -135,7 +173,7 @@ export default class GenerateTranstaction extends React.Component {
             <div className="generate-transaction">
                 <p className="main-title">Transaction Test</p>
                 <p className="explaination">Generate new transtactions to start. When transactions is finished, you’ll be able to check the details.</p>
-                <a className="generate-btn" onClick={self.showInput.bind(self)}>Generate New Transtaction</a>
+                <a className="generate-btn" onClick={self.showInput.bind(self)}>Generate New Transaction</a>
                 {/* <div className="tran-card">
                     <div className="text">
                         <p className="tran-name">Transaction #01</p>
@@ -165,32 +203,33 @@ export default class GenerateTranstaction extends React.Component {
                 { self.state.showDetailModal &&
                     <section className="modal-layer">
                         <div className="modal detail-modal">
-                            <div className="close-btn"><img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" /></div>
+                            <div className="close-btn" onClick={()=>{self.setState({showDetailModal: !self.state.showDetailModal})}}>
+                                <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
+                            </div>
                             <h2>Transactions Detail</h2>
                             <p>Check complete, the transaction is complete</p>
                             <div className="detail-part1">
                                 <table>
                                     <tbody>
                                         <tr>
+                                            <td width="33%">Transaction ID</td>
+                                            <td width="66%">{self.state.successID}</td>
+                                        </tr>
+                                        <tr>
                                             <td width="33%">Transactions Hash</td>
-                                            <td width="66%">b09a57d476ea01c7f91756adff1d560e5d004b146095f94d3ef3e7500f6e5d2b4459fdf5f568439c10fc6615dbea1479057ac99a28d3f30e259b30ecc9dc7</td>
+                                            <td width="66%">{self.state.successHash}</td>
                                         </tr>
                                         <tr>
                                             <td width="33%">Block Height</td>
-                                            <td width="66%">#98738</td>
+                                            <td width="66%">{self.state.successHeight}</td>
                                         </tr>
-                                        <tr>
-                                            <td width="33%">Merkle Proofs</td>
-                                            <td width="66%">b09a57d476ea01c7f91756adff1d560e579057ac99a28d3f30e259b30ecc9dc7</td>
-                                        </tr>
+                                        
                                     </tbody>
                                 </table>
                             </div>
                             <h5>Content Included</h5>
                             <div className="detail-part2">
-                                In order to validate the inclusivity of K, K doesn’t have to be revealed, 
-                                similarly the hash of data L can be revealed without any implicit security 
-                                repercussions and so on.
+                                {self.state.successContent}
                             </div>
                         </div>
                     </section>
@@ -199,12 +238,11 @@ export default class GenerateTranstaction extends React.Component {
                 { self.state.showInputModal &&
                     <section className="modal-layer">
                         <div className="modal input-modal">
-                            <div className="close-btn">
-                                <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗"
-                                    onClick={()=>{self.setState({showInputModal: !self.state.showInputModal})}} />
+                            <div className="close-btn" onClick={()=>{self.setState({showInputModal: !self.state.showInputModal})}}>
+                                <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
                             </div>
                             <h2>Enter Your Content</h2>
-                            <p>You can enter up to 255 characters, UTF-8 format only.</p>
+                            <p>You can enter up to 255 characters.</p>
                             <h5>Content Included</h5>
                             <textarea id="user-input" placeholder="Please enter your content."
                              onChange={self.handleText.bind(self)}>
@@ -213,15 +251,38 @@ export default class GenerateTranstaction extends React.Component {
                         </div>
                     </section>
                 }
-
-                {/* <section className="modal-layer">
-                    <div className="modal error-modal">
-                        <div className="close-btn"><img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" /></div>
-                        <img src={require('../img/icon/button_icon/icon_error_title@2x.png')} alt="查询错误" />
-                        <h2>Transaction Not Found.</h2>
-                        <p>The transaction you’re checking may not exist, try checking another one.</p>
-                    </div>
-                </section> */}
+                { self.state.showFailureModal &&
+                    <section className="modal-layer">
+                        <div className="modal fail-modal error-modal">
+                            <div className="close-btn" onClick={()=>{self.setState({showFailureModal:!self.state.showFailureModal})}}>
+                                <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
+                            </div>
+                            <img src={require('../img/icon/button_icon/icon_error_title@2x.png')} alt="查询错误" />
+                            <h2>Transaction Failed.</h2>
+                            <p>Please review the transaction log then try again.</p>
+                            <h5>Content Included</h5>
+                            <div className="detail-part2 top">
+                                {self.state.failContent}
+                            </div>
+                            <h5>Transaction Log</h5>
+                            <div className="detail-part2">
+                                {self.state.failLog}
+                            </div>
+                        </div>
+                    </section>
+                }
+                { self.state.showErrorModal &&
+                    <section className="modal-layer">
+                        <div className="modal error-modal">
+                            <div className="close-btn" onClick={()=>{self.setState({showErrorModal:!self.state.showErrorModal})}}>
+                                <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
+                            </div>
+                            <img src={require('../img/icon/button_icon/icon_error_title@2x.png')} alt="查询错误" />
+                            <h2>{self.state.errorTitle}</h2>
+                            <p>{self.state.errorInfo}</p>
+                        </div>
+                    </section>
+                }
 
                 {/* <section className="modal-layer">
                     <div className="modal error-modal">
