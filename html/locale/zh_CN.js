@@ -18,7 +18,7 @@ const zh_CN = {
     modalTransactionButton: "发送交易",
     btnCheckTransaction: "查看交易",
     termPending: "待确定...",
-    termSucceed: "成功！",
+    termSucceed: "交易ID成功生成!",
     termFailed: "失败!",
     modalDetailTitle: "交易详情",
     modalDetailSubtitle: "此交易已完成。",

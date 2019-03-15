@@ -18,7 +18,7 @@ const en_US = {
     modalTransactionButton: "Send Transaction",
     btnCheckTransaction: "Check Transaction",
     termPending: "Pending...",
-    termSucceed: "Succeed!",
+    termSucceed: "Transaction ID Generated!",
     termFailed: "Failed!",
     modalDetailTitle: "Transaction Details",
     modalDetailSubtitle: "The transaction is complete.",
