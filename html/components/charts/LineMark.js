@@ -91,6 +91,17 @@ class LineMark extends PureComponent {
    */
   componentDidMount() {}
 
+   /**
+   * When the component will be unmounted.
+   * Clear the intervals
+   */
+  componentWillUnmount() {
+    this.setState = (state,callback)=>{
+      return;
+    };
+    
+  }
+
   getOption = () => {
     const event_list = [];
     // -1: 没有事件  1: Power Outage  4: 攻击  5: 节点更新         只有这四种情况
@@ -107,24 +118,26 @@ class LineMark extends PureComponent {
           des = this.state.lang == "zh" ? "节点更新" : "Node Updates";
           break;
         case -1:
-          des = this.state.lang == "zh" ? "没有事件" : "No Data";
+          des = "no"
           break;
       }
-      event_list.push([
-        {
-          name: des,
-          xAxis: this.timeArr[i] + "",
-          label: {
-            normal: {
-              color: "#fff",
-              show: true
+      if(des!="no"){
+        event_list.push([
+          {
+            name: des,
+            xAxis: this.timeArr[i] + "",
+            label: {
+              normal: {
+                color: "#fff",
+                show: true
+              }
             }
+          },
+          {
+            xAxis: this.timeArr[i + 1] + ""
           }
-        },
-        {
-          xAxis: this.timeArr[i + 1] + ""
-        }
-      ]);
+        ]);
+      }
     }
 
     const option = {

@@ -83,6 +83,11 @@ export default class RightPart extends React.Component {
             })
         }
     }
+    componentWillUnmount() {
+        this.setState = (state,callback)=>{
+          return;
+        };
+    }
 
     render() {
         let text = ' ';

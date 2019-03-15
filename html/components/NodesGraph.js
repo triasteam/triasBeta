@@ -31,6 +31,10 @@ export default class NodesGraph extends React.Component {
     componentWillUnmount(){
         let self= this
         this.nodesInterval = clearInterval(self.nodesInterval)
+        
+        this.setState = (state,callback)=>{
+            return;
+        };
     }
 
     /**
