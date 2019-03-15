@@ -102,8 +102,8 @@ export default class GenerateTranstaction extends React.Component {
     checkDetail(id){
         let self = this;
         $.ajax({
-            url: "/api/send_transaction/",
-            type: "POST",
+            url: "/api/query_transactions/",
+            type: "GET",
             dataType:"json",
             data: {
                 id: id
@@ -151,7 +151,7 @@ export default class GenerateTranstaction extends React.Component {
                         return (
                             <div className="tran-card" key={"item"+index}>
                                 <div className="text">
-                                    <p className="tran-name">Transaction #01</p>
+                                    <p className="tran-name">{'Transaction #0' + (index+1)}</p>
                                     <p className="tran-hint">Succeed!</p>
                                 </div>
                                 <div className="check-btn success">
