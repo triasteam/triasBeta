@@ -10,7 +10,7 @@ import { CSSTransition } from 'react-transition-group';
 /**
  * RightPart components which displays:
  */
-export default class GenerateTransaction extends React.Component {
+class GenerateTransaction extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -28,16 +28,22 @@ export default class GenerateTransaction extends React.Component {
             failContent:'',
             failLog:'',
             errorTitle:'',
-            errorInfo:''
+            errorInfo:'',            
+            lang: this.props.intl.locale, // current locale language
         }
     }
-    componentWillMount() {
-    }
 
-    componentDidMount() {
-        // console.log('rrrrrr',this.props.currentEventIndex)
-        // this.setState({
-        // })
+    /**
+     * Before a mounted component receives new props, reset some state.
+     * @param {Object} nextProps new props
+     */
+    componentWillReceiveProps (nextProps) {  
+        // if locale language will be changed, reset lang state
+        if(this.state.lang != nextProps.intl.locale){
+            this.setState({
+                lang: nextProps.intl.locale
+            })
+        }             
     }
     sendTransaction() {
         let self = this;
@@ -135,15 +141,15 @@ export default class GenerateTransaction extends React.Component {
                     if ( data.result == "trade not exists" ) {
                         self.setState({
                             showErrorModal: !self.state.showErrorModal,
-                            errorTitle: 'Try Again Latter.',
-                            errorInfo: 'The transaction is being generated in the background, please wait a few seconds.'
+                            errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Latter.',
+                            errorInfo: self.state.lang=='zh'?'此交易正在后台生成，请稍后再试。':'The transaction is being generated in the background, please wait a few seconds.'
                         })
                     } else {
                         let info = data.result;
                         info = info.replace(info[0],info[0].toUpperCase());
                         self.setState({
                             showErrorModal: !self.state.showErrorModal,
-                            errorTitle: 'Error Occurred!',
+                            errorTitle: self.state.lang=='zh'?'发生错误！':'Error Occurred!',
                             errorInfo: info
                         })
                         
@@ -152,18 +158,6 @@ export default class GenerateTransaction extends React.Component {
                 }
             }
         })
-    }
-    /**
-     * Before a mounted component receives new props, reset some state.
-     * @param {Object} nextProps new props
-     */
-    componentWillReceiveProps(nextProps) {
-        // console.log('rrrrr',this.props.currentInfo,nextProps.currentInfo)
-        // if (JSON.stringify(nextProps.currentInfo) != JSON.stringify(this.props.currentInfo)) {
-        //     this.setState({
-        //         currentInfo: nextProps.currentInfo
-        //     })
-        // }
     }
 
     componentWillUnmount() {
@@ -175,9 +169,9 @@ export default class GenerateTransaction extends React.Component {
        let self = this;
         return (
             <div className="generate-transaction">
-                <p className="main-title">Transaction Test</p>
-                <p className="explaination">Generate a new transaction to get started. When the transaction is finished, you’ll be able to check the details.</p>
-                <a className="generate-btn" onClick={self.showInput.bind(self)}>Generate New Transaction</a>
+                <p className="main-title"><FormattedMessage id="titleTransactionTest"/></p>
+                <p className="explaination"><FormattedMessage id="pTransactionTest"/></p>
+                <a className="generate-btn" onClick={self.showInput.bind(self)}><FormattedMessage id="buttonTransactionTest"/></a>
                 {/* <div className="tran-card">
                     <div className="text">
                         <p className="tran-name">Transaction #01</p>
@@ -194,11 +188,11 @@ export default class GenerateTransaction extends React.Component {
                             <div className="tran-card" key={"item"+index}>
                                 <div className="text">
                                     <p className="tran-name">{'Transaction #0' + (index+1)}</p>
-                                    <p className="tran-hint">Succeed!</p>
+                                    <p className="tran-hint"><FormattedMessage id="termSucceed"/></p>
                                 </div>
                                 <div className="check-btn success">
                                     <img src={require("../img/icon/inline/icon_check_enable@2x.png")} />
-                                    <a onClick={self.checkDetail.bind(self, item.id)}>Check Transaction</a>
+                                    <a onClick={self.checkDetail.bind(self, item.id)}><FormattedMessage id="btnCheckTransaction"/></a>
                                 </div>
                             </div>
                         )
@@ -215,28 +209,28 @@ export default class GenerateTransaction extends React.Component {
                                 <div className="close-btn" onClick={()=>{self.setState({showDetailModal: !self.state.showDetailModal})}}>
                                     <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
                                 </div>
-                                <h2>Transactions Detail</h2>
-                                <p>Check complete, the transaction is complete</p>
+                                <h2><FormattedMessage id="modalDetailTitle"/></h2>
+                                <p><FormattedMessage id="modalDetailSubtitle"/></p>
                                 <div className="detail-part1">
                                     <table>
                                         <tbody>
                                             <tr>
-                                                <td width="33%">Transaction ID</td>
+                                                <td width="33%"><FormattedMessage id="termTransaction"/> ID</td>
                                                 <td width="66%">{self.state.successID}</td>
                                             </tr>
                                             <tr>
-                                                <td width="33%">Transactions Hash</td>
+                                                <td width="33%"><FormattedMessage id="termTransactionHash"/></td>
                                                 <td width="66%">{self.state.successHash}</td>
                                             </tr>
                                             <tr>
-                                                <td width="33%">Block Height</td>
+                                                <td width="33%"><FormattedMessage id="termBlockHeight"/></td>
                                                 <td width="66%">{self.state.successHeight}</td>
                                             </tr>
                                             
                                         </tbody>
                                     </table>
                                 </div>
-                                <h5>Content Included</h5>
+                                <h5><FormattedMessage id="modalTransactionLabel" /></h5>
                                 <div className="detail-part2">
                                     {self.state.successContent}
                                 </div>
@@ -254,13 +248,13 @@ export default class GenerateTransaction extends React.Component {
                             <div className="close-btn" onClick={()=>{self.setState({showInputModal: !self.state.showInputModal})}}>
                                 <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
                             </div>
-                            <h2>Enter Your Content</h2>
-                            <p>You can enter up to 255 characters.</p>
-                            <h5>Content Included</h5>
-                            <textarea id="user-input" placeholder="Please enter your content."
+                            <h2><FormattedMessage id="modalTransactionTitle"/></h2>
+                            <p><FormattedMessage id="modalTransactionSubtitle"/></p>
+                            <h5><FormattedMessage id="modalTransactionLabel"/></h5>
+                            <textarea id="user-input" maxLength="255" placeholder={this.state.lang=="zh"?"请输入交易内容。":"Please enter your content."}
                             onChange={self.handleText.bind(self)}>
                             </textarea>                       
-                            <button onClick={self.sendTransaction.bind(self)}>Send Transaction</button>
+                            <button onClick={self.sendTransaction.bind(self)}><FormattedMessage id="modalTransactionButton"/></button>
                         </div>
                     </section>
                 </CSSTransition>
@@ -276,13 +270,13 @@ export default class GenerateTransaction extends React.Component {
                                 <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
                             </div>
                             <img src={require('../img/icon/button_icon/icon_error_title@2x.png')} alt="查询错误" />
-                            <h2>Transaction Failed.</h2>
-                            <p>Please review the transaction log then try again.</p>
-                            <h5>Content Included</h5>
+                            <h2><FormattedMessage id="modalFailedTitle"/></h2>
+                            <p><FormattedMessage id="modalFailedSubtitle"/></p>
+                            <h5><FormattedMessage id="modalTransactionLabel"/></h5>
                             <div className="detail-part2 top">
                                 {self.state.failContent}
                             </div>
-                            <h5>Transaction Log</h5>
+                            <h5><FormattedMessage id="modalFailedLog"/></h5>
                             <div className="detail-part2">
                                 {self.state.failLog}
                             </div>
@@ -319,3 +313,10 @@ export default class GenerateTransaction extends React.Component {
         )
     }
 }
+
+/* Inject intl to GenerateTransaction props */
+const propTypes = {
+    intl: intlShape.isRequired,
+};
+GenerateTransaction.propTypes = propTypes
+export default injectIntl(GenerateTransaction)
