@@ -13,8 +13,8 @@ def get_activity_list(request):
     try:
         group = int(request.GET.get('group', 3))
         search = request.GET.get('search', '')
-        start = int(request.GET.get('start', 0))
-        end = int(request.GET.get('end', 4704624000))
+        start = int(request.GET.get('start', 0))//1000
+        end = int(request.GET.get('end', 4704624000))//1000
         page = int(request.GET.get('curr_page', 1))
         size = int(request.GET.get('page_size', 10))
         activities = Activity.objects.filter(Q(time__gte=start) & Q(time__lte=end)).order_by('-time')
