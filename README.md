@@ -1,4 +1,6 @@
 # Trais Beta
+[![GitHub license](https://img.shields.io/badge/license-GPL3.0-blue.svg)](https://github.com/triasteam/triasBeta/blob/master/LICENSE.md)
+[![Build Status](https://travis-ci.org/triasteam/triasBeta.svg)](https://travis-ci.org/triasteam/triasBeta)
 
 This project is a web portal which displays statistics and data of the Trias Beta system.
 
