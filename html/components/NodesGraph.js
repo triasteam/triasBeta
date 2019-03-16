@@ -22,7 +22,7 @@ export default class NodesGraph extends React.Component {
     componentDidMount(){
         var self = this
         self.getNodesData()
-        this.nodesInterval = setInterval(self.getNodesData.bind(self), 5000);
+        this.nodesInterval = setInterval(self.getNodesData.bind(self), 10000);
     }
 
     /**

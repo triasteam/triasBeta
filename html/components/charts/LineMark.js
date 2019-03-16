@@ -91,15 +91,14 @@ class LineMark extends PureComponent {
    */
   componentDidMount() {}
 
-   /**
+  /**
    * When the component will be unmounted.
    * Clear the intervals
    */
   componentWillUnmount() {
-    this.setState = (state,callback)=>{
+    this.setState = (state, callback) => {
       return;
     };
-    
   }
 
   getOption = () => {
@@ -118,10 +117,10 @@ class LineMark extends PureComponent {
           des = this.state.lang == "zh" ? "节点更新" : "Node Updates";
           break;
         case -1:
-          des = "no"
+          des = "no";
           break;
       }
-      if(des!="no"){
+      if (des != "no") {
         event_list.push([
           {
             name: des,
@@ -169,7 +168,7 @@ class LineMark extends PureComponent {
       yAxis: {
         type: "value",
         axisLabel: {
-          formatter: "{value} K",
+          formatter: "{value} "+`${this.props.unit}`,
           show: true,
           textStyle: {
             color: "#777C84"
@@ -277,10 +276,13 @@ class LineMark extends PureComponent {
             />
             <div className="layer">
               <div className="layer-item">Trias</div>
-              <div className="num">
-                {this.state.trias_dial.value + ""
-                  ? this.state.trias_dial.value
-                  : "N/A"}
+              <div>
+                <div className="num">
+                  {this.state.trias_dial.value + ""
+                    ? this.state.trias_dial.value
+                    : "N/A"}
+                </div>
+                <div className="unit">{this.props.unit}</div>
               </div>
             </div>
           </div>
@@ -297,12 +299,14 @@ class LineMark extends PureComponent {
               }}
             />
             <div className="layer">
-              {" "}
               <div className="layer-item">Ethereum</div>
-              <div className="num">
+              <div>
+                <div className="num">
                 {this.state.ethereum_dial.value + ""
                   ? this.state.ethereum_dial.value
                   : "N/A"}
+                </div>
+                <div className="unit">{this.props.unit}</div>
               </div>
             </div>
           </div>
@@ -321,10 +325,13 @@ class LineMark extends PureComponent {
             <div className="layer">
               {" "}
               <div className="layer-item">Hyperledger</div>
-              <div className="num">
+              <div>
+                <div className="num">
                 {this.state.hyperledger_dial.value + ""
                   ? this.state.hyperledger_dial.value
                   : "N/A"}
+                </div>
+                <div className="unit">{this.props.unit}</div>
               </div>
             </div>
           </div>

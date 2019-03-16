@@ -183,16 +183,19 @@ class LineMarkCollection extends React.Component {
           name={this.state.lang == "zh" ? "TPS 监控" : "TPS Monitoring"}
           data={this.state.Monitoring.tps_monitoring}
           dial={this.state.tps_dial}
+          unit={"Unit"}
         />
         <LineMark
           name={this.state.lang == "zh" ? "容错率" : "Fault Acceptance Rate"}
           data={this.state.Monitoring.fault_accetpance_rate}
           dial={this.state.fault_accetpance_rate_dial}
+          unit={"%"}
         />
         <LineMark
           name={this.state.lang == "zh" ? "错误节点" : "Faulty Nodes"}
           data={this.state.Monitoring.faulty_nodes_list}
           dial={this.state.faulty_nodes_dial}
+          unit={"Unit"}
         />
       </div>
     );

@@ -41,7 +41,7 @@ def get_ranking():
 def get_validators():
     try:
         for node in jc.node_list:
-            url = "http://%s:%s/validators" % (node['ip'], node['port'])
+            url = "http://%s:%s/tri_block_validators" % (node['ip'], node['port'])
             result = url_data(url)
             if result and (result['error'] == ""):
                 return result

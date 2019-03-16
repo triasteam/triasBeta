@@ -3,6 +3,7 @@ Index message
 """
 import time
 import datetime
+import json
 import redis
 import uuid
 import hashlib
@@ -83,58 +84,78 @@ def get_visualization(request):
         "ethereum": {"links": [], "nodes": []}
     }
     try:
-        response = get_ranking()
-        if response:
-            ranking = response['ranking']
-            source_list = list(response.keys())
-            source_list.remove('timestamp')
-            source_list.remove('action')
-            source_list.remove('ranking')
-            links = []
-            all_nodes = list(Node.objects.order_by('-id').values_list('node_ip', flat=True))
-            for source_ip in source_list:
-                target_obj = response[source_ip]
-                target_ip_list = list(target_obj.keys())
-                for target_ip in target_ip_list:
-                    links.append({"source": all_nodes.index(source_ip), "target": all_nodes.index(target_ip)})
-            result['trias']['links'] = links
-            result['trias']['nodes'] = []
+        redis_client = redis.Redis(jc.redis_ip, jc.redis_port, socket_connect_timeout=1)
+        visualization = redis_client.get("visualization")
+        if visualization and eval(visualization)['trias']['links']:
+            # get result from visualization
+            visualization = eval(visualization)
+            save_visualization = visualization
+            links = visualization['trias']['links']
+            current_link = links[:20]
+            logger.info("redis visualization length: %s, get: %s" % (len(links), len(current_link)))
+            for r_link in current_link:
+                links.remove(r_link)
+            visualization['trias']['links'] = current_link
+            result = visualization
+            save_visualization['trias']['links'] = links
+            redis_client.set('visualization', json.dumps(save_visualization))
 
-            # get validators
-            validators = get_validators()
-            validators_ips = []
-            if validators:
-                for validator in validators['result']['validators']:
-                    validator_ip = Node.objects.filter(pub_key=validator['pub_key']['data'])
-                    if validator_ip.exists():
-                        validators_ips.append(validator_ip[0].node_ip)
+        else:
+            response = get_ranking()
+            if response:
+                ranking = response['ranking']
+                source_list = list(response.keys())
+                source_list.remove('timestamp')
+                source_list.remove('action')
+                source_list.remove('ranking')
+                links = []
+                all_nodes = list(Node.objects.order_by('-id').values_list('node_ip', flat=True))
+                for source_ip in source_list:
+                    target_obj = response[source_ip]
+                    target_ip_list = list(target_obj.keys())
+                    for target_ip in target_ip_list:
+                        links.append({"source": all_nodes.index(source_ip), "target": all_nodes.index(target_ip)})
+                result['trias']['links'] = links
+                result['trias']['nodes'] = []
 
-            # save ranking to redis
-            redis_client = redis.Redis(jc.redis_ip, jc.redis_port)
-            saved_ranking = redis_client.get('ranking')
-            logger.info('previous ranking %s' % validators_ips)
+                # get validators
+                validators = get_validators()
+                validators_ips = []
+                if validators:
+                    for validator in validators['result']['validators']:
+                        validator_ip = Node.objects.filter(pub_key=validator['pub_key']['data'])
+                        if validator_ip.exists():
+                            validators_ips.append(validator_ip[0].node_ip)
 
-            for index, item in enumerate(validators_ips):
-                status = Node.objects.get(node_ip=item).status
-                trend = 0
-                if saved_ranking:
-                    pre_ranking = eval(saved_ranking)
-                    if item not in pre_ranking:
-                        trend = 1
-                    else:
-                        if index < pre_ranking.index(item):
+                # save ranking to redis
+                saved_ranking = redis_client.get('ranking')
+                logger.info('previous ranking %s' % validators_ips)
+
+                for index, item in enumerate(validators_ips):
+                    status = Node.objects.get(node_ip=item).status
+                    trend = 0
+                    if saved_ranking:
+                        pre_ranking = eval(saved_ranking)
+                        if item not in pre_ranking:
                             trend = 1
-                        elif index > pre_ranking.index(item):
-                            trend = -1
-                result['trias']['nodes'].append({"node_ip": item, "status": status, 'level': 0, 'trend': trend})
-                all_nodes.remove(item)
+                        else:
+                            if index < pre_ranking.index(item):
+                                trend = 1
+                            elif index > pre_ranking.index(item):
+                                trend = -1
+                    result['trias']['nodes'].append({"node_ip": item, "status": status, 'level': 0, 'trend': trend})
+                    all_nodes.remove(item)
 
-            for item in all_nodes:
-                status = Node.objects.get(node_ip=item).status
-                result['trias']['nodes'].append({"node_ip": item, "status": status, 'level': 1, 'trend': 0})
+                for item in all_nodes:
+                    status = Node.objects.get(node_ip=item).status
+                    result['trias']['nodes'].append({"node_ip": item, "status": status, 'level': 1, 'trend': 0})
 
-            redis_client.delete('ranking')
-            redis_client.set('ranking', str([i for i in validators_ips]))
+                redis_client.delete('ranking')
+                redis_client.set('ranking', str([i for i in validators_ips]))
+
+                # save result to redis
+                redis_client.set('visualization', json.dumps(result))
+                logger.info("visualization first saved %s" % (len(links)))
 
         status = 'success'
     except Exception as e:
@@ -220,7 +241,7 @@ def get_tps(request):
         data /= 60
 
         result = {
-            "trias": {'rate': round(data/100, 2), 'value': int(data)},
+            "trias": {'rate': round(data/100, 2), 'value': round(data, 2)},
             "ethereum": {'rate': 0, 'value': 0},
             "hyperledger": {'rate': 0, 'value': 0}
         }
