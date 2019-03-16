@@ -110,7 +110,7 @@ def get_visualization(request):
                         validators_ips.append(validator_ip[0].node_ip)
 
             # save ranking to redis
-            redis_client = redis.Redis(jc.redis_ip, jc.redis_port)
+            redis_client = redis.Redis(jc.redis_ip, jc.redis_port, socket_connect_timeout=1)
             saved_ranking = redis_client.get('ranking')
             logger.info('previous ranking %s' % validators_ips)
 

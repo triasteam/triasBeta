@@ -7,7 +7,7 @@ jc = JsonConfiguration()
 
 def get_monitoring():
     try:
-        redis_client = redis.Redis(jc.redis_ip, jc.redis_port)
+        redis_client = redis.Redis(jc.redis_ip, jc.redis_port, socket_connect_timeout=1)
         faulty_nodes_list = get_single_data(redis_client, 'faulty_nodes_list')
         fault_accetpance_rate = get_single_data(redis_client, 'fault_accetpance_rate')
         tps_monitoring = get_single_data(redis_client, 'tps_monitoring')
