@@ -1,5 +1,10 @@
 import React, { PureComponent } from "react";
-import ReactEcharts from "echarts-for-react";
+// import the core library.
+import ReactEcharts from "echarts-for-react/lib/core";
+
+// then import echarts modules those you have used manually.
+import echarts from "echarts/lib/echarts";
+import "echarts/lib/chart/line";
 import { injectIntl, intlShape } from "react-intl"; /* react-intl imports */
 class LineMark extends PureComponent {
   constructor(props) {
@@ -168,7 +173,7 @@ class LineMark extends PureComponent {
       yAxis: {
         type: "value",
         axisLabel: {
-          formatter: "{value} "+`${this.props.unit}`,
+          formatter: "{value} " + `${this.props.unit}`,
           show: true,
           textStyle: {
             color: "#777C84"
@@ -256,6 +261,7 @@ class LineMark extends PureComponent {
           </ul>
         </div>
         <ReactEcharts
+          echarts={echarts}
           option={this.getOption()}
           style={{ height: "360px", width: "105%" }}
           className="react_for_echarts"
@@ -302,9 +308,9 @@ class LineMark extends PureComponent {
               <div className="layer-item">Ethereum</div>
               <div>
                 <div className="num">
-                {this.state.ethereum_dial.value + ""
-                  ? this.state.ethereum_dial.value
-                  : "N/A"}
+                  {this.state.ethereum_dial.value + ""
+                    ? this.state.ethereum_dial.value
+                    : "N/A"}
                 </div>
                 <div className="unit">{this.props.unit}</div>
               </div>
@@ -327,9 +333,9 @@ class LineMark extends PureComponent {
               <div className="layer-item">Hyperledger</div>
               <div>
                 <div className="num">
-                {this.state.hyperledger_dial.value + ""
-                  ? this.state.hyperledger_dial.value
-                  : "N/A"}
+                  {this.state.hyperledger_dial.value + ""
+                    ? this.state.hyperledger_dial.value
+                    : "N/A"}
                 </div>
                 <div className="unit">{this.props.unit}</div>
               </div>
