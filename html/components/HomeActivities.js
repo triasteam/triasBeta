@@ -5,10 +5,6 @@ import { Link } from 'react-router-dom'
 import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
 import $ from 'jquery'
 
-import TimeAgo from 'javascript-time-ago'
-// Load locale-specific relative date/time formatting rules.
-import en from 'javascript-time-ago/locale/en'
-
 /**
  * HomeActivities components which displays:
  */
@@ -19,14 +15,7 @@ export default class HomeActivities extends React.Component {
             activities:[],
         }
     }
-    componentWillMount() {
-        // Add locale-specific relative date/time formatting rules.
-        TimeAgo.addLocale(en)
-        
-        // Create relative date/time formatter.
-        const timeAgo = new TimeAgo('en-US')
-        this.timeAgo = timeAgo;
-    }
+
 
     componentDidMount() {
         this.getActivities();
