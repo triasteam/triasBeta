@@ -3,7 +3,6 @@ import $ from "jquery";
 import CustomPagination from "./CustomPagination"
 import { injectIntl, intlShape, FormattedMessage } from 'react-intl' /* react-intl imports */
 import { DatePicker } from 'antd';
-import "antd/dist/antd.css";
 
 /**
  * The Subcomponent of the nodeList page and Activities page -----  List of components
