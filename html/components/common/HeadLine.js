@@ -75,13 +75,13 @@ export default class HeadLine extends React.Component {
                                     <FormattedMessage id="subHeaderP3" />
                                 </p>
                                 {
-                                    this.props.eventList.length>0 && this.props.currentEventIndex > -1 && this.props.currentEventIndex!=this.props.eventList.length-1 &&
+                                    this.props.eventList.length > 0 && this.props.currentEventIndex!=this.props.eventList.length-1 &&
                                     <p className="sub-sub">
                                         {this.props.eventList[this.props.currentEventIndex+1].name}
                                     </p>
                                 }
                                 {
-                                    (this.props.eventList.length <= 0 || this.props.currentEventIndex == -1 || this.props.currentEventIndex==this.props.eventList.length-1 )&& 
+                                    (this.props.eventList.length <= 0 || this.props.currentEventIndex==this.props.eventList.length-1 )&& 
                                     <p className="sub-sub">
                                         Null
                                     </p>
