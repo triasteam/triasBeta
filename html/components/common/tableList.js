@@ -3,7 +3,6 @@ import $ from "jquery";
 import CustomPagination from "./CustomPagination"
 import { injectIntl, intlShape, FormattedMessage } from 'react-intl' /* react-intl imports */
 import { DatePicker } from 'antd';
-import moment from 'moment';
 import "antd/dist/antd.css";
 
 /**
