@@ -2,24 +2,19 @@
   "node_list": [
     {
       "ip": "192.168.1.208",
-      "port": "46657",
-      "show_ip": "35.189.62.83"
+      "port": "46657"
     }, {
       "ip": "192.168.1.178",
-      "port": "46657",
-      "show_ip": "192.144.152.140"
+      "port": "46657"
     }, {
       "ip": "192.168.1.206",
-      "port": "46657",
-      "show_ip": "123.206.27.144"
+      "port": "46657"
     }, {
       "ip": "192.168.1.207",
-      "port": "46657",
-      "show_ip": "176.122.188.11"
+      "port": "46657"
     }, {
       "ip": "192.168.1.209",
-      "port": "46657",
-      "show_ip": "10.1.3.139"
+      "port": "46657"
     }
   ],
   "redis_ip":"192.168.1.241",
@@ -29,6 +24,5 @@
   "mysql_user": "8lab",
   "mysql_password": "8lab",
   "mysql_database": "leviatom_explorer",
-  "ranking_port": 8987,
-  "request_interval": 1.5
+  "ranking_port": 8987
 }

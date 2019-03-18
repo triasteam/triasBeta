@@ -11,13 +11,14 @@ import threading
 from django.http import JsonResponse
 from django.db.models import Q
 from app_views.models import Block, Node, Transaction, Activity, Hardware, TransactionLog
-from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration
+from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration, get_node_show
 from app_views.view_utils.logger import logger
-from app_views.view_utils.block_util import url_data, get_ranking, get_validators, send_transaction_util
+from app_views.view_utils.block_util import get_ranking, get_validators, send_transaction_util
 from app_views.view_utils.redis_util import get_monitoring
 
 jc = JsonConfiguration()
 ac = ActivityConfiguration()
+node_show = get_node_show()
 
 
 def get_current_event(request):
@@ -91,14 +92,8 @@ def get_visualization(request):
             source_list.remove('action')
             source_list.remove('ranking')
             links = []
+            node_rank = []
             all_nodes = list(Node.objects.order_by('-id').values_list('node_ip', flat=True))
-            for source_ip in source_list:
-                target_obj = response[source_ip]
-                target_ip_list = list(target_obj.keys())
-                for target_ip in target_ip_list:
-                    links.append({"source": all_nodes.index(source_ip), "target": all_nodes.index(target_ip)})
-            random.shuffle(links)
-            result['trias']['links'] = links[:20]
             result['trias']['nodes'] = []
 
             # get validators
@@ -127,12 +122,23 @@ def get_visualization(request):
                             trend = 1
                         elif index > pre_ranking.index(item):
                             trend = -1
-                result['trias']['nodes'].append({"node_ip": item, "status": status, 'level': 0, 'trend': trend})
+                result['trias']['nodes'].append({"node_ip": node_show[item], "status": status, 'level': 0, 'trend': trend})
+                node_rank.append(item)
                 all_nodes.remove(item)
 
             for item in all_nodes:
                 status = Node.objects.get(node_ip=item).status
-                result['trias']['nodes'].append({"node_ip": item, "status": status, 'level': 1, 'trend': 0})
+                node_rank.append(item)
+                result['trias']['nodes'].append({"node_ip": node_show[item], "status": status, 'level': 1, 'trend': 0})
+
+            # node link
+            for source_ip in source_list:
+                target_obj = response[source_ip]
+                target_ip_list = list(target_obj.keys())
+                for target_ip in target_ip_list:
+                    links.append({"source": node_rank.index(source_ip), "target": node_rank.index(target_ip)})
+            random.shuffle(links)
+            result['trias']['links'] = links[:20]
 
             redis_client.delete('ranking')
             redis_client.set('ranking', str([i for i in validators_ips]))

@@ -3,7 +3,7 @@ local config for parse conf.json vars
 """
 import json
 
-from trias_beta.settings import CONF_JSON, ACTIVITY_JSON
+from trias_beta.settings import CONF_JSON, ACTIVITY_JSON, NODE_SHOW_JSON
 
 
 class JsonConfiguration:
@@ -16,7 +16,6 @@ class JsonConfiguration:
         self.node_list = records["node_list"]
         self.redis_ip = records["redis_ip"]
         self.redis_port = records["redis_port"]
-        self.request_interval = records["request_interval"]
         self.ranking_port = records["ranking_port"]
 
 
@@ -28,3 +27,10 @@ class ActivityConfiguration:
         records = json.loads(rec)
 
         self.activity_list = records["activity_list"]
+
+
+def get_node_show():
+    with open(NODE_SHOW_JSON, 'r') as conf:
+        rec = conf.read()
+    records = json.loads(rec)
+    return records

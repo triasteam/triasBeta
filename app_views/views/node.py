@@ -6,7 +6,9 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 from app_views.models import Node
 from app_views.view_utils.logger import logger
+from app_views.view_utils.localconfig import get_node_show
 
+node_show = get_node_show()
 
 def get_node_list(request):
 
@@ -29,6 +31,8 @@ def get_node_list(request):
         if page > paginator.num_pages:
             page = 1
         nodes_list = list(paginator.page(page).object_list.values())
+        for node in nodes_list:
+            node['node_ip'] = node_show[node['node_ip']]
 
         status, result = 'success', {'nodes_list': nodes_list, 'num': len(nodes_list),
                                      'page': page, 'total_page': paginator.num_pages}
