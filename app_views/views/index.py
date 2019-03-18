@@ -13,7 +13,7 @@ from django.db.models import Q
 from app_views.models import Block, Node, Transaction, Activity, Hardware, TransactionLog
 from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration, get_node_show
 from app_views.view_utils.logger import logger
-from app_views.view_utils.block_util import url_data, get_ranking, get_validators, send_transaction_util
+from app_views.view_utils.block_util import get_ranking, get_validators, send_transaction_util
 from app_views.view_utils.redis_util import get_monitoring
 
 jc = JsonConfiguration()
