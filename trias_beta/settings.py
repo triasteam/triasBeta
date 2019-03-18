@@ -93,6 +93,7 @@ STATICFILES_DIRS = [
 
 CONF_JSON = STATICFILES_DIRS[1] + "/conf.json"
 ACTIVITY_JSON = STATICFILES_DIRS[1] + "/activity.json"
+NODE_SHOW_JSON = STATICFILES_DIRS[1] + "/node_show.json"
 
 with open(CONF_JSON, 'r') as conf:
     rec = conf.read()
