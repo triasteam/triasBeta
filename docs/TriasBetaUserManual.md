@@ -92,13 +92,10 @@ Confirmed transactions will be shown as a transaction card, click "Check Transac
 
 ![Simulations Review](./img/Check_Transaction.png)
 
----
-
 # Activities Tab
 
 Activities tab contains all the history activities, you can refine the result with the group filter and the date selector.
 
----
 
 # Node List Tab
 
