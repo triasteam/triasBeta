@@ -76,9 +76,11 @@ class GenerateTransaction extends React.Component {
                   
                     // this.setState({ stateOpt: currentState });
                     // console.log( stateOpt )
+                    let time = new Date().getTime();
                     item = { 
                         status: 1,
-                        id: data.result.id
+                        id: data.result.id,
+                        time: self.timestampToTime(time),
                     }
                     group.push(item);
                     group = group.concat(self.state.tranCardGroup);
@@ -99,6 +101,18 @@ class GenerateTransaction extends React.Component {
             }
         })
     }
+
+    timestampToTime(timestamp) {
+        var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var Y = date.getFullYear() + '.';
+        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '.';
+        var D = date.getDate() ;
+        var h = date.getHours() + ':';
+        var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+        var s = (date.getSeconds() < 10 ? '0' + date.getSeconds()  : date.getSeconds()) + ' - ';
+        return h+m+s+Y+M+D;
+    }
+
     showInput() {
         this.setState({showInputModal: !this.state.showInputModal})
         $("#user-input").val("");
@@ -183,11 +197,11 @@ class GenerateTransaction extends React.Component {
                     </div>
                 </div> */}
                 {
-                    self.state.tranCardGroup && self.state.tranCardGroup.map(function(item, index, list) {
+                    self.state.tranCardGroup && self.state.tranCardGroup.map(function(item, index) {
                         return (
                             <div className="tran-card" key={"item"+index}>
                                 <div className="text">
-                                    <p className="tran-name">{'Transaction #0' + (list.length-index)}</p>
+                                    <p className="tran-name"> <img src={require('../img/icon/activities/icon_txTime@2x.png')}/>{item.time}</p>
                                     <p className="tran-hint"><FormattedMessage id="termSucceed"/></p>
                                 </div>
                                 <div className="check-btn success">
