@@ -32,6 +32,7 @@
     "style-loader": "^0.21.0",
     "url-loader": "^0.5.7",
     "webpack": "^2.7.0",
+    "webpack-bundle-analyzer": "^3.1.0",
     "webpack-bundle-tracker": "^0.3.0",
     "webpack-dev-server": "^2.3.0"
   },
@@ -42,14 +43,13 @@
     "echarts-for-react": "^2.0.15-beta.0",
     "es5-shim": "^4.5.9",
     "es6-promise": "^3.1.2",
-    "javascript-time-ago": "^2.0.1",
     "jquery": "^1.12.4",
-    "moment": "^2.24.0",
     "react": "^16.3.2",
     "react-bootstrap": "^0.31.3",
     "react-dom": "^16.3.2",
     "react-hot-loader": "^4.1.2",
     "react-intl": "^2.4.0",
+    "react-loadable": "^5.5.0",
     "react-router-dom": "^4.3.0-rc.3",
     "react-transition-group": "^2.6.1",
     "swiper": "^4.5.0"

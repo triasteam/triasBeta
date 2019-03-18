@@ -174,7 +174,7 @@ export default class RightPart extends React.Component {
                   (this.state.currentInfo.fault_nodes_num /
                     this.state.currentInfo.all_nodes_num) *
                   100
-                ).toFixed(4) + "%"}
+                ).toFixed(2) + "%"}
             )
           </p>
           <p className="note">

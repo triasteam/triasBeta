@@ -14,12 +14,37 @@ import en_US from "../locale/en_US"     // import defined messages in English
 addLocaleData([...en, ...zh]);  // load React Intl's locale data for multiple languages
 import $ from 'jquery'
 
-import ChainSatus from "./ChainSatus";
-import Activities from "./Activities";
-import NodeList from "./NodeList";
-
-
-import HeadLine from "./common/HeadLine";
+// 按路由拆分代码
+import Loadable from 'react-loadable';
+const MyLoadingComponent = ({ isLoading, error }) => {
+    // Handle the loading state
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+    // Handle the error state
+    else if (error) {
+        return <div>Sorry, there was a problem loading the page.</div>;
+    }
+    else {
+        return null;
+    }
+};
+const ChainSatus = Loadable({
+    loader: () => import('./ChainSatus'),
+    loading: MyLoadingComponent
+});
+const Activities = Loadable({
+    loader: () => import('./Activities'),
+    loading: MyLoadingComponent
+});
+const NodeList = Loadable({
+    loader: () => import('./NodeList'),
+    loading: MyLoadingComponent
+});
+const HeadLine = Loadable({
+    loader: () => import('./common/HeadLine'),
+    loading: MyLoadingComponent
+});
 
 export default class Main extends React.Component {
     constructor(props) {

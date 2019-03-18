@@ -1,6 +1,7 @@
 var path = require("path");
 var webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
   context: __dirname,
@@ -21,6 +22,7 @@ module.exports = {
   ], // add all vendor libs
 
   plugins: [
+    // new BundleAnalyzerPlugin({ analyzerPort: 8919 }),
     new webpack.optimize.CommonsChunkPlugin({name:'vendors', filename:'vendors.js'}),
     new webpack.LoaderOptionsPlugin({  
       options: {  
@@ -37,7 +39,14 @@ module.exports = {
       filename: "app.css",
       disable: false,
       allChunks: true
-    })
+    }),
+
+  //解决moment打包的时候把所有的语言都打包进去的问题
+  new webpack.ContextReplacementPlugin(
+    /moment[\\\/]locale$/,
+    /^\.\/(zh-cn)$/
+    ),
+    
   ], // add all common plugins here
 
   module: {
