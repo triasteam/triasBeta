@@ -39,7 +39,14 @@ module.exports = {
       filename: "app.css",
       disable: false,
       allChunks: true
-    })
+    }),
+
+  //解决moment打包的时候把所有的语言都打包进去的问题
+  new webpack.ContextReplacementPlugin(
+    /moment[\\\/]locale$/,
+    /^\.\/(zh-cn)$/
+    ),
+    
   ], // add all common plugins here
 
   module: {
