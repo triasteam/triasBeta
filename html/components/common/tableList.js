@@ -81,10 +81,6 @@ class TableList extends React.Component {
     }
 
 
-    componentDidMount() {
-        this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
-    }
-
     /**
      * Listen for changes in the search field
      * @param {e} event
@@ -113,6 +109,9 @@ class TableList extends React.Component {
      * @param {number} testGroupId --- the ID of testGroup
      */
     getHostList(currentPage, rowsPerPage, searchKey, testGroupId) {
+        this.setState({
+            currentPage:currentPage
+        })
         let self = this
         // Whether to pass in a time parameter
         let data = self.state.startValue && self.state.endValue ? {
@@ -160,6 +159,7 @@ class TableList extends React.Component {
             rowsPerPage: num,
             currentPage:1,
         })
+        this.strogePageNum(1)
         this.getHostList(1, num, this.state.nodeSearchKey, this.state.testGroupId)
     }
 
@@ -171,6 +171,7 @@ class TableList extends React.Component {
         this.setState({
             currentPage: pagenum
         })
+        this.strogePageNum(pagenum)
         this.getHostList(pagenum, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
         //console.log(pagenum)
     }
@@ -207,6 +208,7 @@ class TableList extends React.Component {
         this.setState({
             currentPage: pagenum
         })
+        this.strogePageNum(pagenum)
         this.getHostList(pagenum, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
     }
     /**
@@ -228,7 +230,31 @@ class TableList extends React.Component {
         second = second < 10 ? ('0' + second) : second;
         return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
     }
+    /**
+     * Save the current page number to window.localStorage
+     * @param {*} currentPage 
+     */
+    strogePageNum(currentPage){
+        let storage = window.localStorage;
+        storage.setItem(this.props.searchListApi,currentPage);
+    }
+    /**
+     * remove the current page number to window.localStorage
+     */
+    removeStrogePageNum(){
+        let storage = window.localStorage;
+        storage.removeItem(this.props.searchListApi);
+    }
+    componentDidMount() {
+        // get the current page number to window.localStorage
+        let storage = window.localStorage;
+        let currentPage = Number(storage.getItem(this.props.searchListApi)) || this.state.currentPage;
+        this.getHostList(currentPage, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
+    }
+
     componentWillUnmount = () => {
+        // remove window.localStorage
+        this.removeStrogePageNum()
         this.setState = (state,callback)=>{
           return;
         };
@@ -377,7 +403,7 @@ class TableList extends React.Component {
 
 
                 <CustomPagination
-                    from={(this.state.currentPage - 1) * this.state.rowsPerPage}
+                    from={(this.state.currentPage - 1) * this.state.rowsPerPage + 1} 
                     to={(this.state.currentPage - 1) * this.state.rowsPerPage + (this.state.hostlist ? this.state.hostlist.length : 0)}
                     totalItemsCount={this.state.totalItemsCount}
                     totalPagesCount={this.state.pageCount}

@@ -3,6 +3,7 @@ Index message
 """
 import time
 import datetime
+import random
 import redis
 import uuid
 import hashlib
@@ -85,7 +86,6 @@ def get_visualization(request):
     try:
         response = get_ranking()
         if response:
-            ranking = response['ranking']
             source_list = list(response.keys())
             source_list.remove('timestamp')
             source_list.remove('action')
@@ -97,7 +97,8 @@ def get_visualization(request):
                 target_ip_list = list(target_obj.keys())
                 for target_ip in target_ip_list:
                     links.append({"source": all_nodes.index(source_ip), "target": all_nodes.index(target_ip)})
-            result['trias']['links'] = links
+            random.shuffle(links)
+            result['trias']['links'] = links[:20]
             result['trias']['nodes'] = []
 
             # get validators
@@ -110,7 +111,7 @@ def get_visualization(request):
                         validators_ips.append(validator_ip[0].node_ip)
 
             # save ranking to redis
-            redis_client = redis.Redis(jc.redis_ip, jc.redis_port)
+            redis_client = redis.Redis(jc.redis_ip, jc.redis_port, socket_connect_timeout=1)
             saved_ranking = redis_client.get('ranking')
             logger.info('previous ranking %s' % validators_ips)
 
@@ -220,7 +221,7 @@ def get_tps(request):
         data /= 60
 
         result = {
-            "trias": {'rate': round(data/100, 2), 'value': int(data)},
+            "trias": {'rate': round(data/100, 2), 'value': round(data, 2)},
             "ethereum": {'rate': 0, 'value': 0},
             "hyperledger": {'rate': 0, 'value': 0}
         }
