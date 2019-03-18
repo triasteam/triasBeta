@@ -161,7 +161,7 @@ export default class NodesGraph extends React.Component {
         node.append("image")
             .attr({
                 "xlink:href" : function (d) {
-                    if(d.status === "0"){
+                    if(d.status === 0){
                         return require("../img/img_node_norm@2x.png");
                     }else{
                         return require("../img/img_node_offline@2x.png");
@@ -391,7 +391,7 @@ export default class NodesGraph extends React.Component {
                                     </span>
                                     <span className="label"><FormattedMessage id="termNode"/> IP</span>
                                     <span className="value">#{index+1}</span>
-                                    <span className="value">{item.node_ip}<div className="circle"></div></span>
+                                    <span className="value">{item.node_ip}<div className={item.status===0?"circle":"circle red"}></div></span>
                                 </li>
                             )
                         })

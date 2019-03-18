@@ -52,7 +52,7 @@ export default class HomeActivities extends React.Component {
                     let time = data.result.node_time * 1000;
                     let overview = {
                         type: "overview",
-                        time: self.timeAgo.format(time),
+                        time: self.timestampToTime(time),
                         normal: data.result.normal_nodes.length,
                         offline: data.result.fault_nodes.length
                     }
@@ -64,7 +64,7 @@ export default class HomeActivities extends React.Component {
                         let detail_time = details[i].time * 1000;
                         let detail = {
                                 type: "detail",
-                                time: self.timeAgo.format(detail_time),
+                                time: self.timestampToTime(detail_time),
                                 info: details[i].event,
                                 group: details[i].group,
                             
@@ -85,7 +85,16 @@ export default class HomeActivities extends React.Component {
         })
     }
 
-    
+    timestampToTime(timestamp) {
+        var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var Y = date.getFullYear() + '.';
+        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '.';
+        var D = date.getDate() ;
+        var h = date.getHours() + ':';
+        var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+        var s = (date.getSeconds() < 10 ? '0' + date.getSeconds()  : date.getSeconds()) + ' - ';
+        return h+m+s+Y+M+D;
+    }
     /**
      * When the component will unmount.
      * Clear the intervals 
@@ -116,7 +125,7 @@ export default class HomeActivities extends React.Component {
                                 return (
                                     <section className="item clearfix" key={"item"+index}>
                                         <div className="left">
-                                            <img src={require("../img/icon/activities/icon_activities_offline@2x.png")} />
+                                            <img src={require("../img/icon/activities/icon_activities_normal@2x.png")} />
                                             <p></p>
                                         </div>
                                         {
