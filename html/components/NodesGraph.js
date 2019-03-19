@@ -22,7 +22,7 @@ export default class NodesGraph extends React.Component {
     componentDidMount(){
         var self = this
         self.getNodesData()
-        this.nodesInterval = setInterval(self.getNodesData.bind(self), 10000);
+        this.nodesInterval = setInterval(self.getNodesData.bind(self), 20000);
     }
 
     /**
@@ -62,7 +62,7 @@ export default class NodesGraph extends React.Component {
             success: function (data) {
                 if(data){
                     // if nodes data updated
-                    if(JSON.stringify(data.result.trias) != JSON.stringify(self.state.triasData)){    
+                    if(JSON.stringify(data.result.trias) != JSON.stringify(self.state.triasData)){  
                         self.setState({
                             triasData:data.result.trias
                         })
