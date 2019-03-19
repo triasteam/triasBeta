@@ -132,13 +132,21 @@ def get_visualization(request):
                 result['trias']['nodes'].append({"node_ip": node_show[item], "status": status, 'level': 1, 'trend': 0})
 
             # node link
-            for source_ip in source_list:
-                target_obj = response[source_ip]
-                target_ip_list = list(target_obj.keys())
-                for target_ip in target_ip_list:
-                    links.append({"source": node_rank.index(source_ip), "target": node_rank.index(target_ip)})
-            random.shuffle(links)
-            result['trias']['links'] = links[:20]
+            saved_source_list = redis_client.get('saved_source_list')
+            saved_links = redis_client.get('saved_links')
+            if saved_source_list and eval(saved_source_list) == source_list and saved_links:
+                result['trias']['links'] = eval(saved_links)
+                logger.info('Get links from redis')
+            else:
+                for source_ip in source_list:
+                    target_obj = response[source_ip]
+                    target_ip_list = list(target_obj.keys())
+                    for target_ip in target_ip_list:
+                        links.append({"source": node_rank.index(source_ip), "target": node_rank.index(target_ip)})
+                random.shuffle(links)
+                result['trias']['links'] = links[:20]
+                redis_client.set('saved_source_list', str(source_list), 3600)
+                redis_client.set('saved_links', str(result['trias']['links']), 3600)
 
             redis_client.delete('ranking')
             redis_client.set('ranking', str([i for i in validators_ips]))
