@@ -1,2 +1,5 @@
 Django==1.10.4
 django-webpack-loader==0.2.4
+PyMySQL==0.8.0
+requests==2.20.1
+redis==2.10.5
