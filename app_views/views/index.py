@@ -111,7 +111,7 @@ def get_visualization(request):
             logger.info('previous ranking %s' % validators_ips)
 
             for index, item in enumerate(validators_ips):
-                status = Node.objects.get(node_ip=item).status
+                node_status = Node.objects.get(node_ip=item).status
                 trend = 0
                 if saved_ranking:
                     pre_ranking = eval(saved_ranking)
@@ -122,14 +122,14 @@ def get_visualization(request):
                             trend = 1
                         elif index > pre_ranking.index(item):
                             trend = -1
-                result['trias']['nodes'].append({"node_ip": node_show[item], "status": status, 'level': 0, 'trend': trend})
+                result['trias']['nodes'].append({"node_ip": node_show[item], "status": node_status, 'level': 0, 'trend': trend})
                 node_rank.append(item)
                 all_nodes.remove(item)
 
             for item in all_nodes:
-                status = Node.objects.get(node_ip=item).status
+                node_status = Node.objects.get(node_ip=item).status
                 node_rank.append(item)
-                result['trias']['nodes'].append({"node_ip": node_show[item], "status": status, 'level': 1, 'trend': 0})
+                result['trias']['nodes'].append({"node_ip": node_show[item], "status": node_status, 'level': 1, 'trend': 0})
 
             # node link
             saved_source_list = redis_client.get('saved_source_list')
