@@ -172,8 +172,8 @@ class LineMark extends PureComponent {
       },
       yAxis: {
         type: "value",
-        minInterval : 1,
-        boundaryGap : [ 0, 0.1 ],
+        // minInterval : 1,
+        // boundaryGap : [ 0, 0.1 ],
         axisLabel: {
           formatter: "{value} " + `${this.props.unit}`,
           show: true,

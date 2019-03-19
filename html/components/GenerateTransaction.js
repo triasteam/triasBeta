@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom'
 // ES6Promise.polyfill() //关键代码,让ie识别promise对象!
 import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
 import $ from 'jquery'
-import { func } from "prop-types";
 import { CSSTransition } from 'react-transition-group';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 /**
  * RightPart components which displays:
  */
@@ -29,10 +30,13 @@ class GenerateTransaction extends React.Component {
             failLog:'',
             errorTitle:'',
             errorInfo:'',            
-            lang: this.props.intl.locale, // current locale language
+            lang: this.props.intl.locale, // current locale language,
+            copied: false,
+            value:'',
+            searchKey: '',
         }
     }
-
+    
     /**
      * Before a mounted component receives new props, reset some state.
      * @param {Object} nextProps new props
@@ -173,7 +177,76 @@ class GenerateTransaction extends React.Component {
             }
         })
     }
-
+    onCopy(){
+        let self = this;
+        self.setState({
+            copied: true
+        })
+        setTimeout( () => {
+            self.setState({
+                copied: false
+            })
+        }, 1000)
+    }
+    searchTransaction(e){
+        e.preventDefault();
+        let self = this;
+        $.ajax({
+            url: "/api/query_transactions/",
+            dataType:"json",
+            data: {
+                id: self.state.searchKey,
+            },
+            success: function(data){
+                if( data.status == "tx_success" ) {
+                    console.log(data)
+                    self.setState({
+                        showDetailModal: !self.state.showDetailModal,
+                        successID: data.result.id,
+                        successHash: data.result.hash,
+                        successHeight: data.result.block_height,
+                        successContent: data.result.content,
+                    })
+                    
+                } else if ( data.status == "tx_failure" ) {
+                    self.setState({
+                        showFailureModal: !self.state.showFailureModal,
+                        failContent: data.result.content,
+                        failLog: data.result.log,
+                    })
+                } else if ( data.status == "failure" ) {
+                    // if 
+                    // ( data.result == "trade not exists" ) {
+                    //     self.setState({
+                    //         showErrorModal: !self.state.showErrorModal,
+                    //         errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Latter.',
+                    //         errorInfo: self.state.lang=='zh'?'此交易正在后台生成，请稍后再试。':'The transaction is being generated in the background, please wait a few seconds.'
+                    //     })
+                    // }
+                    //  else {
+                        let info = data.result;
+                        info = info.replace(info[0],info[0].toUpperCase());
+                        self.setState({
+                            showErrorModal: !self.state.showErrorModal,
+                            errorTitle: self.state.lang=='zh'?'发生错误！':'Error Occurred!',
+                            errorInfo: info
+                        })
+                        
+                    // }
+                    
+                }
+            }
+        })
+    }
+      /**
+     * Listen for changes in the search field
+     * @param {e} event
+     */
+    onChangeSearchInput(e) {
+        this.setState({
+            searchKey: e.target.value
+        })
+    }
     componentWillUnmount() {
         this.setState = (state,callback)=>{
           return;
@@ -183,7 +256,8 @@ class GenerateTransaction extends React.Component {
        let self = this;
         return (
             <div className="generate-transaction">
-                <p className="main-title"><FormattedMessage id="titleTransactionTest"/></p>
+                <p className="main-title" ><FormattedMessage id="titleTransactionTest"/></p>
+                
                 <p className="explaination"><FormattedMessage id="pTransactionTest"/></p>
                 <a className="generate-btn" onClick={self.showInput.bind(self)}><FormattedMessage id="buttonTransactionTest"/></a>
                 {/* <div className="tran-card">
@@ -212,6 +286,76 @@ class GenerateTransaction extends React.Component {
                         )
                     })
                 }
+                 
+                <div className="search-group">
+                    <form onSubmit={self.searchTransaction.bind(self)} className="clearfix">
+                        <input
+                            id="nodelist-searchkey"
+                            type="text"
+                            placeholder="Search for Tx hash"
+                            className="searchkey"
+                            value={self.state.searchKey}
+                            onChange={self.onChangeSearchInput.bind(this)}
+                        />
+                        <button className="nodelist-search" onClick={self.searchTransaction.bind(self)} >
+                            <i className="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </div>
+                        {/* <section className="modal-layer">
+                            <div className="modal detail-modal">
+                                <div className="close-btn" onClick={()=>{self.setState({showDetailModal: !self.state.showDetailModal})}}>
+                                    <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
+                                </div>
+                                <h2><FormattedMessage id="modalDetailTitle"/></h2>
+                                <p><FormattedMessage id="modalDetailSubtitle"/></p>
+                                <div className="detail-part1">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td width="40%"><FormattedMessage id="termTransaction"/> 
+                                                    ID
+                                                    <CopyToClipboard text={self.state.successID}
+                                                        onCopy={ self.onCopy.bind(self) }>
+                                                        { self.state.copied ?
+                                                            <p className="copy-btn">
+                                                                <img src={require('../img/icon/button_icon/icon_copied@2x.png')} alt="关闭弹窗" />
+                                                                <span>Copied</span>
+                                                            </p>    :
+                                                            <p className="copy-btn">
+                                                                <img src={require('../img/icon/button_icon/icon_copyTx@2x.png')} alt="关闭弹窗" />
+                                                                <span>Copy</span>
+                                                            </p>
+                                                        }
+                                                        
+                                                    </CopyToClipboard>
+                                                </td>
+                                                <td width="59%">
+                                                    1sfasddddddddasdddddddddddddddddd
+                                                    <p className="id-hint">
+                                                        <img src={require('../img/icon/button_icon/icon_tips@2x.png')} alt="关闭弹窗" />
+                                                        <span>Please backup the transaction ID if you intend to check the transaction latter.</span>
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="40%"><FormattedMessage id="termTransactionHash"/></td>
+                                                <td width="59%">212sfasddddddddasdddddddddddddddddd</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="40%"><FormattedMessage id="termBlockHeight"/></td>
+                                                <td width="59%">323231sfasddddddddasdddddddddddddddddd</td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <h5><FormattedMessage id="modalTransactionLabel" /></h5>
+                                <div className="detail-part2">
+                                    1sfasddddddddasdddddddddddddddddd1sfasddddddddasdddddddddddddddddd1sfasddddddddasdddddddddddddddddd
+                                </div>
+                            </div>
+                        </section> */}
                  <CSSTransition
                         in={self.state.showDetailModal}
                         timeout={300}
@@ -229,16 +373,38 @@ class GenerateTransaction extends React.Component {
                                     <table>
                                         <tbody>
                                             <tr>
-                                                <td width="33%"><FormattedMessage id="termTransaction"/> ID</td>
-                                                <td width="66%">{self.state.successID}</td>
+                                            <td width="40%"><FormattedMessage id="termTransaction"/> 
+                                                    ID
+                                                    <CopyToClipboard text={self.state.successID}
+                                                        onCopy={ self.onCopy.bind(self) }>
+                                                        { self.state.copied ?
+                                                            <p className="copy-btn">
+                                                                <img src={require('../img/icon/button_icon/icon_copied@2x.png')} alt="关闭弹窗" />
+                                                                <span>Copied</span>
+                                                            </p>    :
+                                                            <p className="copy-btn">
+                                                                <img src={require('../img/icon/button_icon/icon_copyTx@2x.png')} alt="关闭弹窗" />
+                                                                <span>Copy</span>
+                                                            </p>
+                                                        }
+                                                        
+                                                    </CopyToClipboard>
+                                                </td>
+                                                <td width="59%">
+                                                    {self.state.successID}
+                                                    <p className="id-hint">
+                                                        <img src={require('../img/icon/button_icon/icon_tips@2x.png')} alt="关闭弹窗" />
+                                                        <span>Please backup the transaction ID if you intend to check the transaction latter.</span>
+                                                    </p>
+                                                </td>
                                             </tr>
                                             <tr>
-                                                <td width="33%"><FormattedMessage id="termTransactionHash"/></td>
-                                                <td width="66%">{self.state.successHash}</td>
+                                                <td width="40%"><FormattedMessage id="termTransactionHash"/></td>
+                                                <td width="59%">{self.state.successHash}</td>
                                             </tr>
                                             <tr>
-                                                <td width="33%"><FormattedMessage id="termBlockHeight"/></td>
-                                                <td width="66%">{self.state.successHeight}</td>
+                                                <td width="40%"><FormattedMessage id="termBlockHeight"/></td>
+                                                <td width="59%">{self.state.successHeight}</td>
                                             </tr>
                                             
                                         </tbody>
