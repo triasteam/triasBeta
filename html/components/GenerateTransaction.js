@@ -159,7 +159,7 @@ class GenerateTransaction extends React.Component {
                     if ( data.result == "trade not exists" ) {
                         self.setState({
                             showErrorModal: !self.state.showErrorModal,
-                            errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Latter.',
+                            errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
                             errorInfo: self.state.lang=='zh'?'此交易正在后台生成，请稍后再试。':'The transaction is being generated in the background, please wait a few seconds.'
                         })
                     } else {
@@ -219,7 +219,7 @@ class GenerateTransaction extends React.Component {
                     // ( data.result == "trade not exists" ) {
                     //     self.setState({
                     //         showErrorModal: !self.state.showErrorModal,
-                    //         errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Latter.',
+                    //         errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
                     //         errorInfo: self.state.lang=='zh'?'此交易正在后台生成，请稍后再试。':'The transaction is being generated in the background, please wait a few seconds.'
                     //     })
                     // }
@@ -334,7 +334,7 @@ class GenerateTransaction extends React.Component {
                                                     1sfasddddddddasdddddddddddddddddd
                                                     <p className="id-hint">
                                                         <img src={require('../img/icon/button_icon/icon_tips@2x.png')} alt="关闭弹窗" />
-                                                        <span>Please backup the transaction ID if you intend to check the transaction latter.</span>
+                                                        <span>Please backup the transaction ID if you intend to check the transaction later.</span>
                                                     </p>
                                                 </td>
                                             </tr>
@@ -394,7 +394,7 @@ class GenerateTransaction extends React.Component {
                                                     {self.state.successID}
                                                     <p className="id-hint">
                                                         <img src={require('../img/icon/button_icon/icon_tips@2x.png')} alt="关闭弹窗" />
-                                                        <span>Please backup the transaction ID if you intend to check the transaction latter.</span>
+                                                        <span>Please backup the transaction ID if you intend to check the transaction later.</span>
                                                     </p>
                                                 </td>
                                             </tr>
