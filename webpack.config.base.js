@@ -8,8 +8,7 @@ module.exports = {
 
   entry: {
     // Add as many entry points as you have container-react-components here
-    app: './html/app.js',
-    vendors: ['react']
+    app: './html/app.js'
   },
 
   output: {
@@ -23,7 +22,7 @@ module.exports = {
 
   plugins: [
     // new BundleAnalyzerPlugin({ analyzerPort: 8919 }),
-    new webpack.optimize.CommonsChunkPlugin({name:'vendors', filename:'vendors.js'}),
+    // new webpack.optimize.CommonsChunkPlugin({name:'vendors', filename:'vendors.js'}),
     new webpack.LoaderOptionsPlugin({  
       options: {  
           postcss: function(){  
