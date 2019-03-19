@@ -252,24 +252,24 @@ export default class NodesGraph extends React.Component {
         // on "start" event, transitions start, clear all the paths and moving circles along the links
         force.on("start", function(){
             containerGrp.selectAll("circle").remove()
-            containerGrp.selectAll("path").remove()
+            // containerGrp.selectAll("path").remove()
         })
 
         // create image pattern to fill the circles
         containerGrp.append("pattern")
             .attr({
                 "id": "pointImage",
-                "x": 60,
-                "y": 60,
-                "height": 12,
-                "width": 60
+                "x": 30,
+                "y": 30,
+                "height": 6,
+                "width": 30
             })
             .append("image")
             .attr({
-                "x": 60,
-                "y": 54,
-                "height": 12,
-                "width": 60,
+                "x": 30,
+                "y": 27,
+                "height": 6,
+                "width": 30,
                 "xlink:href": require("../img/img_chart_dots@2x.png")
             })
 
@@ -296,50 +296,53 @@ export default class NodesGraph extends React.Component {
                 .data(linkSources)
                 .enter().append('circle')
                 .attr('id', function(d,i){ return "point"+i; })
-                .attr('r',60)
+                .attr('r',30)
                 .attr('fill', "url(#pointImage)")   // fill the circles with the image pattern
                 .attr("transform", function(d,i) {
-                    return "translate(" + d + ") " + "rotate("+getAngle(linkSources[i], linkTargets[i])+") "; 
+                    var x =  (linkTargets[i][0] - linkSources[i][0])*3/4 + linkSources[i][0]
+                    var y = (linkTargets[i][1] - linkSources[i][1])*3/4 + linkSources[i][1]
+                    return "translate(" + x + "," + y + ") " + "rotate("+getAngle(linkSources[i], linkTargets[i])+") " ; 
                 });
             
                 
-            var lineFunc = d3.svg.line()
-                .x(function(d) {
-                    return d.x;
-                })
-                .y(function(d){
-                    return d.y
-                })
+            // var lineFunc = d3.svg.line()
+            //     .x(function(d) {
+            //         return d.x;
+            //     })
+            //     .y(function(d){
+            //         return d.y
+            //     })
 
-            for(let i=0;i<data.links.length;i++){
-                let pathData = [{x:linkSources[i][0],y:linkSources[i][1]},{x:linkTargets[i][0],y:linkTargets[i][1]}]
+            // for(let i=0;i<data.links.length;i++){
+            //     let pathData = [{x:linkSources[i][0],y:linkSources[i][1]},{x:linkTargets[i][0],y:linkTargets[i][1]}]
 
-                var path = containerGrp.append("path")
-                    .attr("d", lineFunc(pathData))
+            //     var path = containerGrp.append("path")
+            //         .attr("d", lineFunc(pathData))
 
-                transition(i,path)
-            }
+            //     transition(i,path)
+            // }
 
-            function transition(ponitIndex,path) {
-                d3.select('#point'+ponitIndex)                
-                    .transition()
-                    .duration(1800)                    
-                    .styleTween("opacity", function tween() {
-                        return d3.interpolate(String(0), String(1));
-                    })
-                    .attrTween("transform", translateAlong(ponitIndex,path.node()))
-                    .each("end", function(){transition(ponitIndex,path)}); // infinite loop
-            }
+            // function transition(ponitIndex,path) {
+            //     d3.select('#point'+ponitIndex)                
+            //         .transition()
+            //         .duration(1800)                    
+            //         .styleTween("opacity", function tween() {
+            //             return d3.interpolate(String(0), String(1));
+            //         })
+            //         .attrTween("transform", translateAlong(ponitIndex,path.node()))
+            //         .attr("transform", translateAlong(ponitIndex,path.node()))
+            //         .each("end", function(){transition(ponitIndex,path)}); // infinite loop
+            // }
 
-            function translateAlong(index,path) {
-                var l = path.getTotalLength();
-                return function (i) {
-                    return function (t) {
-                        var p = path.getPointAtLength(t * l);
-                        return "translate(" + p.x + "," + p.y + ") "+"rotate("+getAngle(linkSources[index], linkTargets[index])+")"; //Move points
-                    }
-                }
-            }
+            // function translateAlong(index,path) {
+            //     var l = path.getTotalLength();
+            //     return function (i) {
+            //         return function (t) {
+            //             var p = path.getPointAtLength(t * l);
+            //             return "translate(" + p.x + "," + p.y + ") "+"rotate("+getAngle(linkSources[index], linkTargets[index])+")"; //Move points
+            //         }
+            //     }
+            // }
         })
 
         var linkedByIndex = {};
