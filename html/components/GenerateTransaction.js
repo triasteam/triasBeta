@@ -135,7 +135,7 @@ class GenerateTransaction extends React.Component {
     checkDetail(id){
         let self = this;
         $.ajax({
-            url: "/api/query_transactions/",
+            url: "/api/query_transactions_status/",
             type: "GET",
             dataType:"json",
             data: {
@@ -197,16 +197,16 @@ class GenerateTransaction extends React.Component {
         e.preventDefault();
         let self = this;
         let str = self.state.searchKey
-        let re = /^[a-zA-Z0-9]{64}$/;
+        let re = /^[a-zA-Z0-9]{40}$/;
         if (re.test(str)) {
             $.ajax({
                 url: "/api/query_transactions/",
                 dataType:"json",
                 data: {
-                    id: str,
+                    hash: str,
                 },
                 success: function(data){
-                    if( data.status == "tx_success" ) {
+                    if( data.status == "success" ) {
                         console.log(data)
                         self.setState({
                             showDetailModal: !self.state.showDetailModal,
@@ -265,6 +265,26 @@ class GenerateTransaction extends React.Component {
             searchKey: e.target.value
         })
     }
+    hideModal(type){
+        let self = this;
+        if (type == 1) {
+            self.setState ({
+                showInputModal: !self.state.showInputModal,
+            })
+        } else if (type == 2) {
+            self.setState ({
+                showFailureModal: !self.state.showFailureModal,
+            })
+        } else if (type == 3) {
+            self.setState ({
+                showErrorModal: !self.state.showErrorModal,
+            })
+        } else if (type == 0) {
+            self.setState ({
+                showDetailModal: !self.state.showDetailModal,
+            })
+        } 
+    }
     componentWillUnmount() {
         this.setState = (state,callback)=>{
           return;
@@ -321,67 +341,14 @@ class GenerateTransaction extends React.Component {
                     </form>
                     { self.state.queryHint  && <p className="query-info">{self.state.queryHint}</p> }
                 </div>
-                        {/* <section className="modal-layer">
-                            <div className="modal detail-modal">
-                                <div className="close-btn" onClick={()=>{self.setState({showDetailModal: !self.state.showDetailModal})}}>
-                                    <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
-                                </div>
-                                <h2><FormattedMessage id="modalDetailTitle"/></h2>
-                                <p><FormattedMessage id="modalDetailSubtitle"/></p>
-                                <div className="detail-part1">
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td width="40%"><FormattedMessage id="termTransaction"/> 
-                                                    ID
-                                                    <CopyToClipboard text={self.state.successID}
-                                                        onCopy={ self.onCopy.bind(self) }>
-                                                        { self.state.copied ?
-                                                            <p className="copy-btn">
-                                                                <img src={require('../img/icon/button_icon/icon_copied@2x.png')} alt="关闭弹窗" />
-                                                                <span>Copied</span>
-                                                            </p>    :
-                                                            <p className="copy-btn">
-                                                                <img src={require('../img/icon/button_icon/icon_copyTx@2x.png')} alt="关闭弹窗" />
-                                                                <span>Copy</span>
-                                                            </p>
-                                                        }
-                                                        
-                                                    </CopyToClipboard>
-                                                </td>
-                                                <td width="59%">
-                                                    1sfasddddddddasdddddddddddddddddd
-                                                    <p className="id-hint">
-                                                        <img src={require('../img/icon/button_icon/icon_tips@2x.png')} alt="关闭弹窗" />
-                                                        <span>Please backup the transaction ID if you intend to check the transaction later.</span>
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td width="40%"><FormattedMessage id="termTransactionHash"/></td>
-                                                <td width="59%">212sfasddddddddasdddddddddddddddddd</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="40%"><FormattedMessage id="termBlockHeight"/></td>
-                                                <td width="59%">323231sfasddddddddasdddddddddddddddddd</td>
-                                            </tr>
-                                            
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <h5><FormattedMessage id="modalTransactionLabel" /></h5>
-                                <div className="detail-part2">
-                                    1sfasddddddddasdddddddddddddddddd1sfasddddddddasdddddddddddddddddd1sfasddddddddasdddddddddddddddddd
-                                </div>
-                            </div>
-                        </section> */}
                  <CSSTransition
                         in={self.state.showDetailModal}
-                        timeout={300}
+                        timeout={200}
                         classNames="modal-layer"
                         unmountOnExit
                         >
                         <section className="modal-layer">
+                            <div className="mask" onClick={self.hideModal.bind(self,0)}></div>
                             <div className="modal detail-modal">
                                 <div className="close-btn" onClick={()=>{self.setState({showDetailModal: !self.state.showDetailModal})}}>
                                     <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
@@ -393,8 +360,8 @@ class GenerateTransaction extends React.Component {
                                         <tbody>
                                             <tr>
                                             <td width="40%"><FormattedMessage id="termTransaction"/> 
-                                                    ID
-                                                    <CopyToClipboard text={self.state.successID}
+                                                    <FormattedMessage id="termTransactionHash"/>
+                                                    <CopyToClipboard text={self.state.successHash}
                                                         onCopy={ self.onCopy.bind(self) }>
                                                         { self.state.copied ?
                                                             <p className="copy-btn">
@@ -410,17 +377,20 @@ class GenerateTransaction extends React.Component {
                                                     </CopyToClipboard>
                                                 </td>
                                                 <td width="59%">
-                                                    {self.state.successID}
+                                                    {self.state.successHash}
                                                     <p className="id-hint">
                                                         <img src={require('../img/icon/button_icon/icon_tips@2x.png')} alt="关闭弹窗" />
                                                         <span>Please backup the transaction ID if you intend to check the transaction later.</span>
                                                     </p>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td width="40%"><FormattedMessage id="termTransactionHash"/></td>
-                                                <td width="59%">{self.state.successHash}</td>
-                                            </tr>
+                                            {   self.state.successID &&  
+                                                <tr>
+                                                    <td width="40%">ID</td>
+                                                    <td width="59%">{self.state.successID}</td>
+                                                </tr>
+                                            }
+                                           
                                             <tr>
                                                 <td width="40%"><FormattedMessage id="termBlockHeight"/></td>
                                                 <td width="59%">{self.state.successHeight}</td>
@@ -443,6 +413,7 @@ class GenerateTransaction extends React.Component {
                         unmountOnExit
                         >
                     <section className="modal-layer">
+                        <div className="mask" onClick={self.hideModal.bind(self,1)}></div>
                         <div className="modal input-modal">
                             <div className="close-btn" onClick={()=>{self.setState({showInputModal: !self.state.showInputModal})}}>
                                 <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
@@ -464,6 +435,7 @@ class GenerateTransaction extends React.Component {
                         unmountOnExit
                         >
                     <section className="modal-layer">
+                        <div className="mask" onClick={self.hideModal.bind(self,2)}></div>
                         <div className="modal fail-modal error-modal">
                             <div className="close-btn" onClick={()=>{self.setState({showFailureModal:!self.state.showFailureModal})}}>
                                 <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
@@ -489,6 +461,7 @@ class GenerateTransaction extends React.Component {
                         unmountOnExit
                         >
                     <section className="modal-layer">
+                        <div className="mask" onClick={self.hideModal.bind(self,3)}></div>
                         <div className="modal error-modal">
                             <div className="close-btn" onClick={()=>{self.setState({showErrorModal:!self.state.showErrorModal})}}>
                                 <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
