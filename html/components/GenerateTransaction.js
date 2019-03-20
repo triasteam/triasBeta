@@ -206,7 +206,7 @@ class GenerateTransaction extends React.Component {
                     hash: str,
                 },
                 success: function(data){
-                    if( data.status == "tx_success" ) {
+                    if( data.status == "success" ) {
                         console.log(data)
                         self.setState({
                             showDetailModal: !self.state.showDetailModal,
