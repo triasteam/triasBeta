@@ -343,7 +343,7 @@ class GenerateTransaction extends React.Component {
                 </div>
                  <CSSTransition
                         in={self.state.showDetailModal}
-                        timeout={300}
+                        timeout={200}
                         classNames="modal-layer"
                         unmountOnExit
                         >
