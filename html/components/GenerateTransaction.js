@@ -36,6 +36,7 @@ class GenerateTransaction extends React.Component {
             value:'',
             searchKey: '',
             errorType: 1,
+            queryHint:'',
         }
     }
 
@@ -195,51 +196,65 @@ class GenerateTransaction extends React.Component {
     searchTransaction(e){
         e.preventDefault();
         let self = this;
-        $.ajax({
-            url: "/api/query_transactions/",
-            dataType:"json",
-            data: {
-                id: self.state.searchKey,
-            },
-            success: function(data){
-                if( data.status == "tx_success" ) {
-                    console.log(data)
-                    self.setState({
-                        showDetailModal: !self.state.showDetailModal,
-                        successID: data.result.id,
-                        successHash: data.result.hash,
-                        successHeight: data.result.block_height,
-                        successContent: data.result.content,
-                    })
-                    
-                } else if ( data.status == "tx_failure" ) {
-                    self.setState({
-                        showFailureModal: !self.state.showFailureModal,
-                        failContent: data.result.content,
-                        failLog: data.result.log,
-                    })
-                } else if ( data.status == "failure" ) {
-                    if ( data.result == "trade not exists" ) {
+        let str = self.state.searchKey
+        let re = /^[a-zA-Z0-9]{64}$/;
+        if (re.test(str)) {
+            $.ajax({
+                url: "/api/query_transactions/",
+                dataType:"json",
+                data: {
+                    id: str,
+                },
+                success: function(data){
+                    if( data.status == "tx_success" ) {
+                        console.log(data)
                         self.setState({
-                            showErrorModal: !self.state.showErrorModal,
-                            errorTitle: self.state.lang=='zh'?'未找到交易。':'Transaction Not Found.',
-                            errorInfo: self.state.lang=='zh'?'此交易不存在，请重新查询。':'The transaction you’re checking may not exist, try checking another one.',
-                            errorType: 1,
-                        })
-                    } else {
-                        let info = data.result;
-                        info = info.replace(info[0],info[0].toUpperCase());
-                        self.setState({
-                            showErrorModal: !self.state.showErrorModal,
-                            errorTitle: self.state.lang=='zh'?'参数错误！':'Parameter error!',
-                            errorInfo: info,
-                            errorType: 1,
+                            showDetailModal: !self.state.showDetailModal,
+                            successID: data.result.id,
+                            successHash: data.result.hash,
+                            successHeight: data.result.block_height,
+                            successContent: data.result.content,
                         })
                         
+                    } else if ( data.status == "tx_failure" ) {
+                        self.setState({
+                            showFailureModal: !self.state.showFailureModal,
+                            failContent: data.result.content,
+                            failLog: data.result.log,
+                        })
+                    } else if ( data.status == "failure" ) {
+                        if ( data.result == "trade not exists" ) {
+                            self.setState({
+                                showErrorModal: !self.state.showErrorModal,
+                                errorTitle: self.state.lang=='zh'?'未找到交易。':'Transaction Not Found.',
+                                errorInfo: self.state.lang=='zh'?'此交易不存在，请重新查询。':'The transaction you’re checking may not exist, try checking another one.',
+                                errorType: 1,
+                            })
+                        } else {
+                            let info = data.result;
+                            info = info.replace(info[0],info[0].toUpperCase());
+                            self.setState({
+                                showErrorModal: !self.state.showErrorModal,
+                                errorTitle: self.state.lang=='zh'?'参数错误！':'Parameter error!',
+                                errorInfo: info,
+                                errorType: 1,
+                            })
+                            
+                        }
                     }
                 }
-            }
-        })
+            })
+        } else {
+            self.setState({
+                queryHint: 'Please input a valid Tx hash.'
+            })
+            setTimeout( () => {
+                self.setState({
+                    queryHint: ''
+                })
+            }, 3000)
+        }
+      
     }
       /**
      * Listen for changes in the search field
@@ -304,6 +319,7 @@ class GenerateTransaction extends React.Component {
                             <i className="fa fa-search" aria-hidden="true"></i>
                         </button>
                     </form>
+                    { self.state.queryHint  && <p className="query-info">{self.state.queryHint}</p> }
                 </div>
                         {/* <section className="modal-layer">
                             <div className="modal detail-modal">
