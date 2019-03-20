@@ -7,13 +7,15 @@ import random
 import redis
 import uuid
 import hashlib
+import base64
 import threading
 from django.http import JsonResponse
 from django.db.models import Q
+from ratelimit.decorators import ratelimit
 from app_views.models import Block, Node, Transaction, Activity, Hardware, TransactionLog
 from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration, get_node_show
 from app_views.view_utils.logger import logger
-from app_views.view_utils.block_util import get_ranking, get_validators, send_transaction_util
+from app_views.view_utils.block_util import get_ranking, get_validators, send_transaction_util, url_data
 from app_views.view_utils.redis_util import get_monitoring
 
 jc = JsonConfiguration()
@@ -21,6 +23,7 @@ ac = ActivityConfiguration()
 node_show = get_node_show()
 
 
+@ratelimit(key='ip', rate='20/m', block=True)
 def get_current_event(request):
 
     try:
@@ -77,6 +80,7 @@ def cal(start, end):
     return event_list
 
 
+@ratelimit(key='ip', rate='20/m', block=True)
 def get_visualization(request):
 
     result = {
@@ -159,6 +163,7 @@ def get_visualization(request):
     return JsonResponse({'status': status, 'result': result})
 
 
+@ratelimit(key='ip', rate='20/m', block=True)
 def get_instant_message(request):
 
     try:
@@ -181,6 +186,7 @@ def get_instant_message(request):
     return JsonResponse({'status': status, 'result': result})
 
 
+@ratelimit(key='ip', rate='20/m', block=True)
 def general_static(request):
 
     try:
@@ -222,6 +228,7 @@ def general_static(request):
     return JsonResponse({'status': status, 'result': result})
 
 
+@ratelimit(key='ip', rate='20/m', block=True)
 def get_tps(request):
 
     try:
@@ -247,6 +254,7 @@ def get_tps(request):
     return JsonResponse({'status': status, 'result': result})
 
 
+@ratelimit(key='ip', rate='20/m', block=True)
 def get_faulty_nodes(request):
 
     try:
@@ -265,6 +273,7 @@ def get_faulty_nodes(request):
     return JsonResponse({'status': status, 'result': result})
 
 
+@ratelimit(key='ip', rate='20/m', block=True)
 def get_fault_accetpance_rate(request):
 
     try:
@@ -284,6 +293,7 @@ def get_fault_accetpance_rate(request):
     return JsonResponse({'status': status, 'result': result})
 
 
+@ratelimit(key='ip', rate='20/m', block=True)
 def get_data_monitoring(request):
 
     result = {
@@ -379,6 +389,7 @@ def get_data_monitoring(request):
     return JsonResponse({'status': status, 'result': result})
 
 
+@ratelimit(key='ip', rate='20/m', block=True)
 def get_hardware_specifications(request):
 
     try:
@@ -398,6 +409,7 @@ def get_hardware_specifications(request):
     return JsonResponse({'status': status, 'result': result})
 
 
+@ratelimit(key='ip', rate='20/m', block=True)
 def get_nodes_num(request):
 
     try:
@@ -412,6 +424,7 @@ def get_nodes_num(request):
     return JsonResponse({'status': status, 'result': result})
 
 
+@ratelimit(key='ip', rate='20/m', block=True)
 def send_transaction(request):
     try:
         content = request.POST.get('content', '')
@@ -424,7 +437,7 @@ def send_transaction(request):
         sha256 = hashlib.sha256()
         sha256.update(id.encode('utf-8'))
         sha256_id = sha256.hexdigest()
-        t = threading.Thread(target=send_transaction_util, args=[sha256_id, "\"%s\"" % content])
+        t = threading.Thread(target=send_transaction_util, args=[sha256_id, content])
         t.start()
         logger.info('create transaction sha256_id %s' % sha256_id)
         status, result = 'success', {'id': sha256_id}
@@ -435,10 +448,11 @@ def send_transaction(request):
     return JsonResponse({'status': status, 'result': result})
 
 
-def query_transactions(request):
+@ratelimit(key='ip', rate='20/m', block=True)
+def query_transactions_status(request):
     try:
         id = request.GET.get('id', '')
-        if not id:
+        if (not id) or (len(id) != 64):
             return JsonResponse({'status': 'failure', 'result': 'parameter error'})
 
         transaction_log = TransactionLog.objects.filter(trias_hash=id)
@@ -457,6 +471,47 @@ def query_transactions(request):
             status = 'tx_success'
         else:
             status = 'tx_failure'
+
+    except Exception as e:
+        logger.error(e)
+        status, result = 'failure', 'connect error'
+
+    return JsonResponse({'status': status, 'result': result})
+
+
+@ratelimit(key='ip', rate='20/m', block=True)
+def query_transactions(request):
+    try:
+        hash = request.GET.get('hash', '')
+        if (not hash) or (len(hash) != 40):
+            return JsonResponse({'status': 'failure', 'result': 'parameter error'})
+
+        status, result = 'failure', 'Tx (%s) not found' % hash
+        # get from DB
+        transaction_log = TransactionLog.objects.filter(hash=hash)
+        if transaction_log.exists():
+            tx = transaction_log[0]
+            block_height = tx.block_heigth
+            content = tx.content
+            status, result = 'success', {'hash': hash, 'block_height': block_height, 'content': content}
+
+        # get from BlockChain
+        else:
+            nodes = list(Node.objects.filter(status=0).order_by('-block_heigth').values_list('node_ip', flat=True))
+            params = {'hash': '0x%s' % hash}
+            for node_ip in nodes:
+                base_url = "http://%s:%s/tri_block_tx" % (node_ip, jc.node_list[0]['port'])
+                response = url_data(base_url, params)
+                if response:
+                    if not response['error']:
+                        block_height = response['result']['height']
+                        content = base64.b64decode(response['result']['tx']).decode()[12:]
+                        status, result = 'success', {'hash': hash, 'block_height': block_height, 'content': content}
+                    else:
+                        status, result = 'failure', response['error']
+                    break
+                else:
+                    continue
 
     except Exception as e:
         logger.error(e)

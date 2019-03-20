@@ -7,6 +7,7 @@ import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-in
 import $ from 'jquery'
 import { CSSTransition } from 'react-transition-group';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { cold } from "react-hot-loader";
 
 /**
  * RightPart components which displays:
@@ -34,9 +35,11 @@ class GenerateTransaction extends React.Component {
             copied: false,
             value:'',
             searchKey: '',
+            errorType: 1,
+            queryHint:'',
         }
     }
-    
+
     /**
      * Before a mounted component receives new props, reset some state.
      * @param {Object} nextProps new props
@@ -132,7 +135,7 @@ class GenerateTransaction extends React.Component {
     checkDetail(id){
         let self = this;
         $.ajax({
-            url: "/api/query_transactions/",
+            url: "/api/query_transactions_status/",
             type: "GET",
             dataType:"json",
             data: {
@@ -159,8 +162,9 @@ class GenerateTransaction extends React.Component {
                     if ( data.result == "trade not exists" ) {
                         self.setState({
                             showErrorModal: !self.state.showErrorModal,
-                            errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
-                            errorInfo: self.state.lang=='zh'?'此交易正在后台生成，请稍后再试。':'The transaction is being generated in the background, please wait a few seconds.'
+                            errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Latter.',
+                            errorInfo: self.state.lang=='zh'?'此交易正在后台生成，请稍后再试。':'The transaction is being generated in the background, please wait a few seconds.',
+                            errorType: 2,
                         })
                     } else {
                         let info = data.result;
@@ -168,7 +172,8 @@ class GenerateTransaction extends React.Component {
                         self.setState({
                             showErrorModal: !self.state.showErrorModal,
                             errorTitle: self.state.lang=='zh'?'发生错误！':'Error Occurred!',
-                            errorInfo: info
+                            errorInfo: info,
+                            errorType: 2,
                         })
                         
                     }
@@ -191,52 +196,65 @@ class GenerateTransaction extends React.Component {
     searchTransaction(e){
         e.preventDefault();
         let self = this;
-        $.ajax({
-            url: "/api/query_transactions/",
-            dataType:"json",
-            data: {
-                id: self.state.searchKey,
-            },
-            success: function(data){
-                if( data.status == "tx_success" ) {
-                    console.log(data)
-                    self.setState({
-                        showDetailModal: !self.state.showDetailModal,
-                        successID: data.result.id,
-                        successHash: data.result.hash,
-                        successHeight: data.result.block_height,
-                        successContent: data.result.content,
-                    })
-                    
-                } else if ( data.status == "tx_failure" ) {
-                    self.setState({
-                        showFailureModal: !self.state.showFailureModal,
-                        failContent: data.result.content,
-                        failLog: data.result.log,
-                    })
-                } else if ( data.status == "failure" ) {
-                    // if 
-                    // ( data.result == "trade not exists" ) {
-                    //     self.setState({
-                    //         showErrorModal: !self.state.showErrorModal,
-                    //         errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
-                    //         errorInfo: self.state.lang=='zh'?'此交易正在后台生成，请稍后再试。':'The transaction is being generated in the background, please wait a few seconds.'
-                    //     })
-                    // }
-                    //  else {
-                        let info = data.result;
-                        info = info.replace(info[0],info[0].toUpperCase());
+        let str = self.state.searchKey
+        let re = /^[a-zA-Z0-9]{40}$/;
+        if (re.test(str)) {
+            $.ajax({
+                url: "/api/query_transactions/",
+                dataType:"json",
+                data: {
+                    hash: str,
+                },
+                success: function(data){
+                    if( data.status == "success" ) {
+                        console.log(data)
                         self.setState({
-                            showErrorModal: !self.state.showErrorModal,
-                            errorTitle: self.state.lang=='zh'?'发生错误！':'Error Occurred!',
-                            errorInfo: info
+                            showDetailModal: !self.state.showDetailModal,
+                            successID: data.result.id,
+                            successHash: data.result.hash,
+                            successHeight: data.result.block_height,
+                            successContent: data.result.content,
                         })
                         
-                    // }
-                    
+                    } else if ( data.status == "tx_failure" ) {
+                        self.setState({
+                            showFailureModal: !self.state.showFailureModal,
+                            failContent: data.result.content,
+                            failLog: data.result.log,
+                        })
+                    } else if ( data.status == "failure" ) {
+                        if ( data.result == "trade not exists" ) {
+                            self.setState({
+                                showErrorModal: !self.state.showErrorModal,
+                                errorTitle: self.state.lang=='zh'?'未找到交易。':'Transaction Not Found.',
+                                errorInfo: self.state.lang=='zh'?'此交易不存在，请重新查询。':'The transaction you’re checking may not exist, try checking another one.',
+                                errorType: 1,
+                            })
+                        } else {
+                            let info = data.result;
+                            info = info.replace(info[0],info[0].toUpperCase());
+                            self.setState({
+                                showErrorModal: !self.state.showErrorModal,
+                                errorTitle: self.state.lang=='zh'?'参数错误！':'Parameter error!',
+                                errorInfo: info,
+                                errorType: 1,
+                            })
+                            
+                        }
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            self.setState({
+                queryHint: 'Please input a valid Tx hash.'
+            })
+            setTimeout( () => {
+                self.setState({
+                    queryHint: ''
+                })
+            }, 3000)
+        }
+      
     }
       /**
      * Listen for changes in the search field
@@ -246,6 +264,26 @@ class GenerateTransaction extends React.Component {
         this.setState({
             searchKey: e.target.value
         })
+    }
+    hideModal(type){
+        let self = this;
+        if (type == 1) {
+            self.setState ({
+                showInputModal: !self.state.showInputModal,
+            })
+        } else if (type == 2) {
+            self.setState ({
+                showFailureModal: !self.state.showFailureModal,
+            })
+        } else if (type == 3) {
+            self.setState ({
+                showErrorModal: !self.state.showErrorModal,
+            })
+        } else if (type == 0) {
+            self.setState ({
+                showDetailModal: !self.state.showDetailModal,
+            })
+        } 
     }
     componentWillUnmount() {
         this.setState = (state,callback)=>{
@@ -301,68 +339,16 @@ class GenerateTransaction extends React.Component {
                             <i className="fa fa-search" aria-hidden="true"></i>
                         </button>
                     </form>
+                    { self.state.queryHint  && <p className="query-info">{self.state.queryHint}</p> }
                 </div>
-                        {/* <section className="modal-layer">
-                            <div className="modal detail-modal">
-                                <div className="close-btn" onClick={()=>{self.setState({showDetailModal: !self.state.showDetailModal})}}>
-                                    <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
-                                </div>
-                                <h2><FormattedMessage id="modalDetailTitle"/></h2>
-                                <p><FormattedMessage id="modalDetailSubtitle"/></p>
-                                <div className="detail-part1">
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td width="40%"><FormattedMessage id="termTransaction"/> 
-                                                    ID
-                                                    <CopyToClipboard text={self.state.successID}
-                                                        onCopy={ self.onCopy.bind(self) }>
-                                                        { self.state.copied ?
-                                                            <p className="copy-btn">
-                                                                <img src={require('../img/icon/button_icon/icon_copied@2x.png')} alt="关闭弹窗" />
-                                                                <span>Copied</span>
-                                                            </p>    :
-                                                            <p className="copy-btn">
-                                                                <img src={require('../img/icon/button_icon/icon_copyTx@2x.png')} alt="关闭弹窗" />
-                                                                <span>Copy</span>
-                                                            </p>
-                                                        }
-                                                        
-                                                    </CopyToClipboard>
-                                                </td>
-                                                <td width="59%">
-                                                    1sfasddddddddasdddddddddddddddddd
-                                                    <p className="id-hint">
-                                                        <img src={require('../img/icon/button_icon/icon_tips@2x.png')} alt="关闭弹窗" />
-                                                        <span>Please backup the transaction ID if you intend to check the transaction later.</span>
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td width="40%"><FormattedMessage id="termTransactionHash"/></td>
-                                                <td width="59%">212sfasddddddddasdddddddddddddddddd</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="40%"><FormattedMessage id="termBlockHeight"/></td>
-                                                <td width="59%">323231sfasddddddddasdddddddddddddddddd</td>
-                                            </tr>
-                                            
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <h5><FormattedMessage id="modalTransactionLabel" /></h5>
-                                <div className="detail-part2">
-                                    1sfasddddddddasdddddddddddddddddd1sfasddddddddasdddddddddddddddddd1sfasddddddddasdddddddddddddddddd
-                                </div>
-                            </div>
-                        </section> */}
                  <CSSTransition
                         in={self.state.showDetailModal}
-                        timeout={300}
+                        timeout={200}
                         classNames="modal-layer"
                         unmountOnExit
                         >
                         <section className="modal-layer">
+                            <div className="mask" onClick={self.hideModal.bind(self,0)}></div>
                             <div className="modal detail-modal">
                                 <div className="close-btn" onClick={()=>{self.setState({showDetailModal: !self.state.showDetailModal})}}>
                                     <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
@@ -374,8 +360,8 @@ class GenerateTransaction extends React.Component {
                                         <tbody>
                                             <tr>
                                             <td width="40%"><FormattedMessage id="termTransaction"/> 
-                                                    ID
-                                                    <CopyToClipboard text={self.state.successID}
+                                                    <FormattedMessage id="termTransactionHash"/>
+                                                    <CopyToClipboard text={self.state.successHash}
                                                         onCopy={ self.onCopy.bind(self) }>
                                                         { self.state.copied ?
                                                             <p className="copy-btn">
@@ -391,17 +377,20 @@ class GenerateTransaction extends React.Component {
                                                     </CopyToClipboard>
                                                 </td>
                                                 <td width="59%">
-                                                    {self.state.successID}
+                                                    {self.state.successHash}
                                                     <p className="id-hint">
                                                         <img src={require('../img/icon/button_icon/icon_tips@2x.png')} alt="关闭弹窗" />
                                                         <span>Please backup the transaction ID if you intend to check the transaction later.</span>
                                                     </p>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td width="40%"><FormattedMessage id="termTransactionHash"/></td>
-                                                <td width="59%">{self.state.successHash}</td>
-                                            </tr>
+                                            {   self.state.successID &&  
+                                                <tr>
+                                                    <td width="40%">ID</td>
+                                                    <td width="59%">{self.state.successID}</td>
+                                                </tr>
+                                            }
+                                           
                                             <tr>
                                                 <td width="40%"><FormattedMessage id="termBlockHeight"/></td>
                                                 <td width="59%">{self.state.successHeight}</td>
@@ -424,6 +413,7 @@ class GenerateTransaction extends React.Component {
                         unmountOnExit
                         >
                     <section className="modal-layer">
+                        <div className="mask" onClick={self.hideModal.bind(self,1)}></div>
                         <div className="modal input-modal">
                             <div className="close-btn" onClick={()=>{self.setState({showInputModal: !self.state.showInputModal})}}>
                                 <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
@@ -445,6 +435,7 @@ class GenerateTransaction extends React.Component {
                         unmountOnExit
                         >
                     <section className="modal-layer">
+                        <div className="mask" onClick={self.hideModal.bind(self,2)}></div>
                         <div className="modal fail-modal error-modal">
                             <div className="close-btn" onClick={()=>{self.setState({showFailureModal:!self.state.showFailureModal})}}>
                                 <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
@@ -470,12 +461,15 @@ class GenerateTransaction extends React.Component {
                         unmountOnExit
                         >
                     <section className="modal-layer">
+                        <div className="mask" onClick={self.hideModal.bind(self,3)}></div>
                         <div className="modal error-modal">
                             <div className="close-btn" onClick={()=>{self.setState({showErrorModal:!self.state.showErrorModal})}}>
                                 <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
                             </div>
-                            <img src={require('../img/icon/button_icon/icon_error_title@2x.png')} alt="查询错误" />
-                            <h2>{self.state.errorTitle}</h2>
+                            {self.state.errorType == 1 && <img src={require('../img/icon/button_icon/icon_warning_title@2x.png')} alt="关闭弹窗" /> }
+                            {self.state.errorType == 2 && <img src={require('../img/icon/button_icon/icon_error_title@2x.png')} alt="查询错误" /> }
+                            <h2 style={{color:(self.state.errorType == 1 ) ? '#A1FC3A':'#FF0075'}}>{self.state.errorTitle}</h2>
+                            {/* <h2 style={self.state.errorType == 1 ? {color:'#A1FC3A'}: {color:'#FF0075'}}>{self.state.errorTitle}</h2> */}
                             <p>{self.state.errorInfo}</p>
                         </div>
                     </section>
