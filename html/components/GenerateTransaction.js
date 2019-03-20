@@ -359,7 +359,7 @@ class GenerateTransaction extends React.Component {
                                     <table>
                                         <tbody>
                                             <tr>
-                                            <td width="40%"><FormattedMessage id="termTransaction"/> 
+                                            <td width="40%"> 
                                                     <FormattedMessage id="termTransactionHash"/>
                                                     <CopyToClipboard text={self.state.successHash}
                                                         onCopy={ self.onCopy.bind(self) }>
@@ -380,7 +380,7 @@ class GenerateTransaction extends React.Component {
                                                     {self.state.successHash}
                                                     <p className="id-hint">
                                                         <img src={require('../img/icon/button_icon/icon_tips@2x.png')} alt="关闭弹窗" />
-                                                        <span>Please backup the transaction ID if you intend to check the transaction later.</span>
+                                                        <span>Please backup the transaction hash if you intend to check the transaction later.</span>
                                                     </p>
                                                 </td>
                                             </tr>
