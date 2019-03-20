@@ -4,12 +4,15 @@ Node list message
 
 from django.http import JsonResponse
 from django.core.paginator import Paginator
+from ratelimit.decorators import ratelimit
 from app_views.models import Node
 from app_views.view_utils.logger import logger
 from app_views.view_utils.localconfig import get_node_show
 
 node_show = get_node_show()
 
+
+@ratelimit(key='ip', rate='20/m', block=True)
 def get_node_list(request):
 
     try:
