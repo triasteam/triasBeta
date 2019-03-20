@@ -384,10 +384,13 @@ class GenerateTransaction extends React.Component {
                                                     </p>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td width="40%">ID</td>
-                                                <td width="59%">{self.state.successID}</td>
-                                            </tr>
+                                            {   self.state.successID &&  
+                                                <tr>
+                                                    <td width="40%">ID</td>
+                                                    <td width="59%">{self.state.successID}</td>
+                                                </tr>
+                                            }
+                                           
                                             <tr>
                                                 <td width="40%"><FormattedMessage id="termBlockHeight"/></td>
                                                 <td width="59%">{self.state.successHeight}</td>
