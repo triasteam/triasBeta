@@ -135,7 +135,7 @@ class GenerateTransaction extends React.Component {
     checkDetail(id){
         let self = this;
         $.ajax({
-            url: "/api/query_transactions/",
+            url: "/api/query_transactions_status/",
             type: "GET",
             dataType:"json",
             data: {
@@ -197,13 +197,13 @@ class GenerateTransaction extends React.Component {
         e.preventDefault();
         let self = this;
         let str = self.state.searchKey
-        let re = /^[a-zA-Z0-9]{64}$/;
+        let re = /^[a-zA-Z0-9]{40}$/;
         if (re.test(str)) {
             $.ajax({
                 url: "/api/query_transactions/",
                 dataType:"json",
                 data: {
-                    id: str,
+                    hash: str,
                 },
                 success: function(data){
                     if( data.status == "tx_success" ) {
@@ -279,6 +279,10 @@ class GenerateTransaction extends React.Component {
             self.setState ({
                 showErrorModal: !self.state.showErrorModal,
             })
+        } else if (type == 0) {
+            self.setState ({
+                showDetailModal: !self.state.showDetailModal,
+            })
         } 
     }
     componentWillUnmount() {
@@ -344,6 +348,7 @@ class GenerateTransaction extends React.Component {
                         unmountOnExit
                         >
                         <section className="modal-layer">
+                            <div className="mask" onClick={self.hideModal.bind(self,0)}></div>
                             <div className="modal detail-modal">
                                 <div className="close-btn" onClick={()=>{self.setState({showDetailModal: !self.state.showDetailModal})}}>
                                     <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
@@ -355,8 +360,8 @@ class GenerateTransaction extends React.Component {
                                         <tbody>
                                             <tr>
                                             <td width="40%"><FormattedMessage id="termTransaction"/> 
-                                                    ID
-                                                    <CopyToClipboard text={self.state.successID}
+                                                    <FormattedMessage id="termTransactionHash"/>
+                                                    <CopyToClipboard text={self.state.successHash}
                                                         onCopy={ self.onCopy.bind(self) }>
                                                         { self.state.copied ?
                                                             <p className="copy-btn">
@@ -372,7 +377,7 @@ class GenerateTransaction extends React.Component {
                                                     </CopyToClipboard>
                                                 </td>
                                                 <td width="59%">
-                                                    {self.state.successID}
+                                                    {self.state.successHash}
                                                     <p className="id-hint">
                                                         <img src={require('../img/icon/button_icon/icon_tips@2x.png')} alt="关闭弹窗" />
                                                         <span>Please backup the transaction ID if you intend to check the transaction later.</span>
@@ -380,8 +385,8 @@ class GenerateTransaction extends React.Component {
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td width="40%"><FormattedMessage id="termTransactionHash"/></td>
-                                                <td width="59%">{self.state.successHash}</td>
+                                                <td width="40%">ID</td>
+                                                <td width="59%">{self.state.successID}</td>
                                             </tr>
                                             <tr>
                                                 <td width="40%"><FormattedMessage id="termBlockHeight"/></td>
