@@ -37,6 +37,7 @@ class GenerateTransaction extends React.Component {
             searchKey: '',
             errorType: 1,
             queryHint:'',
+            sendController: true,
         }
     }
 
@@ -97,6 +98,7 @@ class GenerateTransaction extends React.Component {
                     self.setState({
                         tranCardGroup: group,
                         showInputModal: !self.state.showInputModal,
+                        sendController: false,
                     })
                     
                     // this.setstate({
@@ -121,7 +123,10 @@ class GenerateTransaction extends React.Component {
     }
 
     showInput() {
-        this.setState({showInputModal: !this.state.showInputModal})
+        this.setState({
+            showInputModal: !this.state.showInputModal,
+            sendController: true,
+        })
         $("#user-input").val("");
     }
     
@@ -423,8 +428,13 @@ class GenerateTransaction extends React.Component {
                             <h5><FormattedMessage id="modalTransactionLabel"/></h5>
                             <textarea id="user-input" maxLength="255" placeholder={this.state.lang=="zh"?"请输入交易内容。":"Please enter your content."}
                             onChange={self.handleText.bind(self)}>
-                            </textarea>                       
-                            <button onClick={self.sendTransaction.bind(self)}><FormattedMessage id="modalTransactionButton"/></button>
+                            </textarea>
+                            {
+                                self.state.sendController ? 
+                                <button onClick={self.sendTransaction.bind(self)}><FormattedMessage id="modalTransactionButton"/></button> :
+                                <button><FormattedMessage id="modalTransactionButton"/></button> 
+                            }                       
+                            
                         </div>
                     </section>
                 </CSSTransition>
