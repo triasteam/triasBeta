@@ -38,6 +38,7 @@ class GenerateTransaction extends React.Component {
             errorType: 1,
             queryHint:'',
             sendController: true,
+            sendHint: false,
         }
     }
 
@@ -59,56 +60,68 @@ class GenerateTransaction extends React.Component {
         // let itemName = 'item' + this.state.tranCardGroup.length;
         let info = self.state.tranContent;
         let item = {};
-       
-        $.ajax({
-            url: "/api/send_transaction/",
-            type: "POST",
-            dataType:"json",
-            data: {
-                content: info
-            },
-            success: function(data){
-                // console.log(data)
-                if( data.status == "success" ) {
-                    // let tranCardGroup = {...this.state.tranCardGroup}
-                    // let statusCopy = Object.assign({}, this.state);
-                    // statusCopy.tranCardGroup[itemName].id = data.result.id;
-                    // this.setState(statusCopy);
-
-                    // tranCardGroup[itemName].id = data.result.id;
-                    // this.setState({tranCardGroup});
-                    // const { stateOpt } = { ...this.state };
-                    // const currentState = stateOpt;
-                    // const { name, value } = e.target;
-                    // currentState.tranCardGroup[itemName].id = data.result.id;
-                  
-                    // this.setState({ stateOpt: currentState });
-                    // console.log( stateOpt )
-                    let time = new Date().getTime();
-                    item = { 
-                        status: 1,
-                        id: data.result.id,
-                        time: self.timestampToTime(time),
+        if (!info) {
+            self.setState({
+                sendHint: true,
+            })
+            setTimeout( () => {
+                self.setState({
+                    sendHint: false
+                })
+            }, 3000)
+        } {
+            $.ajax({
+                url: "/api/send_transaction/",
+                type: "POST",
+                dataType:"json",
+                data: {
+                    content: info
+                },
+                success: function(data){
+                    // console.log(data)
+                    if( data.status == "success" ) {
+                        // let tranCardGroup = {...this.state.tranCardGroup}
+                        // let statusCopy = Object.assign({}, this.state);
+                        // statusCopy.tranCardGroup[itemName].id = data.result.id;
+                        // this.setState(statusCopy);
+    
+                        // tranCardGroup[itemName].id = data.result.id;
+                        // this.setState({tranCardGroup});
+                        // const { stateOpt } = { ...this.state };
+                        // const currentState = stateOpt;
+                        // const { name, value } = e.target;
+                        // currentState.tranCardGroup[itemName].id = data.result.id;
+                      
+                        // this.setState({ stateOpt: currentState });
+                        // console.log( stateOpt )
+                        let time = new Date().getTime();
+                        item = { 
+                            status: 1,
+                            id: data.result.id,
+                            time: self.timestampToTime(time),
+                        }
+                        group.push(item);
+                        group = group.concat(self.state.tranCardGroup);
+                        if (group.length > 3) {
+                            group = group.slice(0,3);
+                        }
+                        self.setState({
+                            tranCardGroup: group,
+                            showInputModal: !self.state.showInputModal,
+                            sendController: false,
+                        })
+                        
+                        // this.setstate({
+                        //     ...this.state.tranCardGroup[0],
+                        //     id: data.result.id
+                        // })
+    
                     }
-                    group.push(item);
-                    group = group.concat(self.state.tranCardGroup);
-                    if (group.length > 3) {
-                        group = group.slice(0,3);
-                    }
-                    self.setState({
-                        tranCardGroup: group,
-                        showInputModal: !self.state.showInputModal,
-                        sendController: false,
-                    })
-                    
-                    // this.setstate({
-                    //     ...this.state.tranCardGroup[0],
-                    //     id: data.result.id
-                    // })
-
                 }
-            }
-        })
+            })
+        }
+       
+       
     }
 
     timestampToTime(timestamp) {
@@ -430,9 +443,13 @@ class GenerateTransaction extends React.Component {
                             onChange={self.handleText.bind(self)}>
                             </textarea>
                             {
+                                self.state.sendHint &&
+                                <p className="send-hint">Please input content to contiune.</p>
+                            }
+                            {
                                 self.state.sendController ? 
-                                <button onClick={self.sendTransaction.bind(self)}><FormattedMessage id="modalTransactionButton"/></button> :
-                                <button><FormattedMessage id="modalTransactionButton"/></button> 
+                                <button style={{marginTop:self.state.sendHint ? '18px':'48px'}} onClick={self.sendTransaction.bind(self)}><FormattedMessage id="modalTransactionButton"/></button> :
+                                <button style={{marginTop:self.state.sendHint ? '18px':'48px'}}><FormattedMessage id="modalTransactionButton"/></button> 
                             }                       
                             
                         </div>
