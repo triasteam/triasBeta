@@ -139,6 +139,7 @@ class GenerateTransaction extends React.Component {
         this.setState({
             showInputModal: !this.state.showInputModal,
             sendController: true,
+            tranContent:'',
         })
         $("#user-input").val("");
     }
