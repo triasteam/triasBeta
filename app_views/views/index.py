@@ -23,7 +23,7 @@ ac = ActivityConfiguration()
 node_show = get_node_show()
 
 
-@ratelimit(key='ip', rate='20/m', block=True)
+@ratelimit(key='ip', rate='30/m', block=True)
 def get_current_event(request):
 
     try:
@@ -80,7 +80,7 @@ def cal(start, end):
     return event_list
 
 
-@ratelimit(key='ip', rate='20/m', block=True)
+@ratelimit(key='ip', rate='30/m', block=True)
 def get_visualization(request):
 
     result = {
@@ -163,7 +163,7 @@ def get_visualization(request):
     return JsonResponse({'status': status, 'result': result})
 
 
-@ratelimit(key='ip', rate='20/m', block=True)
+@ratelimit(key='ip', rate='30/m', block=True)
 def get_instant_message(request):
 
     try:
@@ -186,7 +186,7 @@ def get_instant_message(request):
     return JsonResponse({'status': status, 'result': result})
 
 
-@ratelimit(key='ip', rate='20/m', block=True)
+@ratelimit(key='ip', rate='30/m', block=True)
 def general_static(request):
 
     try:
@@ -228,7 +228,7 @@ def general_static(request):
     return JsonResponse({'status': status, 'result': result})
 
 
-@ratelimit(key='ip', rate='20/m', block=True)
+@ratelimit(key='ip', rate='30/m', block=True)
 def get_tps(request):
 
     try:
@@ -254,7 +254,7 @@ def get_tps(request):
     return JsonResponse({'status': status, 'result': result})
 
 
-@ratelimit(key='ip', rate='20/m', block=True)
+@ratelimit(key='ip', rate='30/m', block=True)
 def get_faulty_nodes(request):
 
     try:
@@ -273,7 +273,7 @@ def get_faulty_nodes(request):
     return JsonResponse({'status': status, 'result': result})
 
 
-@ratelimit(key='ip', rate='20/m', block=True)
+@ratelimit(key='ip', rate='30/m', block=True)
 def get_fault_accetpance_rate(request):
 
     try:
@@ -293,7 +293,7 @@ def get_fault_accetpance_rate(request):
     return JsonResponse({'status': status, 'result': result})
 
 
-@ratelimit(key='ip', rate='20/m', block=True)
+@ratelimit(key='ip', rate='30/m', block=True)
 def get_data_monitoring(request):
 
     result = {
@@ -389,7 +389,7 @@ def get_data_monitoring(request):
     return JsonResponse({'status': status, 'result': result})
 
 
-@ratelimit(key='ip', rate='20/m', block=True)
+@ratelimit(key='ip', rate='30/m', block=True)
 def get_hardware_specifications(request):
 
     try:
@@ -409,7 +409,7 @@ def get_hardware_specifications(request):
     return JsonResponse({'status': status, 'result': result})
 
 
-@ratelimit(key='ip', rate='20/m', block=True)
+@ratelimit(key='ip', rate='30/m', block=True)
 def get_nodes_num(request):
 
     try:
@@ -424,7 +424,7 @@ def get_nodes_num(request):
     return JsonResponse({'status': status, 'result': result})
 
 
-@ratelimit(key='ip', rate='20/m', block=True)
+@ratelimit(key='ip', rate='30/m', block=True)
 def send_transaction(request):
     try:
         content = request.POST.get('content', '')
@@ -448,7 +448,7 @@ def send_transaction(request):
     return JsonResponse({'status': status, 'result': result})
 
 
-@ratelimit(key='ip', rate='20/m', block=True)
+@ratelimit(key='ip', rate='30/m', block=True)
 def query_transactions_status(request):
     try:
         id = request.GET.get('id', '')
@@ -479,7 +479,7 @@ def query_transactions_status(request):
     return JsonResponse({'status': status, 'result': result})
 
 
-@ratelimit(key='ip', rate='20/m', block=True)
+@ratelimit(key='ip', rate='30/m', block=True)
 def query_transactions(request):
     try:
         hash = request.GET.get('hash', '')
