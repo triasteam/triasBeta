@@ -12,7 +12,7 @@ from app_views.view_utils.localconfig import get_node_show
 node_show = get_node_show()
 
 
-@ratelimit(key='ip', rate='30/m', block=True)
+# @ratelimit(key='ip', rate='30/m', block=True)
 def get_node_list(request):
 
     try:

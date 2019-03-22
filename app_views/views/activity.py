@@ -9,7 +9,7 @@ from app_views.models import Activity
 from app_views.view_utils.logger import logger
 
 
-@ratelimit(key='ip', rate='30/m', block=True)
+# @ratelimit(key='ip', rate='30/m', block=True)
 def get_activity_list(request):
 
     try:
