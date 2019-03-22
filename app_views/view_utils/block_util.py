@@ -51,7 +51,7 @@ def get_validators():
 
 
 def send_transaction_util(id, content):
-    params = {"tx": "\"%s\"" % content}
+    params = {"tx": "\"%s\"".encode() % content}
     nowtime = int(time.time())
     try:
         for node in jc.node_list:
