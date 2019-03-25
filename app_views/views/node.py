@@ -21,13 +21,13 @@ def get_node_list(request):
         page = int(request.GET.get('curr_page', 1))
         size = int(request.GET.get('page_size', 10))
 
-        nodes = Node.objects.all().order_by('-block_heigth', '-status')
+        nodes = Node.objects.all().order_by('-block_heigth', '-status', 'id')
 
         if node_status:
             nodes = nodes.filter(status=node_status)
 
         if search:
-            nodes = nodes.filter(node_ip__contains=search)
+            nodes = nodes.filter(show_ip__contains=search)
 
         # paging
         paginator = Paginator(nodes, size)
