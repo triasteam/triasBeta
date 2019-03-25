@@ -37,6 +37,8 @@ class GenerateTransaction extends React.Component {
             searchKey: '',
             errorType: 1,
             queryHint:'',
+            sendController: true,
+            sendHint: false,
         }
     }
 
@@ -58,55 +60,68 @@ class GenerateTransaction extends React.Component {
         // let itemName = 'item' + this.state.tranCardGroup.length;
         let info = self.state.tranContent;
         let item = {};
-       
-        $.ajax({
-            url: "/api/send_transaction/",
-            type: "POST",
-            dataType:"json",
-            data: {
-                content: info
-            },
-            success: function(data){
-                // console.log(data)
-                if( data.status == "success" ) {
-                    // let tranCardGroup = {...this.state.tranCardGroup}
-                    // let statusCopy = Object.assign({}, this.state);
-                    // statusCopy.tranCardGroup[itemName].id = data.result.id;
-                    // this.setState(statusCopy);
-
-                    // tranCardGroup[itemName].id = data.result.id;
-                    // this.setState({tranCardGroup});
-                    // const { stateOpt } = { ...this.state };
-                    // const currentState = stateOpt;
-                    // const { name, value } = e.target;
-                    // currentState.tranCardGroup[itemName].id = data.result.id;
-                  
-                    // this.setState({ stateOpt: currentState });
-                    // console.log( stateOpt )
-                    let time = new Date().getTime();
-                    item = { 
-                        status: 1,
-                        id: data.result.id,
-                        time: self.timestampToTime(time),
+        if (!info) {
+            self.setState({
+                sendHint: true,
+            })
+            setTimeout( () => {
+                self.setState({
+                    sendHint: false
+                })
+            }, 3000)
+        } {
+            $.ajax({
+                url: "/api/send_transaction/",
+                type: "POST",
+                dataType:"json",
+                data: {
+                    content: info
+                },
+                success: function(data){
+                    // console.log(data)
+                    if( data.status == "success" ) {
+                        // let tranCardGroup = {...this.state.tranCardGroup}
+                        // let statusCopy = Object.assign({}, this.state);
+                        // statusCopy.tranCardGroup[itemName].id = data.result.id;
+                        // this.setState(statusCopy);
+    
+                        // tranCardGroup[itemName].id = data.result.id;
+                        // this.setState({tranCardGroup});
+                        // const { stateOpt } = { ...this.state };
+                        // const currentState = stateOpt;
+                        // const { name, value } = e.target;
+                        // currentState.tranCardGroup[itemName].id = data.result.id;
+                      
+                        // this.setState({ stateOpt: currentState });
+                        // console.log( stateOpt )
+                        let time = new Date().getTime();
+                        item = { 
+                            status: 1,
+                            id: data.result.id,
+                            time: self.timestampToTime(time),
+                        }
+                        group.push(item);
+                        group = group.concat(self.state.tranCardGroup);
+                        if (group.length > 3) {
+                            group = group.slice(0,3);
+                        }
+                        self.setState({
+                            tranCardGroup: group,
+                            showInputModal: !self.state.showInputModal,
+                            sendController: false,
+                        })
+                        
+                        // this.setstate({
+                        //     ...this.state.tranCardGroup[0],
+                        //     id: data.result.id
+                        // })
+    
                     }
-                    group.push(item);
-                    group = group.concat(self.state.tranCardGroup);
-                    if (group.length > 3) {
-                        group = group.slice(0,3);
-                    }
-                    self.setState({
-                        tranCardGroup: group,
-                        showInputModal: !self.state.showInputModal,
-                    })
-                    
-                    // this.setstate({
-                    //     ...this.state.tranCardGroup[0],
-                    //     id: data.result.id
-                    // })
-
                 }
-            }
-        })
+            })
+        }
+       
+       
     }
 
     timestampToTime(timestamp) {
@@ -121,7 +136,11 @@ class GenerateTransaction extends React.Component {
     }
 
     showInput() {
-        this.setState({showInputModal: !this.state.showInputModal})
+        this.setState({
+            showInputModal: !this.state.showInputModal,
+            sendController: true,
+            tranContent:'',
+        })
         $("#user-input").val("");
     }
     
@@ -359,7 +378,7 @@ class GenerateTransaction extends React.Component {
                                     <table>
                                         <tbody>
                                             <tr>
-                                            <td width="40%"><FormattedMessage id="termTransaction"/> 
+                                            <td width="40%"> 
                                                     <FormattedMessage id="termTransactionHash"/>
                                                     <CopyToClipboard text={self.state.successHash}
                                                         onCopy={ self.onCopy.bind(self) }>
@@ -380,7 +399,7 @@ class GenerateTransaction extends React.Component {
                                                     {self.state.successHash}
                                                     <p className="id-hint">
                                                         <img src={require('../img/icon/button_icon/icon_tips@2x.png')} alt="关闭弹窗" />
-                                                        <span>Please backup the transaction ID if you intend to check the transaction later.</span>
+                                                        <span>Please backup the transaction hash if you intend to check the transaction later.</span>
                                                     </p>
                                                 </td>
                                             </tr>
@@ -423,8 +442,17 @@ class GenerateTransaction extends React.Component {
                             <h5><FormattedMessage id="modalTransactionLabel"/></h5>
                             <textarea id="user-input" maxLength="255" placeholder={this.state.lang=="zh"?"请输入交易内容。":"Please enter your content."}
                             onChange={self.handleText.bind(self)}>
-                            </textarea>                       
-                            <button onClick={self.sendTransaction.bind(self)}><FormattedMessage id="modalTransactionButton"/></button>
+                            </textarea>
+                            {
+                                self.state.sendHint &&
+                                <p className="send-hint">Please input content to contiune.</p>
+                            }
+                            {
+                                self.state.sendController ? 
+                                <button style={{marginTop:self.state.sendHint ? '18px':'48px'}} onClick={self.sendTransaction.bind(self)}><FormattedMessage id="modalTransactionButton"/></button> :
+                                <button style={{marginTop:self.state.sendHint ? '18px':'48px'}}><FormattedMessage id="modalTransactionButton"/></button> 
+                            }                       
+                            
                         </div>
                     </section>
                 </CSSTransition>
