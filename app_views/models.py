@@ -10,6 +10,7 @@ class Node(models.Model):
     latest_block_time = models.BigIntegerField(default=1517746076)
     status = models.IntegerField(default=0)  # 节点状态: 0正常 1异常
     pub_key = models.CharField(max_length=255)
+    show_ip = models.CharField(unique=True, max_length=255)
 
     class Meta:
         db_table = "node_base_info"
