@@ -264,7 +264,7 @@ class TableList extends React.Component {
                     <input
                         id="nodelist-searchkey"
                         type="text"
-                        placeholder="搜索别名或 IP"
+                        placeholder="Enter IP to search..."
                         className="searchkey"
                         value={this.state.nodeSearchKey}
                         onChange={this.onChangeSearchInput.bind(this)}
