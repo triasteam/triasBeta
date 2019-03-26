@@ -4,7 +4,7 @@ Activity list message
 from django.http import JsonResponse
 from django.db.models import Q
 from django.core.paginator import Paginator
-from ratelimit.decorators import ratelimit
+# from ratelimit.decorators import ratelimit
 from app_views.models import Activity
 from app_views.view_utils.logger import logger
 
