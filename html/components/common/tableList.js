@@ -203,11 +203,14 @@ class TableList extends React.Component {
      */
     handleJumpPage() {
         var pagenum = parseInt($('#inputPageNum').val())
-        this.setState({
-            currentPage: pagenum
-        })
-        this.strogePageNum(pagenum)
-        this.getHostList(pagenum, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
+        if (pagenum) {
+            this.setState({
+                currentPage: pagenum
+            })
+            this.strogePageNum(pagenum)
+            this.getHostList(pagenum, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
+        }
+       
     }
     /**
      * Timestamp format conversion
