@@ -2119,6 +2119,7 @@ mark {
   position: relative;
   display: inline-block;
   outline: none;
+  cursor: text;
   -webkit-transition: opacity 0.3s;
   transition: opacity 0.3s;
 }
@@ -4000,10 +4001,12 @@ textarea.ant-input {
 .ant-input-search-enter-button input {
   border-right: 0;
 }
+.ant-input-search-enter-button + .ant-input-group-addon,
 .ant-input-search-enter-button input + .ant-input-group-addon {
   padding: 0;
   border: 0;
 }
+.ant-input-search-enter-button + .ant-input-group-addon .ant-input-search-button,
 .ant-input-search-enter-button input + .ant-input-group-addon .ant-input-search-button {
   width: 100%;
   border-top-left-radius: 0;
@@ -5358,6 +5361,7 @@ li.ant-time-picker-panel-select-option-disabled:hover {
   display: inline-block;
   width: 128px;
   outline: none;
+  cursor: text;
   -webkit-transition: opacity 0.3s;
   transition: opacity 0.3s;
 }
