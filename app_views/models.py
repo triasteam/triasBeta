@@ -8,7 +8,7 @@ class Node(models.Model):
     block_heigth = models.BigIntegerField(default=0)
     latest_block_hash = models.CharField(max_length=255, default='x000000')
     latest_block_time = models.BigIntegerField(default=1517746076)
-    status = models.IntegerField(default=0)  # 节点状态: 0正常 1异常
+    status = models.IntegerField(default=0)  # node status: 0 normal 1 abnormal
     pub_key = models.CharField(max_length=255)
     show_ip = models.CharField(unique=True, max_length=255)
 
@@ -37,8 +37,9 @@ class Transaction(models.Model):
 
 
 class Activity(models.Model):
-    group = models.IntegerField(default=0)  # 0 trias   1 eth    2 hyperledger
-    type = models.IntegerField()  # 1 宕机   2 由于时间导致的天榜变更  3 由于攻击导致的天榜变更  4 Ddos攻击  5 节点变化
+    group = models.IntegerField(default=0)  # 0 trias  1 eth  2 hyperledger
+    type = models.IntegerField()
+    # 1 power down  2 ranking change for time  3 ranking change for attack  4 Ddos attack  5 node status change
     time = models.BigIntegerField()
     event = models.CharField(max_length=255, default='')
 

@@ -11,7 +11,7 @@ import base64
 import threading
 from django.http import JsonResponse
 from django.db.models import Q
-from ratelimit.decorators import ratelimit
+# from ratelimit.decorators import ratelimit
 from app_views.models import Block, Node, Transaction, Activity, Hardware, TransactionLog
 from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration, get_node_show
 from app_views.view_utils.logger import logger
