@@ -112,12 +112,16 @@ class TableList extends React.Component {
         })
         let self = this
         // Whether to pass in a time parameter
+        let dateStart = new Date(self.state.startValue);
+        let dateStartStr = dateStart.getFullYear() + '/' + (dateStart.getMonth()+1) + '/' + dateStart.getDate();
+        // console.log('www',dateStartStr)
+        // console.log('www111', Date.parse(dateStartStr))
         let data = self.state.startValue && self.state.endValue ? {
             group: testGroupId,
             curr_page: currentPage,
             page_size: rowsPerPage,
             search: searchKey,
-            start: new Date(self.state.startValue).getTime(),
+            start: Date.parse(dateStartStr),
             end: new Date(self.state.endValue).getTime()
         } : {
                 group: testGroupId,
