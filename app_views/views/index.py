@@ -96,6 +96,8 @@ def get_visualization(request):
             source_list.remove('timestamp')
             source_list.remove('action')
             source_list.remove('ranking')
+        else:
+            source_list = []
     except Exception as e:
         logger.error(e)
         source_list = []
