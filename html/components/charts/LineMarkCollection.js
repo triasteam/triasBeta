@@ -47,6 +47,9 @@ class LineMarkCollection extends React.Component {
         hyperledger: null
       },
       showAll: true,
+      showTPS: true,
+      showRate: true,
+      showNodes: true,
     };
   }
 
@@ -78,6 +81,19 @@ class LineMarkCollection extends React.Component {
             showAll: true,
             Monitoring: data.result
           });
+          if ( JSON.stringify(data.result.tps_monitoring.trias) == "{}" ) {
+            self.setState({
+              showTPS: false
+            })
+          } else if ( JSON.stringify(data.result.fault_accetpance_rate.trias) == "{}" ) {
+            self.setState({
+              showRate: false
+            })
+          } else if ( JSON.stringify(data.result.faulty_nodes_list.trias) == "{}" ) {
+            self.setState({
+              showNodes: false
+            })
+          }
         } else {
           self.setState({
             showAll: false,
@@ -194,6 +210,7 @@ class LineMarkCollection extends React.Component {
           dial={this.state.tps_dial}
           unit={"Unit"}
           showAll={this.state.showAll}
+          showThis={this.state.showTPS}
         />
         <LineMark
           name={this.state.lang == "zh" ? "容错率" : "Fault Acceptance Rate"}
@@ -201,6 +218,7 @@ class LineMarkCollection extends React.Component {
           dial={this.state.fault_accetpance_rate_dial}
           unit={"%"}
           showAll={this.state.showAll}
+          showThis={this.state.showRate}
         />
         <LineMark
           name={this.state.lang == "zh" ? "错误节点" : "Faulty Nodes"}
@@ -208,6 +226,7 @@ class LineMarkCollection extends React.Component {
           dial={this.state.faulty_nodes_dial}
           unit={"Unit"}
           showAll={this.state.showAll}
+          showThis={this.state.showNodes}
         />
       </div>
     );

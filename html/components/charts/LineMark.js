@@ -62,20 +62,25 @@ class LineMark extends PureComponent {
         showAll: nextProps.showAll
       });
     }
-    self.timeArr = [];
-    //  console.log("linelllll", nextProps.name, (JSON.stringify(nextProps.data.trias) == "{}") )
 
-    if ( (JSON.stringify(nextProps.data.trias) == "{}") ) {
+    if (self.state.showThis != nextProps.showThis) {
       self.setState({
-        showThis: false
-      })
-      return false;
-    } else {
-      self.setState({
-        showThis: true
-      })
+        showThis: nextProps.showThis
+      });
     }
-    
+    self.timeArr = [];
+
+    // console.log("linelllll", nextProps.name, !nextProps.data.trias ||
+    // !nextProps.data.ethereum ||
+    // !nextProps.data.hyperledger )
+    if (
+      !nextProps.data.trias ||
+      !nextProps.data.ethereum ||
+      !nextProps.data.hyperledger
+    ) {
+      return false;
+    }
+
     let getMonitoringTime = nextProps.data.trias.time || [];
     for (var i = 0; i < getMonitoringTime.length; i++) {
       self.timeArr.push(self.formatDate(new Date(getMonitoringTime[i] * 1000)));
