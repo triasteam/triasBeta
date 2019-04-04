@@ -88,6 +88,7 @@ def get_visualization(request):
         "hyperledger": {"links": [], "nodes": []},
         "ethereum": {"links": [], "nodes": []}
     }
+
     try:
         response = get_ranking()
         if response:
@@ -95,65 +96,72 @@ def get_visualization(request):
             source_list.remove('timestamp')
             source_list.remove('action')
             source_list.remove('ranking')
-            links = []
-            node_rank = []
-            all_nodes = list(Node.objects.order_by('-id').values_list('node_ip', flat=True))
-            result['trias']['nodes'] = []
+        else:
+            source_list = []
+    except Exception as e:
+        logger.error(e)
+        source_list = []
 
-            # get validators
-            validators = get_validators()
-            validators_ips = []
-            if validators:
-                for validator in validators['result']['validators']:
-                    validator_ip = Node.objects.filter(pub_key=validator['pub_key']['data'])
-                    if validator_ip.exists():
-                        validators_ips.append(validator_ip[0].node_ip)
+    try:
+        links = []
+        node_rank = []
+        all_nodes = list(Node.objects.order_by('-id').values_list('node_ip', flat=True))
+        result['trias']['nodes'] = []
 
-            # save ranking to redis
-            redis_client = redis.Redis(jc.redis_ip, jc.redis_port, socket_connect_timeout=1)
-            saved_ranking = redis_client.get('ranking')
-            logger.info('previous ranking %s' % validators_ips)
+        # get validators
+        validators = get_validators()
+        validators_ips = []
+        if validators:
+            for validator in validators['result']['validators']:
+                validator_ip = Node.objects.filter(pub_key=validator['pub_key']['data'])
+                if validator_ip.exists():
+                    validators_ips.append(validator_ip[0].node_ip)
 
-            for index, item in enumerate(validators_ips):
-                node_status = Node.objects.get(node_ip=item).status
-                trend = 0
-                if saved_ranking:
-                    pre_ranking = eval(saved_ranking)
-                    if item not in pre_ranking:
+        # save ranking to redis
+        redis_client = redis.Redis(jc.redis_ip, jc.redis_port, socket_connect_timeout=1)
+        saved_ranking = redis_client.get('ranking')
+        logger.info('previous ranking %s' % validators_ips)
+
+        for index, item in enumerate(validators_ips):
+            node_status = Node.objects.get(node_ip=item).status
+            trend = 0
+            if saved_ranking:
+                pre_ranking = eval(saved_ranking)
+                if item not in pre_ranking:
+                    trend = 1
+                else:
+                    if index < pre_ranking.index(item):
                         trend = 1
-                    else:
-                        if index < pre_ranking.index(item):
-                            trend = 1
-                        elif index > pre_ranking.index(item):
-                            trend = -1
-                result['trias']['nodes'].append({"node_ip": node_show[item], "status": node_status, 'level': 0, 'trend': trend})
-                node_rank.append(item)
-                all_nodes.remove(item)
+                    elif index > pre_ranking.index(item):
+                        trend = -1
+            result['trias']['nodes'].append({"node_ip": node_show[item], "status": node_status, 'level': 0, 'trend': trend})
+            node_rank.append(item)
+            all_nodes.remove(item)
 
-            for item in all_nodes:
-                node_status = Node.objects.get(node_ip=item).status
-                node_rank.append(item)
-                result['trias']['nodes'].append({"node_ip": node_show[item], "status": node_status, 'level': 1, 'trend': 0})
+        for item in all_nodes:
+            node_status = Node.objects.get(node_ip=item).status
+            node_rank.append(item)
+            result['trias']['nodes'].append({"node_ip": node_show[item], "status": node_status, 'level': 1, 'trend': 0})
 
-            # node link
-            saved_source_list = redis_client.get('saved_source_list')
-            saved_links = redis_client.get('saved_links')
-            if saved_source_list and eval(saved_source_list) == source_list and saved_links:
-                result['trias']['links'] = eval(saved_links)
-                logger.info('Get links from redis')
-            else:
-                for source_ip in source_list:
-                    target_obj = response[source_ip]
-                    target_ip_list = list(target_obj.keys())
-                    for target_ip in target_ip_list:
-                        links.append({"source": node_rank.index(source_ip), "target": node_rank.index(target_ip)})
-                random.shuffle(links)
-                result['trias']['links'] = links[:20]
-                redis_client.set('saved_source_list', str(source_list), 3600)
-                redis_client.set('saved_links', str(result['trias']['links']), 3600)
+        # node link
+        saved_source_list = redis_client.get('saved_source_list')
+        saved_links = redis_client.get('saved_links')
+        if saved_source_list and eval(saved_source_list) == source_list and saved_links:
+            result['trias']['links'] = eval(saved_links)
+            logger.info('Get links from redis')
+        else:
+            for source_ip in source_list:
+                target_obj = response[source_ip]
+                target_ip_list = list(target_obj.keys())
+                for target_ip in target_ip_list:
+                    links.append({"source": node_rank.index(source_ip), "target": node_rank.index(target_ip)})
+            random.shuffle(links)
+            result['trias']['links'] = links[:20]
+            redis_client.set('saved_source_list', str(source_list), 3600)
+            redis_client.set('saved_links', str(result['trias']['links']), 3600)
 
-            redis_client.delete('ranking')
-            redis_client.set('ranking', str([i for i in validators_ips]))
+        redis_client.delete('ranking')
+        redis_client.set('ranking', str([i for i in validators_ips]))
 
         status = 'success'
     except Exception as e:
