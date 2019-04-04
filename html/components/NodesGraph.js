@@ -61,7 +61,7 @@ export default class NodesGraph extends React.Component {
             data: "data",
             dataType: "json",
             success: function (data) {
-                console.log('tututtuu',data)
+                // console.log('tututtuu',data)
                 if(data.status == "success"){
                     self.setState ({
                         nodeShow: true,
