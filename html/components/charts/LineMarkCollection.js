@@ -45,7 +45,8 @@ class LineMarkCollection extends React.Component {
         trias: null,
         ethereum: null,
         hyperledger: null
-      }
+      },
+      showAll: true,
     };
   }
 
@@ -72,9 +73,17 @@ class LineMarkCollection extends React.Component {
       type: "get",
       dataType: "json",
       success: function(data) {
-        self.setState({
-          Monitoring: data.result
-        });
+        if ( data.status == "success" ) {
+          self.setState({
+            showAll: true,
+            Monitoring: data.result
+          });
+        } else {
+          self.setState({
+            showAll: false,
+          })
+        }
+        
       },
       error(err) {
         console.log(err);
@@ -184,18 +193,21 @@ class LineMarkCollection extends React.Component {
           data={this.state.Monitoring.tps_monitoring}
           dial={this.state.tps_dial}
           unit={"Unit"}
+          showAll={this.state.showAll}
         />
         <LineMark
           name={this.state.lang == "zh" ? "容错率" : "Fault Acceptance Rate"}
           data={this.state.Monitoring.fault_accetpance_rate}
           dial={this.state.fault_accetpance_rate_dial}
           unit={"%"}
+          showAll={this.state.showAll}
         />
         <LineMark
           name={this.state.lang == "zh" ? "错误节点" : "Faulty Nodes"}
           data={this.state.Monitoring.faulty_nodes_list}
           dial={this.state.faulty_nodes_dial}
           unit={"Unit"}
+          showAll={this.state.showAll}
         />
       </div>
     );

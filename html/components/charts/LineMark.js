@@ -30,7 +30,9 @@ class LineMark extends PureComponent {
         rate: "",
         value: ""
       },
-      event_list: [] //Histogram event data
+      event_list: [], //Histogram event data
+      showAll: true,
+      showThis: true,
     };
     this.timeArr = [];
   }
@@ -55,14 +57,25 @@ class LineMark extends PureComponent {
         lang: nextProps.intl.locale
       });
     }
-    self.timeArr = [];
-    if (
-      !nextProps.data.trias ||
-      !nextProps.data.ethereum ||
-      !nextProps.data.hyperledger
-    ) {
-      return false;
+    if (self.state.showAll != nextProps.showAll) {
+      self.setState({
+        showAll: nextProps.showAll
+      });
     }
+    self.timeArr = [];
+    //  console.log("linelllll", nextProps.name, (JSON.stringify(nextProps.data.trias) == "{}") )
+
+    if ( (JSON.stringify(nextProps.data.trias) == "{}") ) {
+      self.setState({
+        showThis: false
+      })
+      return false;
+    } else {
+      self.setState({
+        showThis: true
+      })
+    }
+    
     let getMonitoringTime = nextProps.data.trias.time || [];
     for (var i = 0; i < getMonitoringTime.length; i++) {
       self.timeArr.push(self.formatDate(new Date(getMonitoringTime[i] * 1000)));
@@ -87,6 +100,7 @@ class LineMark extends PureComponent {
         },
         event_list: nextProps.data.event_list || []
       });
+      // console.log("vvvv", nextProps.name, self.state.showAll, self.state.showThis)
     }, 0);
   }
   /**
@@ -262,12 +276,22 @@ class LineMark extends PureComponent {
             <li className="active">10 Min</li>
           </ul>
         </div>
-        <ReactEcharts
-          echarts={echarts}
-          option={this.getOption()}
-          style={{ height: "360px", width: "105%" }}
-          className="react_for_echarts"
-        />
+        { this.state.showAll && this.state.showThis &&
+          <ReactEcharts
+            echarts={echarts}
+            option={this.getOption()}
+            style={{ height: "360px", width: "105%" }}
+            className="react_for_echarts"
+          />
+        }
+        { !this.state.showAll || !this.state.showThis &&
+            <div className="failure-modal">
+                <div className="info">
+                    <img src={require("../../img/icon_maintenance@2x.png")} />
+                    <p>System is currently under maintenance, can not sync statistics.</p>
+                </div>
+            </div>
+        }
 
         <div className="lineMark-pie">
           <div className="warpper">
