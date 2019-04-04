@@ -12,6 +12,7 @@ export default class NodesGraph extends React.Component {
         super(props);
         this.state = {            
             triasData:null,
+            nodeShow: true,
         }
     }
 
@@ -60,7 +61,11 @@ export default class NodesGraph extends React.Component {
             data: "data",
             dataType: "json",
             success: function (data) {
-                if(data){
+                console.log('tututtuu',data)
+                if(data.status == "success"){
+                    self.setState ({
+                        nodeShow: true,
+                    })
                     // if nodes data updated
                     if(JSON.stringify(data.result.trias) != JSON.stringify(self.state.triasData)){  
                         self.setState({
@@ -70,7 +75,11 @@ export default class NodesGraph extends React.Component {
                     } else {
                         console.log('nodes not udated!!')
                     }
-                }else{
+                } else if (data.status == "failure") {
+                    self.setState ({
+                        nodeShow: false,
+                    })
+                } else{
                     self.setState({
                         triasData:null
                     })  
@@ -381,26 +390,36 @@ export default class NodesGraph extends React.Component {
                         <li className="active">Trias</li>
                     </ul>
                 </div>
-                <div id="nodesGraph"></div>
-                <div className="hostlist-contaniner">                
-                    <ul className="host-list">
-                    {
-                        this.state.triasData && this.state.triasData.nodes && this.state.triasData.nodes.map(function(item,index){
-                            return (
-                                <li key={"host"+index}  className={item.level===1?"normal":(item.level===0?"premium":"problem")} >
-                                    <span className="label">
-                                        <FormattedMessage id="termRanking"/>
-                                        <div className={item.trend===0?"trend":(item.trend===1?"trend up":"trend down")}></div>
-                                    </span>
-                                    <span className="label"><FormattedMessage id="termNode"/> IP</span>
-                                    <span className="value">#{index+1}</span>
-                                    <span className="value">{item.node_ip}<div className={item.status===0?"circle":"circle red"}></div></span>
-                                </li>
-                            )
-                        })
-                    }
-                    </ul>
-                </div>
+                { this.state.nodeShow && <div id="nodesGraph"></div> }
+                { this.state.nodeShow && 
+                    <div className="hostlist-contaniner">                
+                        <ul className="host-list">
+                        {
+                            this.state.triasData && this.state.triasData.nodes && this.state.triasData.nodes.map(function(item,index){
+                                return (
+                                    <li key={"host"+index}  className={item.level===1?"normal":(item.level===0?"premium":"problem")} >
+                                        <span className="label">
+                                            <FormattedMessage id="termRanking"/>
+                                            <div className={item.trend===0?"trend":(item.trend===1?"trend up":"trend down")}></div>
+                                        </span>
+                                        <span className="label"><FormattedMessage id="termNode"/> IP</span>
+                                        <span className="value">#{index+1}</span>
+                                        <span className="value">{item.node_ip}<div className={item.status===0?"circle":"circle red"}></div></span>
+                                    </li>
+                                )
+                            })
+                        }
+                        </ul>
+                    </div>
+                }
+                { !this.state.nodeShow && 
+                    <div className="failure-modal">
+                        <div className="info">
+                            <img src={require("../img/icon_maintenance@2x.png")} />
+                            <p>System is currently under maintenance, can not sync statistics.</p>
+                        </div>
+                    </div>
+                }
             </div>
         )
     }

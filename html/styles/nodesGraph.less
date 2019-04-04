@@ -158,4 +158,34 @@
             background:linear-gradient(180deg,rgba(41,42,50,0) 0%,rgba(41,42,50,1) 100%);
         }
     }
+
+    .failure-modal {
+        width:1016px;
+        height:500px;
+        background:rgba(50,51,60,1);
+        border-radius:6px;
+        border:1px dashed rgba(71,72,86,1);
+        position: relative;
+        .info {
+            width:290px;
+            height:96px;
+            font-size:15px;
+            font-weight:400;
+            color:rgba(161,166,173,1);
+            line-height:22px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            img {
+                margin: 0 auto;
+                width:32px;
+                height:30px;
+            }
+            p {
+                word-wrap: break-word;
+            }
+        }
+    }
 }
