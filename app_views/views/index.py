@@ -146,7 +146,7 @@ def get_visualization(request):
         # node link
         saved_source_list = redis_client.get('saved_source_list')
         saved_links = redis_client.get('saved_links')
-        if saved_source_list and eval(saved_source_list) == source_list and saved_links:
+        if saved_source_list and eval(saved_source_list) == source_list and saved_links and eval(saved_ranking) == validators_ips:
             result['trias']['links'] = eval(saved_links)
             logger.info('Get links from redis')
         else:
