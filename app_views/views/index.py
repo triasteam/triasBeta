@@ -105,7 +105,7 @@ def get_visualization(request):
     try:
         links = []
         node_rank = []
-        all_nodes = list(Node.objects.order_by('-id').values_list('node_ip', flat=True))
+        all_nodes = list(Node.objects.order_by('status', '-block_heigth').values_list('node_ip', flat=True))
         result['trias']['nodes'] = []
 
         # get validators
