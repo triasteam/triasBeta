@@ -14,6 +14,8 @@ export default class NodesGraph extends React.Component {
             triasData:null,
             nodeShow: true,
         }
+        this.pointIntervals = new Array();  // the interval onject of the point
+        this.pointTimeouts = new Array();  // the interval onject of the point
     }
 
     /**
@@ -36,6 +38,8 @@ export default class NodesGraph extends React.Component {
         this.setState = (state,callback)=>{
             return;
         };
+        this.clearPointesInterval(self.pointIntervals)
+        this.clearPointesTimeout(self.pointTimeouts)
     }
 
     /**
@@ -95,13 +99,26 @@ export default class NodesGraph extends React.Component {
         // });
     }
 
+    clearPointesInterval(intervals){
+        for(let i=0;i<intervals.length;i++){
+            if(intervals[i]) intervals[i] = clearInterval(intervals[i])
+        }
+    }
+    clearPointesTimeout(timeouts){
+        for(let i=0;i<timeouts.length;i++){
+            if(timeouts[i]) timeouts[i] = clearTimeout(timeouts[i])
+        }
+    }
+    
     updateGraph(data){
+        var self = this
         var width = 738,
             height = 500,
             linkedByIndex = {},
             node = null,
             text = null,
             link = null,
+            point = null,
             force = null;
         
         var linkSources = [];   // source positions of links
@@ -141,6 +158,11 @@ export default class NodesGraph extends React.Component {
 
         //add container
         var containerGrp = svg.append("g");
+
+        for(let i=0;i<data.links.length;i++){
+            this.pointIntervals.push(null)
+            this.pointTimeouts.push(null)
+        }
         
         //add group of all lines
         //Create all the line svgs but without locations yet
@@ -263,26 +285,24 @@ export default class NodesGraph extends React.Component {
         force.on("start", function(){
             containerGrp.selectAll("circle").remove()
             containerGrp.selectAll("path").remove()
-            for(let i=0;i<data.links.length;i++){
-                pointTimers[i] = clearInterval(pointTimers[i])
-                // pointStopflags.push(false)
-            }
+            self.clearPointesInterval(self.pointIntervals)
+            self.clearPointesTimeout(self.pointTimeouts)
         })
 
         // create image pattern to fill the circles
         containerGrp.append("pattern")
             .attr({
                 "id": "pointImage",
-                "x": 30,
-                "y": 30,
-                "height": 6,
-                "width": 30
+                "x": 15,
+                "y": 15,
+                "height": 3,
+                "width": 15
             })
             .append("image")
             .attr({
-                "x": 30,
-                "y": 27,
-                "height": 6,
+                "x": 15,
+                "y": 13.5,
+                "height": 3,
                 "width": 30,
                 "xlink:href": require("../img/img_chart_dots@2x.png")
             })
@@ -302,22 +322,15 @@ export default class NodesGraph extends React.Component {
             var angle = - Math.round(Math.atan2(pointB[1] - pointA[1], -pointB[0] + pointA[0]) / (Math.PI / 180))
             return angle
         }
-
-        var transitionInterval = 1500;  // interval between every entire transition of point
-        var pointTimers = new Array();  // the interval onject of the point
-        var pointStopflags = new Array();   // whether one transition of the point is finished
-        for(let i=0;i<data.links.length;i++){
-            pointTimers.push(null)
-            // pointStopflags.push(false)
-        }
+        
         // on "end" event, all transitions are finished
         force.on("end", function(){
             // add points to move along the link
-            containerGrp.selectAll(".point")
+            point = containerGrp.selectAll(".point")
                 .data(linkSources)
                 .enter().append('circle')
                 .attr('id', function(d,i){ return "point"+i; })
-                .attr('r',30)
+                .attr('r',15)
                 .attr('fill', "url(#pointImage)")   // fill the circles with the image pattern
                 .attr('opacity', 0)
                 .attr("transform", function(d,i) {
@@ -341,37 +354,31 @@ export default class NodesGraph extends React.Component {
              * @param {*} path which the point moves along
              */
             function transition(pointIndex,path) {
-                console.log(pointIndex)
                 var frame = 1;
                 var duration = 3000;
                 var fps = 15;
                 var maxFrame = fps*duration/1000;
-                // if(!pointStopflags[pointIndex]){
-                    pointTimers[pointIndex] = setInterval(function(){
-                        // to finish transition, clear interval and reset point style
-                        if(frame>=maxFrame){
-                            pointTimers[pointIndex] = clearInterval(pointTimers[pointIndex]);
-                            // pointStopflags[pointIndex] = true;
-                            // return to initial position and hide
-                            $('#point'+pointIndex)
-                                .css("opacity",0)
-                                .attr('transform', translateAlong(pointIndex, path.node(), 0))
-                                // .animate({
-                                //     "opacity":0
-                                // }, transitionInterval/2, function(){
-                                //     $('#point'+pointIndex).attr('transform', translateAlong(pointIndex, path.node(), 0))
-                                // })
-                            // set timeout to trigger transition again
-                            setTimeout(transition, transitionInterval, pointIndex, path);
-                            return;
-                        }
-                        // update point style
-                        $('#point'+pointIndex)                
-                            .css('opacity', 1 * frame/maxFrame)
-                            .attr('transform', translateAlong(pointIndex, path.node(), 1 * frame/maxFrame))
-                        frame++;
-                    }, 1000/fps)
-                // }
+                var transitionInterval = 2000;  // interval between every entire transition of point
+
+                self.pointIntervals[pointIndex] = setInterval(function(){
+                    // to finish transition, clear interval and reset point style
+                    if(frame>=maxFrame){
+                        self.pointIntervals[pointIndex] = clearInterval(self.pointIntervals[pointIndex]);
+                        self.pointTimeouts[pointIndex] = clearTimeout(self.pointTimeouts[pointIndex])
+                        // return to initial position and hide
+                        $('#point'+pointIndex)
+                            .css("opacity",0)
+                            .attr('transform', translateAlong(pointIndex, path.node(), 0))
+                        // set timeout to trigger transition again
+                        self.pointTimeouts[pointIndex] = setTimeout(transition, transitionInterval, pointIndex, path);
+                        return;
+                    }
+                    // update point style
+                    $('#point'+pointIndex)                
+                        .css('opacity', 1 * frame/maxFrame)
+                        .attr('transform', translateAlong(pointIndex, path.node(), 1 * frame/maxFrame))
+                    frame++;
+                }, 1000/fps)
             }
 
             for(let i=0;i<data.links.length;i++){
@@ -409,10 +416,6 @@ export default class NodesGraph extends React.Component {
         }
 
         function set_focus(d) {
-            for(let i=0;i<data.links.length;i++){
-                pointTimers[i] = clearInterval(pointTimers[i])
-                // pointStopflags.push(false)
-            }
             if (highlight_trans < 1) {
                 node.style("opacity", function (o) {
                     return isConnected(d, o) ? 1 : highlight_trans;
@@ -423,6 +426,20 @@ export default class NodesGraph extends React.Component {
                 });
 
                 link.style("opacity", function (o) {
+                    if(o.source.index == d.index) {
+                        console.log("source", o.source.index)
+                        console.log(o)
+                    }
+                    if(o.target.index == d.index){
+                        console.log("target", o.target.index)
+                        console.log(o)
+                    }
+                    
+
+                    point.style("visibility", function (p) {
+                        if((o.source.index == d.index && o.source.x == p[0] && o.source.y == p[1]) || (o.target.index == d.index &&o.source.x == p[0] && o.source.y == p[1])) console.log(p)
+                        return (o.source.index == d.index && o.source.x == p[0] && o.source.y == p[1]) || (o.target.index == d.index &&o.source.x == p[0] && o.source.y == p[1] ) ? "visible" : "hidden";
+                    });
                     return o.source.index == d.index || o.target.index == d.index ? 1 : highlight_trans;
                 });
             }
