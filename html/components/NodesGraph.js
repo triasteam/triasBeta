@@ -59,13 +59,12 @@ export default class NodesGraph extends React.Component {
      */
     getNodesData(){
         var self = this;
-        // $.ajax({
-        //     type: "GET",
-        //     url: "/api/visualization/",
-        //     data: "data",
-        //     dataType: "json",
-        //     success: function (data) {
-            var data = {"status": "success", "result": {"trias": {"links": [{"source": 7, "target": 3}, {"source": 6, "target": 1}, {"source": 1, "target": 6}, {"source": 7, "target": 0}, {"source": 8, "target": 1}, {"source": 8, "target": 4}, {"source": 2, "target": 0}, {"source": 3, "target": 4}, {"source": 0, "target": 2}, {"source": 8, "target": 5}, {"source": 0, "target": 7}, {"source": 4, "target": 8}, {"source": 5, "target": 6}, {"source": 7, "target": 6}, {"source": 0, "target": 6}, {"source": 1, "target": 0}, {"source": 3, "target": 1}, {"source": 2, "target": 6}, {"source": 4, "target": 0}, {"source": 2, "target": 1}], "nodes": [{"status": 0, "level": 0, "node_ip": "3.0.49.166", "trend": 0}, {"status": 0, "level": 0, "node_ip": "3.0.206.44", "trend": 0}, {"status": 0, "level": 0, "node_ip": "13.251.63.11", "trend": 0}, {"status": 1, "level": 0, "node_ip": "3.1.196.255", "trend": 0}, {"status": 0, "level": 0, "node_ip": "3.1.103.240", "trend": 0}, {"status": 0, "level": 1, "node_ip": "18.138.11.165", "trend": 0}, {"status": 0, "level": 1, "node_ip": "3.1.24.97", "trend": 0}, {"status": 0, "level": 1, "node_ip": "13.229.126.39", "trend": 0}, {"status": 0, "level": 1, "node_ip": "13.229.105.23", "trend": 0}]}, "hyperledger": {"links": [], "nodes": []}, "ethereum": {"links": [], "nodes": []}}};
+        $.ajax({
+            type: "GET",
+            url: "/api/visualization/",
+            data: "data",
+            dataType: "json",
+            success: function (data) {
                 // console.log('tututtuu',data)
                 if(data.status == "success"){
                     self.setState ({
@@ -89,14 +88,14 @@ export default class NodesGraph extends React.Component {
                         triasData:null
                     })  
                 }
-        //     },
-        //     error(err){
-        //         console.log(err)
-        //         self.setState({
-        //             triasData:null
-        //         })
-        //     }
-        // });
+            },
+            error(err){
+                console.log(err)
+                self.setState({
+                    triasData:null
+                })
+            }
+        });
     }
 
     clearPointesInterval(intervals){
@@ -109,7 +108,7 @@ export default class NodesGraph extends React.Component {
             if(timeouts[i]) timeouts[i] = clearTimeout(timeouts[i])
         }
     }
-    
+
     updateGraph(data){
         var self = this
         var width = 738,
@@ -243,6 +242,7 @@ export default class NodesGraph extends React.Component {
                         node.style("opacity", 1);
                         text.style("opacity", 1);
                         link.style("opacity", 1);
+                        point.style("visibility", "visible");
                     }
                 }
             }
@@ -425,20 +425,14 @@ export default class NodesGraph extends React.Component {
                     return isConnected(d, o) ? 1 : highlight_trans;
                 });
 
-                link.style("opacity", function (o) {
-                    if(o.source.index == d.index) {
-                        console.log("source", o.source.index)
-                        console.log(o)
-                    }
-                    if(o.target.index == d.index){
-                        console.log("target", o.target.index)
-                        console.log(o)
-                    }
-                    
+                point.style("visibility", "hidden");
 
-                    point.style("visibility", function (p) {
-                        if((o.source.index == d.index && o.source.x == p[0] && o.source.y == p[1]) || (o.target.index == d.index &&o.source.x == p[0] && o.source.y == p[1])) console.log(p)
-                        return (o.source.index == d.index && o.source.x == p[0] && o.source.y == p[1]) || (o.target.index == d.index &&o.source.x == p[0] && o.source.y == p[1] ) ? "visible" : "hidden";
+                link.style("opacity", function (o) {
+                    // only related points are visible
+                    point.each(function (p, i) {
+                        if((o.source.index == d.index && o.source.x == p[0] && o.source.y == p[1]) || (o.target.index == d.index && o.target.x == linkTargets[i][0] && o.target.y == linkTargets[i][1])) {
+                            $("#point"+i).css("visibility","visible")
+                        }
                     });
                     return o.source.index == d.index || o.target.index == d.index ? 1 : highlight_trans;
                 });
