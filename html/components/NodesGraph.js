@@ -14,6 +14,8 @@ export default class NodesGraph extends React.Component {
             triasData:null,
             nodeShow: true,
         }
+        this.pointIntervals = new Array();  // the interval onject of the point
+        this.pointTimeouts = new Array();  // the interval onject of the point
     }
 
     /**
@@ -36,6 +38,8 @@ export default class NodesGraph extends React.Component {
         this.setState = (state,callback)=>{
             return;
         };
+        this.clearPointesInterval(self.pointIntervals)
+        this.clearPointesTimeout(self.pointTimeouts)
     }
 
     /**
@@ -55,12 +59,13 @@ export default class NodesGraph extends React.Component {
      */
     getNodesData(){
         var self = this;
-        $.ajax({
-            type: "GET",
-            url: "/api/visualization/",
-            data: "data",
-            dataType: "json",
-            success: function (data) {
+        // $.ajax({
+        //     type: "GET",
+        //     url: "/api/visualization/",
+        //     data: "data",
+        //     dataType: "json",
+        //     success: function (data) {
+            var data = {"status": "success", "result": {"trias": {"links": [{"source": 7, "target": 3}, {"source": 6, "target": 1}, {"source": 1, "target": 6}, {"source": 7, "target": 0}, {"source": 8, "target": 1}, {"source": 8, "target": 4}, {"source": 2, "target": 0}, {"source": 3, "target": 4}, {"source": 0, "target": 2}, {"source": 8, "target": 5}, {"source": 0, "target": 7}, {"source": 4, "target": 8}, {"source": 5, "target": 6}, {"source": 7, "target": 6}, {"source": 0, "target": 6}, {"source": 1, "target": 0}, {"source": 3, "target": 1}, {"source": 2, "target": 6}, {"source": 4, "target": 0}, {"source": 2, "target": 1}], "nodes": [{"status": 0, "level": 0, "node_ip": "3.0.49.166", "trend": 0}, {"status": 0, "level": 0, "node_ip": "3.0.206.44", "trend": 0}, {"status": 0, "level": 0, "node_ip": "13.251.63.11", "trend": 0}, {"status": 1, "level": 0, "node_ip": "3.1.196.255", "trend": 0}, {"status": 0, "level": 0, "node_ip": "3.1.103.240", "trend": 0}, {"status": 0, "level": 1, "node_ip": "18.138.11.165", "trend": 0}, {"status": 0, "level": 1, "node_ip": "3.1.24.97", "trend": 0}, {"status": 0, "level": 1, "node_ip": "13.229.126.39", "trend": 0}, {"status": 0, "level": 1, "node_ip": "13.229.105.23", "trend": 0}]}, "hyperledger": {"links": [], "nodes": []}, "ethereum": {"links": [], "nodes": []}}};
                 // console.log('tututtuu',data)
                 if(data.status == "success"){
                     self.setState ({
@@ -84,23 +89,36 @@ export default class NodesGraph extends React.Component {
                         triasData:null
                     })  
                 }
-            },
-            error(err){
-                console.log(err)
-                self.setState({
-                    triasData:null
-                })
-            }
-        });
+        //     },
+        //     error(err){
+        //         console.log(err)
+        //         self.setState({
+        //             triasData:null
+        //         })
+        //     }
+        // });
+    }
+
+    clearPointesInterval(intervals){
+        for(let i=0;i<intervals.length;i++){
+            if(intervals[i]) intervals[i] = clearInterval(intervals[i])
+        }
+    }
+    clearPointesTimeout(timeouts){
+        for(let i=0;i<timeouts.length;i++){
+            if(timeouts[i]) timeouts[i] = clearTimeout(timeouts[i])
+        }
     }
 
     updateGraph(data){
+        var self = this
         var width = 738,
             height = 500,
             linkedByIndex = {},
             node = null,
             text = null,
             link = null,
+            point = null,
             force = null;
         
         var linkSources = [];   // source positions of links
@@ -140,6 +158,11 @@ export default class NodesGraph extends React.Component {
 
         //add container
         var containerGrp = svg.append("g");
+
+        for(let i=0;i<data.links.length;i++){
+            this.pointIntervals.push(null)
+            this.pointTimeouts.push(null)
+        }
         
         //add group of all lines
         //Create all the line svgs but without locations yet
@@ -220,6 +243,7 @@ export default class NodesGraph extends React.Component {
                         node.style("opacity", 1);
                         text.style("opacity", 1);
                         link.style("opacity", 1);
+                        point.style("visibility", "visible");
                     }
                 }
             }
@@ -261,23 +285,25 @@ export default class NodesGraph extends React.Component {
         // on "start" event, transitions start, clear all the paths and moving circles along the links
         force.on("start", function(){
             containerGrp.selectAll("circle").remove()
-            // containerGrp.selectAll("path").remove()
+            containerGrp.selectAll("path").remove()
+            self.clearPointesInterval(self.pointIntervals)
+            self.clearPointesTimeout(self.pointTimeouts)
         })
 
         // create image pattern to fill the circles
         containerGrp.append("pattern")
             .attr({
                 "id": "pointImage",
-                "x": 30,
-                "y": 30,
-                "height": 6,
-                "width": 30
+                "x": 15,
+                "y": 15,
+                "height": 3,
+                "width": 15
             })
             .append("image")
             .attr({
-                "x": 30,
-                "y": 27,
-                "height": 6,
+                "x": 15,
+                "y": 13.5,
+                "height": 3,
                 "width": 30,
                 "xlink:href": require("../img/img_chart_dots@2x.png")
             })
@@ -301,57 +327,83 @@ export default class NodesGraph extends React.Component {
         // on "end" event, all transitions are finished
         force.on("end", function(){
             // add points to move along the link
-            containerGrp.selectAll(".point")
+            point = containerGrp.selectAll(".point")
                 .data(linkSources)
                 .enter().append('circle')
                 .attr('id', function(d,i){ return "point"+i; })
-                .attr('r',30)
+                .attr('r',15)
                 .attr('fill', "url(#pointImage)")   // fill the circles with the image pattern
+                .attr('opacity', 0)
                 .attr("transform", function(d,i) {
-                    var x =  (linkTargets[i][0] - linkSources[i][0])*3/4 + linkSources[i][0]
-                    var y = (linkTargets[i][1] - linkSources[i][1])*3/4 + linkSources[i][1]
-                    return "translate(" + x + "," + y + ") " + "rotate("+getAngle(linkSources[i], linkTargets[i])+") " ; 
+                    return "translate(" + d + ") " + "rotate("+getAngle(linkSources[i], linkTargets[i])+") "; 
                 });
             
                 
-            // var lineFunc = d3.svg.line()
-            //     .x(function(d) {
-            //         return d.x;
-            //     })
-            //     .y(function(d){
-            //         return d.y
-            //     })
+            var lineFunc = d3.svg.line()
+                .x(function(d) {
+                    return d.x;
+                })
+                .y(function(d){
+                    return d.y
+                })
 
-            // for(let i=0;i<data.links.length;i++){
-            //     let pathData = [{x:linkSources[i][0],y:linkSources[i][1]},{x:linkTargets[i][0],y:linkTargets[i][1]}]
+            
 
-            //     var path = containerGrp.append("path")
-            //         .attr("d", lineFunc(pathData))
+            /**
+             * Begin animation, moves the point along the path
+             * @param {*} pointIndex index of point
+             * @param {*} path which the point moves along
+             */
+            function transition(pointIndex,path) {
+                var frame = 1;
+                var duration = 3000;
+                var fps = 15;
+                var maxFrame = fps*duration/1000;
+                var transitionInterval = 2000;  // interval between every entire transition of point
 
-            //     transition(i,path)
-            // }
+                self.pointIntervals[pointIndex] = setInterval(function(){
+                    // to finish transition, clear interval and reset point style
+                    if(frame>=maxFrame){
+                        self.pointIntervals[pointIndex] = clearInterval(self.pointIntervals[pointIndex]);
+                        self.pointTimeouts[pointIndex] = clearTimeout(self.pointTimeouts[pointIndex])
+                        // return to initial position and hide
+                        $('#point'+pointIndex)
+                            .css("opacity",0)
+                            .attr('transform', translateAlong(pointIndex, path.node(), 0))
+                        // set timeout to trigger transition again
+                        self.pointTimeouts[pointIndex] = setTimeout(transition, transitionInterval, pointIndex, path);
+                        return;
+                    }
+                    // update point style
+                    $('#point'+pointIndex)                
+                        .css('opacity', 1 * frame/maxFrame)
+                        .attr('transform', translateAlong(pointIndex, path.node(), 1 * frame/maxFrame))
+                    frame++;
+                }, 1000/fps)
+            }
 
-            // function transition(ponitIndex,path) {
-            //     d3.select('#point'+ponitIndex)                
-            //         .transition()
-            //         .duration(1800)                    
-            //         .styleTween("opacity", function tween() {
-            //             return d3.interpolate(String(0), String(1));
-            //         })
-            //         .attrTween("transform", translateAlong(ponitIndex,path.node()))
-            //         .attr("transform", translateAlong(ponitIndex,path.node()))
-            //         .each("end", function(){transition(ponitIndex,path)}); // infinite loop
-            // }
+            for(let i=0;i<data.links.length;i++){
+                let pathData = [{x:linkSources[i][0],y:linkSources[i][1]},{x:linkTargets[i][0],y:linkTargets[i][1]}]
 
-            // function translateAlong(index,path) {
-            //     var l = path.getTotalLength();
-            //     return function (i) {
-            //         return function (t) {
-            //             var p = path.getPointAtLength(t * l);
-            //             return "translate(" + p.x + "," + p.y + ") "+"rotate("+getAngle(linkSources[index], linkTargets[index])+")"; //Move points
-            //         }
-            //     }
-            // }
+                var path = containerGrp.append("path")
+                    .attr("d", lineFunc(pathData))
+                
+                // move point i along path
+                transition(i,path)
+            }
+            
+            /**
+             * Get position of the point when it moves along the path
+             * @param {*} index index of point
+             * @param {*} path which the point moves along
+             * @param {*} percentage percentage of path length, represent the position of the point
+             */
+            function translateAlong(index,path, percentage) {
+                var l = path.getTotalLength();
+                var p = path.getPointAtLength(percentage * l);
+                // new position
+                return "translate(" + p.x + "," + p.y + ") "+"rotate("+getAngle(linkSources[index], linkTargets[index])+")"; 
+            }
         })
 
         var linkedByIndex = {};
@@ -374,7 +426,15 @@ export default class NodesGraph extends React.Component {
                     return isConnected(d, o) ? 1 : highlight_trans;
                 });
 
+                if(point) point.style("visibility", "hidden");
+
                 link.style("opacity", function (o) {
+                    // only related points are visible
+                    if(point) point.each(function (p, i) {
+                        if((o.source.index == d.index && o.source.x == p[0] && o.source.y == p[1]) || (o.target.index == d.index && o.target.x == linkTargets[i][0] && o.target.y == linkTargets[i][1])) {
+                            $("#point"+i).css("visibility","visible")
+                        }
+                    });
                     return o.source.index == d.index || o.target.index == d.index ? 1 : highlight_trans;
                 });
             }
