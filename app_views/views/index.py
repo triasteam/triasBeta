@@ -157,8 +157,8 @@ def get_visualization(request):
                     links.append({"source": node_rank.index(source_ip), "target": node_rank.index(target_ip)})
             random.shuffle(links)
             result['trias']['links'] = links[:20]
-            redis_client.set('saved_source_list', str(source_list), 3600)
-            redis_client.set('saved_links', str(result['trias']['links']), 3600)
+            redis_client.set('saved_source_list', str(source_list), 60)
+            redis_client.set('saved_links', str(result['trias']['links']), 60)
 
         redis_client.delete('ranking')
         redis_client.set('ranking', str([i for i in validators_ips]))
