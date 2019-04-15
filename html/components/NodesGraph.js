@@ -293,17 +293,17 @@ export default class NodesGraph extends React.Component {
         containerGrp.append("pattern")
             .attr({
                 "id": "pointImage",
-                "x": 15,
-                "y": 15,
-                "height": 3,
-                "width": 15
+                "x": 20,
+                "y": 20,
+                "height": 2,
+                "width": 20
             })
             .append("image")
             .attr({
-                "x": 15,
-                "y": 13.5,
-                "height": 3,
-                "width": 30,
+                "x": 20,
+                "y": 19,
+                "height": 2,
+                "width": 20,
                 "xlink:href": require("../img/img_chart_dots@2x.png")
             })
 
@@ -330,7 +330,7 @@ export default class NodesGraph extends React.Component {
                 .data(linkSources)
                 .enter().append('circle')
                 .attr('id', function(d,i){ return "point"+i; })
-                .attr('r',15)
+                .attr('r',20)
                 .attr('fill', "url(#pointImage)")   // fill the circles with the image pattern
                 .attr('opacity', 0)
                 .attr("transform", function(d,i) {
