@@ -59,13 +59,12 @@ export default class NodesGraph extends React.Component {
      */
     getNodesData(){
         var self = this;
-        // $.ajax({
-        //     type: "GET",
-        //     url: "/api/visualization/",
-        //     data: "data",
-        //     dataType: "json",
-        //     success: function (data) {
-            var data = {"status": "success", "result": {"trias": {"links": [{"source": 7, "target": 3}, {"source": 6, "target": 1}, {"source": 1, "target": 6}, {"source": 7, "target": 0}, {"source": 8, "target": 1}, {"source": 8, "target": 4}, {"source": 2, "target": 0}, {"source": 3, "target": 4}, {"source": 0, "target": 2}, {"source": 8, "target": 5}, {"source": 0, "target": 7}, {"source": 4, "target": 8}, {"source": 5, "target": 6}, {"source": 7, "target": 6}, {"source": 0, "target": 6}, {"source": 1, "target": 0}, {"source": 3, "target": 1}, {"source": 2, "target": 6}, {"source": 4, "target": 0}, {"source": 2, "target": 1}], "nodes": [{"status": 0, "level": 0, "node_ip": "3.0.49.166", "trend": 0}, {"status": 0, "level": 0, "node_ip": "3.0.206.44", "trend": 0}, {"status": 0, "level": 0, "node_ip": "13.251.63.11", "trend": 0}, {"status": 1, "level": 0, "node_ip": "3.1.196.255", "trend": 0}, {"status": 0, "level": 0, "node_ip": "3.1.103.240", "trend": 0}, {"status": 0, "level": 1, "node_ip": "18.138.11.165", "trend": 0}, {"status": 0, "level": 1, "node_ip": "3.1.24.97", "trend": 0}, {"status": 0, "level": 1, "node_ip": "13.229.126.39", "trend": 0}, {"status": 0, "level": 1, "node_ip": "13.229.105.23", "trend": 0}]}, "hyperledger": {"links": [], "nodes": []}, "ethereum": {"links": [], "nodes": []}}};
+        $.ajax({
+            type: "GET",
+            url: "/api/visualization/",
+            data: "data",
+            dataType: "json",
+            success: function (data) {
                 // console.log('tututtuu',data)
                 if(data.status == "success"){
                     self.setState ({
@@ -89,14 +88,14 @@ export default class NodesGraph extends React.Component {
                         triasData:null
                     })  
                 }
-        //     },
-        //     error(err){
-        //         console.log(err)
-        //         self.setState({
-        //             triasData:null
-        //         })
-        //     }
-        // });
+            },
+            error(err){
+                console.log(err)
+                self.setState({
+                    triasData:null
+                })
+            }
+        });
     }
 
     clearPointesInterval(intervals){
