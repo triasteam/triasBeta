@@ -34,7 +34,7 @@ def stamp2datetime(stamp):
 def get_ranking():
     node_list = get_ordered_node()
     for node in node_list:
-        url = "http://%s:%s/trias/getranking" % (node, jc.server_port)
+        url = "http://%s:%s/trias/getranking" % (node, jc.ranking_port)
         result = url_data(url)
         if result:
             return result
