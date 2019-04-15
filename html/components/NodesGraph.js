@@ -336,7 +336,20 @@ export default class NodesGraph extends React.Component {
                 .attr("transform", function(d,i) {
                     return "translate(" + d + ") " + "rotate("+getAngle(linkSources[i], linkTargets[i])+") "; 
                 });
-            
+
+            // if there is already a focused node, set points visibilities.
+            if (focus_node !== null) {
+                if(point) point.style("visibility", "hidden");
+
+                link.each(function(o) {
+                    // only related points are visible
+                    if(point) point.each(function (p, i) {
+                        if((o.source.index == focus_node.index && o.source.x == p[0] && o.source.y == p[1]) || (o.target.index == focus_node.index && o.target.x == linkTargets[i][0] && o.target.y == linkTargets[i][1])) {
+                            $("#point"+i).css("visibility","visible")
+                        }
+                    });
+                });
+            }          
                 
             var lineFunc = d3.svg.line()
                 .x(function(d) {
