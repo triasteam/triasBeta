@@ -425,11 +425,11 @@ export default class NodesGraph extends React.Component {
                     return isConnected(d, o) ? 1 : highlight_trans;
                 });
 
-                point.style("visibility", "hidden");
+                if(point) point.style("visibility", "hidden");
 
                 link.style("opacity", function (o) {
                     // only related points are visible
-                    point.each(function (p, i) {
+                    if(point) point.each(function (p, i) {
                         if((o.source.index == d.index && o.source.x == p[0] && o.source.y == p[1]) || (o.target.index == d.index && o.target.x == linkTargets[i][0] && o.target.y == linkTargets[i][1])) {
                             $("#point"+i).css("visibility","visible")
                         }

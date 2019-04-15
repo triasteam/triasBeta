@@ -2,6 +2,7 @@ import time
 import requests
 import json
 from requests.adapters import HTTPAdapter
+from app_views.models import Node
 from app_views.view_utils.logger import logger
 from app_views.view_utils.localconfig import JsonConfiguration
 from app_views.models import TransactionLog
@@ -31,8 +32,9 @@ def stamp2datetime(stamp):
 
 
 def get_ranking():
-    for node in jc.node_list:
-        url = "http://%s:%s/trias/getranking" % (node['ip'], jc.ranking_port)
+    node_list = get_ordered_node()
+    for node in node_list:
+        url = "http://%s:%s/trias/getranking" % (node, jc.server_port)
         result = url_data(url)
         if result:
             return result
@@ -40,8 +42,9 @@ def get_ranking():
 
 def get_validators():
     try:
-        for node in jc.node_list:
-            url = "http://%s:%s/tri_block_validators" % (node['ip'], node['port'])
+        node_list = get_ordered_node()
+        for node in node_list:
+            url = "http://%s:%s/tri_block_validators" % (node, jc.server_port)
             result = url_data(url)
             if result and (result['error'] == ""):
                 return result
@@ -54,8 +57,9 @@ def send_transaction_util(id, content):
     params = {"tx": "\"%s\"" % content}
     nowtime = int(time.time())
     try:
-        for node in jc.node_list:
-            url = "http://%s:%s/tri_bc_tx_commit" % (node['ip'], node['port'])
+        node_list = get_ordered_node()
+        for node in node_list:
+            url = "http://%s:%s/tri_bc_tx_commit" % (node, jc.server_port)
             result = url_data(url, params=params, time_out=120)
             if result:
                 # save tx hash
@@ -75,3 +79,9 @@ def send_transaction_util(id, content):
     except Exception as e:
         logger.error(e)
 
+
+def get_ordered_node():
+    try:
+        return list(Node.objects.order_by('status', '-block_heigth', 'id').values_list('node_ip', flat=True))
+    except Exception as e:
+        logger.error(e)

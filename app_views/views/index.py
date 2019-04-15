@@ -105,7 +105,7 @@ def get_visualization(request):
     try:
         links = []
         node_rank = []
-        all_nodes = list(Node.objects.order_by('-id').values_list('node_ip', flat=True))
+        all_nodes = list(Node.objects.order_by('status', '-block_heigth').values_list('node_ip', flat=True))
         result['trias']['nodes'] = []
 
         # get validators
@@ -146,7 +146,7 @@ def get_visualization(request):
         # node link
         saved_source_list = redis_client.get('saved_source_list')
         saved_links = redis_client.get('saved_links')
-        if saved_source_list and eval(saved_source_list) == source_list and saved_links:
+        if saved_source_list and eval(saved_source_list) == source_list and saved_links and eval(saved_ranking) == validators_ips:
             result['trias']['links'] = eval(saved_links)
             logger.info('Get links from redis')
         else:
