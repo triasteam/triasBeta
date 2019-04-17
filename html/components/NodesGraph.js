@@ -71,7 +71,7 @@ export default class NodesGraph extends React.Component {
                         nodeShow: true,
                     })
                     // if nodes data updated
-                    if(JSON.stringify(data.result.trias) != JSON.stringify(self.state.triasData)){  
+                    if(JSON.stringify(data.result.trias) != JSON.stringify(self.state.triasData)){
                         self.setState({
                             triasData:data.result.trias
                         })
@@ -137,6 +137,10 @@ export default class NodesGraph extends React.Component {
         var base_node_height = 106;  
         var base_text_size = 10;
         var base_stroke = 1;
+
+        // clear intervals and timeouts when update the graph
+        this.clearPointesInterval(self.pointIntervals)
+        this.clearPointesTimeout(self.pointTimeouts)
 
         //Set up the force layout
         //Creates the graph data structure out of the json data
