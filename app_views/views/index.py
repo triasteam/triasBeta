@@ -143,6 +143,16 @@ def get_visualization(request):
             node_rank.append(item)
             result['trias']['nodes'].append({"node_ip": node_show[item], "status": node_status, 'level': 1, 'trend': 0})
 
+        # untrusted_node
+        untrusted_node_list = []
+        for source_ip in source_list:
+            target_obj = response[source_ip]
+            target_ip_list = list(target_obj.keys())
+            for target_ip in target_ip_list:
+                if response[source_ip][target_ip][2] == 0:
+                    if target_ip not in untrusted_node_list:
+                        untrusted_node_list.append(target_ip)
+
         # node link
         saved_source_list = redis_client.get('saved_source_list')
         saved_links = redis_client.get('saved_links')
@@ -162,6 +172,12 @@ def get_visualization(request):
 
         redis_client.delete('ranking')
         redis_client.set('ranking', str([i for i in validators_ips]))
+
+        # identify untrusted nodes
+        for untrusted_node in untrusted_node_list:
+            for node in result['trias']['nodes']:
+                if node_show[untrusted_node] == node['node_ip'] and node['status'] != 1:
+                    node['status'] = 2
 
         status = 'success'
     except Exception as e:

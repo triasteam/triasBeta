@@ -85,3 +85,4 @@ def get_ordered_node():
         return list(Node.objects.order_by('status', '-block_heigth', 'id').values_list('node_ip', flat=True))
     except Exception as e:
         logger.error(e)
+        return []
