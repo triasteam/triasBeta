@@ -196,10 +196,13 @@ export default class NodesGraph extends React.Component {
         node.append("image")
             .attr({
                 "xlink:href" : function (d) {
-                    if(d.status === 0){
-                        return require("../img/img_node_norm@2x.png");
-                    }else{
+                    // status : 0 正常节点    1异常节点   2不可信节点
+                    if(d.status === 2){
+                        return require("../img/img_node_faulty@2x.png");
+                    }else if(d.status === 1){
                         return require("../img/img_node_offline@2x.png");
+                    }else {
+                        return require("../img/img_node_norm@2x.png");
                     }
                 },
                 "x" : -base_node_width/2,
@@ -473,14 +476,14 @@ export default class NodesGraph extends React.Component {
                         {
                             this.state.triasData && this.state.triasData.nodes && this.state.triasData.nodes.map(function(item,index){
                                 return (
-                                    <li key={"host"+index}  className={item.level===1?"normal":(item.level===0?"premium":"problem")} >
+                                    <li key={"host"+index}  className={item.level===0?"premium":(item.status===2?"faulty":(item.status===1?"offline":"normal"))} >
                                         <span className="label">
                                             <FormattedMessage id="termRanking"/>
                                             <div className={item.trend===0?"trend":(item.trend===1?"trend up":"trend down")}></div>
                                         </span>
                                         <span className="label"><FormattedMessage id="termNode"/> IP</span>
                                         <span className="value">#{index+1}</span>
-                                        <span className="value">{item.node_ip}<div className={item.status===0?"circle":"circle red"}></div></span>
+                                        <span className="value">{item.node_ip}</span>
                                     </li>
                                 )
                             })
