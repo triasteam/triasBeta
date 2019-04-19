@@ -476,7 +476,7 @@ export default class NodesGraph extends React.Component {
                         {
                             this.state.triasData && this.state.triasData.nodes && this.state.triasData.nodes.map(function(item,index){
                                 return (
-                                    <li key={"host"+index}  className={item.level===0?"premium":(item.status===2?"faulty":(item.status===1?"offline":"normal"))} >
+                                    <li key={"host"+index}  className={item.level===0?(item.status===1?"premium offline":"premium"):(item.status===2?"faulty":(item.status===1?"offline":"normal"))} >
                                         <span className="label">
                                             <FormattedMessage id="termRanking"/>
                                             <div className={item.trend===0?"trend":(item.trend===1?"trend up":"trend down")}></div>
