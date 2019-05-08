@@ -22,6 +22,8 @@ def get_single_data(client, key):
         redis_saved_list_exist = client.llen(key)
         if redis_saved_list_exist == 12:
             return client.lrange(key, 0, -1)
+        elif 12 > redis_saved_list_exist > 0:
+            return client.lrange(key, 0, -1).extend([0]*(12-redis_saved_list_exist))
     except Exception as e:
         logger.error(e)
 
