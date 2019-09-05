@@ -46,7 +46,7 @@ def get_validators():
         for node in node_list:
             url = "http://%s:%s/tri_block_validators" % (node, jc.server_port)
             result = url_data(url)
-            if result and (result['error'] == ""):
+            if result and ('error' not in result):
                 return result
     except Exception as e:
         logger.error(e)
@@ -63,7 +63,7 @@ def send_transaction_util(id, content):
             result = url_data(url, params=params, time_out=120)
             if result:
                 # save tx hash
-                if result['error'] == "":
+                if 'error' not in result:
                     # tx success
                     hash = result['result']['hash']
                     height = result['result']['height']
