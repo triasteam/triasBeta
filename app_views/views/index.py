@@ -9,6 +9,7 @@ import uuid
 import hashlib
 import base64
 import threading
+import traceback
 from django.http import JsonResponse
 from django.db.models import Q
 # from ratelimit.decorators import ratelimit
@@ -157,6 +158,7 @@ def get_visualization(request):
     except Exception as e:
         logger.error(e)
         status = 'failure'
+        logger.error(traceback.format_exc())
 
     return JsonResponse({'status': status, 'result': result})
 
