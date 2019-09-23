@@ -148,7 +148,7 @@ def get_visualization(request):
         redis_client.set('ranking', str([i for i in node_rank]))
 
         # node link
-        random.shuffle[ctx_list]
+        random.shuffle(ctx_list)
         for ctx_item in ctx_list[:20]:
             target = node_rank.index(ctx_item['attestee'])
             source = node_rank.index(ctx_item['attester'])
