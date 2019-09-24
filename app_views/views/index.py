@@ -483,7 +483,7 @@ def query_transactions_status(request):
 def query_transactions(request):
     try:
         hash = request.GET.get('hash', '')
-        if (not hash) or (len(hash) != 40):
+        if (not hash) or (len(hash) != 64):
             return JsonResponse({'status': 'failure', 'result': 'parameter error'})
 
         status, result = 'failure', 'Tx (%s) not found' % hash
