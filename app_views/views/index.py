@@ -168,7 +168,7 @@ def get_instant_message(request):
 
     try:
         result = {}
-        nowtime = int(time.time()) - 3600 * 8
+        nowtime = int(time.time())
         activity_list = list(Activity.objects.filter(time__gte=nowtime-10).order_by('-time').values())
         normal_nodes = list(Node.objects.filter(status=0).values_list('node_ip', flat=True))
         fault_nodes = list(Node.objects.filter(status=1).values_list('node_ip', flat=True))
@@ -232,7 +232,7 @@ def general_static(request):
 def get_tps(request):
 
     try:
-        qtime = int(time.time())
+        qtime = int(time.time()) - 3600 * 8
         isBlock = Block.objects.filter(Q(time__lte=qtime) & Q(time__gt=(qtime - 60)))
         data = 0
         if isBlock.exists():
