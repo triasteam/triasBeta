@@ -168,7 +168,7 @@ def get_instant_message(request):
 
     try:
         result = {}
-        nowtime = int(time.time())
+        nowtime = int(time.time()) - 3600 * 8
         activity_list = list(Activity.objects.filter(time__gte=nowtime-10).order_by('-time').values())
         normal_nodes = list(Node.objects.filter(status=0).values_list('node_ip', flat=True))
         fault_nodes = list(Node.objects.filter(status=1).values_list('node_ip', flat=True))
