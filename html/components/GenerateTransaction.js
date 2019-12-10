@@ -183,20 +183,21 @@ class GenerateTransaction extends React.Component {
                             showErrorModal: !self.state.showErrorModal,
                             errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
                             errorInfo: self.state.lang=='zh'?'此交易正在后台生成，请稍后再试。':'The transaction is being generated in the background, please wait a few seconds.',
-                            errorType: 2,
+                            // errorType: 2,
+                            errorType:1
                         })
                     } else {
                         let info = data.result;
                         info = info.replace(info[0],info[0].toUpperCase());
                         self.setState({
                             showErrorModal: !self.state.showErrorModal,
-                            errorTitle: self.state.lang=='zh'?'发生错误！':'Error Occurred!',
+                            // errorTitle: self.state.lang=='zh'?'发生错误！':'Error Occurred!',
+                            errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
                             errorInfo: info,
-                            errorType: 2,
+                            // errorType: 2,
+                            errorType:1
                         })
-
                     }
-
                 }
             }
         })
@@ -254,7 +255,8 @@ class GenerateTransaction extends React.Component {
                             info = info.replace(info[0],info[0].toUpperCase());
                             self.setState({
                                 showErrorModal: !self.state.showErrorModal,
-                                errorTitle: self.state.lang=='zh'?'参数错误！':'Parameter error!',
+                                // errorTitle: self.state.lang=='zh'?'参数错误！':'Parameter error!',
+                                errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
                                 errorInfo: info,
                                 errorType: 1,
                             })
@@ -494,8 +496,8 @@ class GenerateTransaction extends React.Component {
                             <div className="close-btn" onClick={()=>{self.setState({showErrorModal:!self.state.showErrorModal})}}>
                                 <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
                             </div>
-                            {self.state.errorType == 1 && <img src={require('../img/icon/button_icon/icon_warning_title@2x.png')} alt="关闭弹窗" /> }
-                            {self.state.errorType == 2 && <img src={require('../img/icon/button_icon/icon_error_title@2x.png')} alt="查询错误" /> }
+                            {self.state.errorType == 1 && <img src={require('../img/icon/button_icon/icon_warning_title@2x.png')} /> }
+                            {/* {self.state.errorType == 2 && <img src={require('../img/icon/button_icon/icon_error_title@2x.png')} alt="查询错误" /> } */}
                             <h2 style={{color:(self.state.errorType == 1 ) ? '#A1FC3A':'#FF0075'}}>{self.state.errorTitle}</h2>
                             {/* <h2 style={self.state.errorType == 1 ? {color:'#A1FC3A'}: {color:'#FF0075'}}>{self.state.errorTitle}</h2> */}
                             <p>{self.state.errorInfo}</p>
