@@ -62,24 +62,26 @@ def send_transaction_util(id, content):
     try:
         node_list = get_ordered_node()
         for node in node_list:
-            url = "http://%s:%s/tri_bc_tx_commit" % (node, jc.server_port)
+            url = "http://%s:%s/tri_bc_tx_async" % (node, jc.server_port)
             result = url_data(url, params=params, time_out=120)
             logger.info('request url result is: %s' % result)
-            if result:
+            if result and 'result' in result:
                 # save tx hash
-                if 'error' not in result:
-                    # tx success
-                    hash = result['result']['hash']
-                    height = result['result']['height']
-                    TransactionLog.objects.create(status=0, hash=hash, block_heigth=height,
-                                                  content=content, trias_hash=id, log='', time=nowtime)
-                else:
-                    log = result['error']
-                    TransactionLog.objects.create(status=1, content=content, trias_hash=id, log=log, time=nowtime)
+                # if 'error' not in result:
+                #     # tx success
+                #     hash = result['result']['hash']
+                #     height = result['result']['height']
+                #     TransactionLog.objects.create(status=0, hash=hash, block_heigth=height,
+                #                                   content=content, trias_hash=id, log='', time=nowtime)
+                # else:
+                #     log = result['error']
+                tx_hash = result['result']['hash']
+                log = 'Please query with %s' % tx_hash
+                TransactionLog.objects.create(status=0, content=content, trias_hash=id, log=log, time=nowtime, hash=tx_hash)
 
                 return
 
-        TransactionLog.objects.create(status=1, content=content, trias_hash=id, log='transaction handling exception', time=nowtime)
+        # TransactionLog.objects.create(status=1, content=content, trias_hash=id, log='transaction handling exception', time=nowtime)
     except Exception as e:
         logger.error(e)
 
