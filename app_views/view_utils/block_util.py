@@ -77,7 +77,7 @@ def send_transaction_util(id, content):
                 #     log = result['error']
                 tx_hash = result['result']['hash']
                 log = 'Please query with %s' % tx_hash
-                TransactionLog.objects.create(status=0, content=content, trias_hash=id, log=log, time=nowtime, hash=tx_hash)
+                TransactionLog.objects.create(status=1, content=content, trias_hash=id, log=log, time=nowtime, hash=tx_hash)
 
                 return
 
