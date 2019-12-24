@@ -217,7 +217,7 @@ class GenerateTransaction extends React.Component {
         e.preventDefault();
         let self = this;
         let str = self.state.searchKey
-        let re = /^[a-zA-Z0-9]{40}$/;
+        let re = /^[a-zA-Z0-9]{40,64}$/;
         if (re.test(str)) {
             $.ajax({
                 url: "/api/query_transactions/",
