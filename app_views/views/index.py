@@ -489,8 +489,7 @@ def query_transactions(request):
         status, result = 'failure', 'Tx (%s) not found' % hash
         # get from DB
         transaction_log = TransactionLog.objects.filter(hash=hash)
-        # if transaction_log.exists():
-        if 1 == 2:
+        if transaction_log.exists():
             tx = transaction_log[0]
             block_height = tx.block_heigth
             content = tx.content
