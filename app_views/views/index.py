@@ -314,7 +314,7 @@ def get_data_monitoring(request):
         for tmp in range(len(timestamp_list)-1):
             tx_nums = Block.objects.filter(Q(timestamp__gte=(timestamp_list[tmp]-3600*8)) &
                                            Q(timestamp__lt=(timestamp_list[tmp+1]-3600*8))).aggregate(tx_nums=Count('transactionsCount'))
-            result_tps.append(tx_nums)
+            result_tps.append(tx_nums['tx_nums'])
 
             activity_query = Activity.objects.filter(Q(time__gte=timestamp_list[tmp]) &
                                                      Q(time__lt=(timestamp_list[tmp+1]))).order_by('time')

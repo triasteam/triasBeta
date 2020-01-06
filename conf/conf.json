@@ -27,6 +27,6 @@
   "mysql_port": "3306",
   "mysql_user": "8lab",
   "mysql_password": "8lab",
-  "mysql_database": "leviatom_explorer",
+  "mysql_database": "explorer_monitor_script",
   "ranking_port": 8987
 }
