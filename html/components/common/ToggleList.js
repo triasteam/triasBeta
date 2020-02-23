@@ -1,23 +1,33 @@
 import React from "react"
 import $ from "jquery";
+import PropTypes from 'prop-types';
+
 /**
  * Custom toggle list component.
- * Usage:
+ * 
+ * ### Example:
+ * ```js
  * <ToggleList
  * listID="langlist"
  * itemsToSelect={[{
-      ele: <span onClick={()=>this.changeLanguage('zh')}>中文</span>
-    }, {
-        ele: <span  onClick={()=>this.changeLanguage('en')}>English</span>
-    }]}
+ *      ele: <span onClick={()=>this.changeLanguage('zh')}>中文</span>
+ *      }, {
+ *      ele: <span  onClick={()=>this.changeLanguage('en')}>English</span>
+ *  }]}
  * name={<i className="fas fa-globe-americas"></i>} />
- * 
- * Attributes:
- * - listID: id of the outer container
- * - itemsToSelect: a list of elements( ele: element shows in the drop-down list )
- * - name: shows in the toggle button
+ * ```
  */
 export default class ToggleList extends React.Component {
+    static propTypes = {
+        /** Id of the outer container */
+        listID: PropTypes.string,
+        /** A list of elements( ele: element shows in the drop-down list ) */
+        itemsToSelect:PropTypes.object,
+        /** Name shows in the toggle button */
+        name: PropTypes.string,
+        /** CSS Class name to append to the container  */
+        className: PropTypes.string
+    }
     constructor(props) {
         super(props);
         this.state={

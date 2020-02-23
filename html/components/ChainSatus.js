@@ -4,17 +4,17 @@ import RightPart from "./RightPart";
 import LineMarkCollection from "./charts/LineMarkCollection";
 import NodesGraph from "./NodesGraph";
 import EventHappenSwiper from "./common/EventHappenSwiper"
-/* Component for node status page */
+import PropTypes from "prop-types";
+/**
+ * Component for simulaitons part in chain status page
+ */
 export default class ChainStatus extends React.Component {
+  static propTypes = {
+    /** Info about nodes number and current event */
+    currentInfo: PropTypes.object
+  }
   constructor(props) {
     super(props);
-  }
-
-  componentDidMount(){
-
-  }
-  componentWillReceiveProps(nextProps) {
-    // console.log('rrrrrr111',this.props.currentInfo, nextProps.currentInfo)
   }
   render() {
     return (

@@ -1,12 +1,45 @@
 import React, { PureComponent } from "react";
 // import the core library.
 import ReactEcharts from "echarts-for-react/lib/core";
-
 // then import echarts modules those you have used manually.
 import echarts from "echarts/lib/echarts";
 import "echarts/lib/chart/line";
 import { injectIntl, intlShape } from "react-intl"; /* react-intl imports */
+import PropTypes from 'prop-types'
+
+/**
+ * Component for group of linechart and gauge. 
+ * 
+ * ### Example:
+ * ```js
+ * <LineMark
+ *  name="TPS Monitoring"
+ *  data={"trias":{"time":[582457790],"value":[1]},"ethereum":{"time":[1582457610],"value":[0]},"hyperledger":{"time":[1582457610],"value":[0]},"event_list":[-1]}
+ *  dial={"trias":{"rate":0.11,"value":1},"ethereum":{"rate":0,"value":0},"hyperledger":{"rate":0,"value":0}}
+ *  unit="Unit"
+ *  showAll={true}
+ *  showThis={true}
+ * />
+ * ```
+ */
 class LineMark extends PureComponent {
+  static propTypes = {
+    /* Inject intl to LineMark props */
+    intl: intlShape.isRequired,
+    /** Title of the section */
+    name: PropTypes.string,
+    /** Data of line chart */
+    data: PropTypes.object,
+    /** Data of gauge charts */
+    dial: PropTypes.object,
+    /** Whether show all the charts */
+    showAll: PropTypes.bool,
+    /** Unit of data */
+    unit: PropTypes.string,
+    /** Whether show this part*/
+    showThis: PropTypes.bool,
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -120,7 +153,7 @@ class LineMark extends PureComponent {
    * Clear the intervals
    */
   componentWillUnmount() {
-    this.setState = (state, callback) => {
+    this.setState = () => {
       return;
     };
   }
@@ -378,9 +411,4 @@ class LineMark extends PureComponent {
   }
 }
 
-/* Inject intl to LineMark props */
-const propTypes = {
-  intl: intlShape.isRequired
-};
-LineMark.propTypes = propTypes;
 export default injectIntl(LineMark);

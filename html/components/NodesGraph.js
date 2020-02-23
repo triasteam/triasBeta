@@ -35,7 +35,7 @@ export default class NodesGraph extends React.Component {
         let self= this
         this.nodesInterval = clearInterval(self.nodesInterval)
         
-        this.setState = (state,callback)=>{
+        this.setState = ()=>{
             return;
         };
         this.clearPointesInterval(self.pointIntervals)
@@ -425,7 +425,6 @@ export default class NodesGraph extends React.Component {
             }
         })
 
-        var linkedByIndex = {};
         //map of all connected nodes index
         data.links.forEach(function (d) {
             linkedByIndex[d.source.index + "," + d.target.index] = true;
