@@ -527,7 +527,7 @@ def query_transactions(request):
                 base_url = "http://%s:%s/tri_block_tx" % (node_ip, jc.node_list[0]['port'])
                 response = url_data(base_url, params)
                 if response:
-                    if not response['error']:
+                    if 'error' not in response:
                         block_height = response['result']['height']
                         content = base64.b64decode(response['result']['tx']).decode()[12:]
                         status, result = 'success', {'hash': hash, 'block_height': block_height, 'content': content}

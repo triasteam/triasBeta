@@ -30,7 +30,7 @@ class GenerateTransaction extends React.Component {
             failContent:'',
             failLog:'',
             errorTitle:'',
-            errorInfo:'',            
+            errorInfo:'',
             lang: this.props.intl.locale, // current locale language,
             copied: false,
             value:'',
@@ -46,13 +46,13 @@ class GenerateTransaction extends React.Component {
      * Before a mounted component receives new props, reset some state.
      * @param {Object} nextProps new props
      */
-    componentWillReceiveProps (nextProps) {  
+    componentWillReceiveProps (nextProps) {
         // if locale language will be changed, reset lang state
         if(this.state.lang != nextProps.intl.locale){
             this.setState({
                 lang: nextProps.intl.locale
             })
-        }             
+        }
     }
     sendTransaction() {
         let self = this;
@@ -84,18 +84,18 @@ class GenerateTransaction extends React.Component {
                         // let statusCopy = Object.assign({}, this.state);
                         // statusCopy.tranCardGroup[itemName].id = data.result.id;
                         // this.setState(statusCopy);
-    
+
                         // tranCardGroup[itemName].id = data.result.id;
                         // this.setState({tranCardGroup});
                         // const { stateOpt } = { ...this.state };
                         // const currentState = stateOpt;
                         // const { name, value } = e.target;
                         // currentState.tranCardGroup[itemName].id = data.result.id;
-                      
+
                         // this.setState({ stateOpt: currentState });
                         // console.log( stateOpt )
                         let time = new Date().getTime();
-                        item = { 
+                        item = {
                             status: 1,
                             id: data.result.id,
                             time: self.timestampToTime(time),
@@ -110,18 +110,18 @@ class GenerateTransaction extends React.Component {
                             showInputModal: !self.state.showInputModal,
                             sendController: false,
                         })
-                        
+
                         // this.setstate({
                         //     ...this.state.tranCardGroup[0],
                         //     id: data.result.id
                         // })
-    
+
                     }
                 }
             })
         }
-       
-       
+
+
     }
 
     timestampToTime(timestamp) {
@@ -143,7 +143,7 @@ class GenerateTransaction extends React.Component {
         })
         $("#user-input").val("");
     }
-    
+
     handleText(e) {
         let content = e.target.value;
         this.setState({
@@ -170,7 +170,7 @@ class GenerateTransaction extends React.Component {
                         successHeight: data.result.block_height,
                         successContent: data.result.content,
                     })
-                    
+
                 } else if ( data.status == "tx_failure" ) {
                     self.setState({
                         showFailureModal: !self.state.showFailureModal,
@@ -181,22 +181,23 @@ class GenerateTransaction extends React.Component {
                     if ( data.result == "trade not exists" ) {
                         self.setState({
                             showErrorModal: !self.state.showErrorModal,
-                            errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Latter.',
+                            errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
                             errorInfo: self.state.lang=='zh'?'此交易正在后台生成，请稍后再试。':'The transaction is being generated in the background, please wait a few seconds.',
-                            errorType: 2,
+                            // errorType: 2,
+                            errorType:1
                         })
                     } else {
                         let info = data.result;
                         info = info.replace(info[0],info[0].toUpperCase());
                         self.setState({
                             showErrorModal: !self.state.showErrorModal,
-                            errorTitle: self.state.lang=='zh'?'发生错误！':'Error Occurred!',
+                            // errorTitle: self.state.lang=='zh'?'发生错误！':'Error Occurred!',
+                            errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
                             errorInfo: info,
-                            errorType: 2,
+                            // errorType: 2,
+                            errorType:1
                         })
-                        
                     }
-                    
                 }
             }
         })
@@ -234,7 +235,7 @@ class GenerateTransaction extends React.Component {
                             successHeight: data.result.block_height,
                             successContent: data.result.content,
                         })
-                        
+
                     } else if ( data.status == "tx_failure" ) {
                         self.setState({
                             showFailureModal: !self.state.showFailureModal,
@@ -254,11 +255,12 @@ class GenerateTransaction extends React.Component {
                             info = info.replace(info[0],info[0].toUpperCase());
                             self.setState({
                                 showErrorModal: !self.state.showErrorModal,
-                                errorTitle: self.state.lang=='zh'?'参数错误！':'Parameter error!',
+                                // errorTitle: self.state.lang=='zh'?'参数错误！':'Parameter error!',
+                                errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
                                 errorInfo: info,
                                 errorType: 1,
                             })
-                            
+
                         }
                     }
                 }
@@ -273,7 +275,7 @@ class GenerateTransaction extends React.Component {
                 })
             }, 3000)
         }
-      
+
     }
       /**
      * Listen for changes in the search field
@@ -302,7 +304,7 @@ class GenerateTransaction extends React.Component {
             self.setState ({
                 showDetailModal: !self.state.showDetailModal,
             })
-        } 
+        }
     }
     componentWillUnmount() {
         this.setState = (state,callback)=>{
@@ -314,7 +316,7 @@ class GenerateTransaction extends React.Component {
         return (
             <div className="generate-transaction">
                 <p className="main-title" ><FormattedMessage id="titleTransactionTest"/></p>
-                
+
                 <p className="explaination"><FormattedMessage id="pTransactionTest"/></p>
                 <a className="generate-btn" onClick={self.showInput.bind(self)}><FormattedMessage id="buttonTransactionTest"/></a>
                 {/* <div className="tran-card">
@@ -343,7 +345,7 @@ class GenerateTransaction extends React.Component {
                         )
                     })
                 }
-                 
+
                 <div className="search-group">
                     <form onSubmit={self.searchTransaction.bind(self)} className="clearfix">
                         <input
@@ -378,7 +380,7 @@ class GenerateTransaction extends React.Component {
                                     <table>
                                         <tbody>
                                             <tr>
-                                            <td width="40%"> 
+                                            <td width="40%">
                                                     <FormattedMessage id="termTransactionHash"/>
                                                     <CopyToClipboard text={self.state.successHash}
                                                         onCopy={ self.onCopy.bind(self) }>
@@ -392,7 +394,7 @@ class GenerateTransaction extends React.Component {
                                                                 <span>Copy</span>
                                                             </p>
                                                         }
-                                                        
+
                                                     </CopyToClipboard>
                                                 </td>
                                                 <td width="59%">
@@ -403,18 +405,18 @@ class GenerateTransaction extends React.Component {
                                                     </p>
                                                 </td>
                                             </tr>
-                                            {   self.state.successID &&  
+                                            {   self.state.successID &&
                                                 <tr>
                                                     <td width="40%">ID</td>
                                                     <td width="59%">{self.state.successID}</td>
                                                 </tr>
                                             }
-                                           
+
                                             <tr>
                                                 <td width="40%"><FormattedMessage id="termBlockHeight"/></td>
                                                 <td width="59%">{self.state.successHeight}</td>
                                             </tr>
-                                            
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -448,11 +450,11 @@ class GenerateTransaction extends React.Component {
                                 <p className="send-hint">Please input content to contiune.</p>
                             }
                             {
-                                self.state.sendController ? 
+                                self.state.sendController ?
                                 <button style={{marginTop:self.state.sendHint ? '18px':'48px'}} onClick={self.sendTransaction.bind(self)}><FormattedMessage id="modalTransactionButton"/></button> :
-                                <button style={{marginTop:self.state.sendHint ? '18px':'48px'}}><FormattedMessage id="modalTransactionButton"/></button> 
-                            }                       
-                            
+                                <button style={{marginTop:self.state.sendHint ? '18px':'48px'}}><FormattedMessage id="modalTransactionButton"/></button>
+                            }
+
                         </div>
                     </section>
                 </CSSTransition>
@@ -494,8 +496,8 @@ class GenerateTransaction extends React.Component {
                             <div className="close-btn" onClick={()=>{self.setState({showErrorModal:!self.state.showErrorModal})}}>
                                 <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
                             </div>
-                            {self.state.errorType == 1 && <img src={require('../img/icon/button_icon/icon_warning_title@2x.png')} alt="关闭弹窗" /> }
-                            {self.state.errorType == 2 && <img src={require('../img/icon/button_icon/icon_error_title@2x.png')} alt="查询错误" /> }
+                            {self.state.errorType == 1 && <img src={require('../img/icon/button_icon/icon_warning_title@2x.png')} /> }
+                            {/* {self.state.errorType == 2 && <img src={require('../img/icon/button_icon/icon_error_title@2x.png')} alt="查询错误" /> } */}
                             <h2 style={{color:(self.state.errorType == 1 ) ? '#A1FC3A':'#FF0075'}}>{self.state.errorTitle}</h2>
                             {/* <h2 style={self.state.errorType == 1 ? {color:'#A1FC3A'}: {color:'#FF0075'}}>{self.state.errorTitle}</h2> */}
                             <p>{self.state.errorInfo}</p>
