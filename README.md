@@ -40,7 +40,7 @@ Then, start the django server:
 Finally, open http://localhost:8000 .
 
 ### How To Use?
-See [Trias Beta User Manual](https://github.com/triasteam/triasBeta/blob/master/docs/TriasBetaUserManual.md).
+See [Trias Beta User Manual](https://github.com/triasteam/triasBeta/blob/master/userguide/TriasBetaUserManual.md).
 
 ### Directory Description
 |Directory|Description|
