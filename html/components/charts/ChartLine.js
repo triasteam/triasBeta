@@ -1,13 +1,14 @@
 import React from "react"
-import { Route, Switch, Redirect } from 'react-router-dom'
 import ES6Promise from 'es6-promise'
 import echarts from 'echarts'
-import $ from 'jquery'
+import PropTypes from 'prop-types'
 ES6Promise.polyfill() //关键代码,让ie识别promise对象!
 
 /**
- * 静态折线图
- * 使用示例：
+ * Static line chart component:
+ * 
+ * ### Example：
+ * ```js
  * <ChartLine
  *  chartIndex="myChart1"
  *  chartStyle={{width: "76px", height: "170px"}}
@@ -21,16 +22,27 @@ ES6Promise.polyfill() //关键代码,让ie识别promise对象!
  *      containLabel: true
  *      }}
  * />
- * -----------
+ * ```
+ * 
  * - chartIndex: 用于此图表元素的id中，不可重复
  * - chartStyle：自定义样式（可选）
  * - chartSeries: 自定义数据（可选）
  * - xAxis: 自定义x轴（可选）当chartSeries 数据个数不是 14 时，需提供对应个数的 xAxis。
  * - grid: 详见 echarts的grid 配置项：http://echarts.baidu.com/option.html#grid （可选）
  */
-
-/* 自定义静态折线图 */
 export default class ChartLine extends React.Component {
+    static propTypes = {
+        /** 用于此图表元素的id中，不可重复 */
+        chartIndex: PropTypes.string,
+        /** （可选）自定义样式 */
+        chartStyle: PropTypes.object,
+        /** （可选）自定义数据 */
+        chartSeries: PropTypes.array,
+        /** （可选）自定义x轴。当chartSeries 数据个数不是 14 时，需提供对应个数的 xAxis。 */
+        xAxis: PropTypes.array,
+        /** （可选）详见 echarts的grid 配置项：http://echarts.baidu.com/option.html#grid （可选）  */
+        grid: PropTypes.object,
+    }
     constructor(props) {
         super(props);
         this.state = {
@@ -110,7 +122,6 @@ export default class ChartLine extends React.Component {
 
 
     initChart(){
-        var self=this
         this.optionLine.series[0].data = this.state.chartSeries
         var chartLine1 = echarts.init(document.getElementById('node-Line'+this.state.chartIndex));
         chartLine1.setOption(this.optionLine, true);

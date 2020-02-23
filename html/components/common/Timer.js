@@ -43,7 +43,7 @@ export default class Timer extends React.Component {
      * Clear time interval when the component will be unmounted
      */
     componentWillUnmount = () => {
-        this.setState = (state,callback)=>{
+        this.setState = ()=>{
           return;
         };
         // clear Countdown timer
@@ -55,7 +55,6 @@ export default class Timer extends React.Component {
      */
     startTimer(){
         let hour = this.props.start.split(':')
-        console.log(hour)
         this.currentTime = (new Date().getHours() - Number(hour[0]))*3600 +
                           (new Date().getMinutes() - Number(hour[1])) * 60 + 
                           (new Date().getSeconds() - Number(hour[2])) 
@@ -81,7 +80,6 @@ export default class Timer extends React.Component {
             minute = Math.floor(seconds / 60) - (day * 24 * 60) - (hour * 60);
             second = Math.floor(seconds) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
         }
-        if (day <= 9) day = '0' + day;
         if (hour <= 9) hour = '0' + hour;
         if (minute <= 9) minute = '0' + minute;
         if (second <= 9) second = '0' + second;

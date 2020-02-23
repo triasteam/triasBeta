@@ -232,7 +232,7 @@ export default class Main extends React.Component {
         }
     }
     componentWillUnmount = () => {
-        this.setState = (state,callback)=>{
+        this.setState = ()=>{
           return;
         };
     }

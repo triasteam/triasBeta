@@ -3,12 +3,17 @@ import $ from "jquery";
 import CustomPagination from "./CustomPagination"
 import { injectIntl, intlShape, FormattedMessage } from 'react-intl' /* react-intl imports */
 import { DatePicker } from 'antd';
-
+import PropTypes from 'prop-types'
 /**
- * The Subcomponent of the nodeList page and Activities page -----  List of components
- * 
+ * The Subcomponent for table in the nodeList page and Activities page.
  */
 class TableList extends React.Component {
+    static propTypes = {
+        /** Inject intl to TableList props */
+        intl: intlShape.isRequired,
+        /** API to get data in the table */
+        searchListApi: PropTypes.string
+    };
 
     constructor(props) {
         super(props);
@@ -66,7 +71,7 @@ class TableList extends React.Component {
 
     }
 
-    handleStartOpenChange = (open) => {
+    handleStartOpenChange = () => {
         // if (!open) {
         //     this.setState({ endOpen: true });
         // }
@@ -77,7 +82,6 @@ class TableList extends React.Component {
         this.setState({ endOpen: open });
         this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
     }
-
 
     /**
      * Listen for changes in the search field
@@ -260,7 +264,7 @@ class TableList extends React.Component {
     componentWillUnmount = () => {
         // remove window.localStorage
         this.removeStrogePageNum()
-        this.setState = (state,callback)=>{
+        this.setState = ()=>{
           return;
         };
     }
@@ -403,10 +407,6 @@ class TableList extends React.Component {
                     </tbody>
                 </table>
 
-
-
-
-
                 <CustomPagination
                     from={(this.state.currentPage - 1) * this.state.rowsPerPage + 1} 
                     to={(this.state.currentPage - 1) * this.state.rowsPerPage + (this.state.hostlist ? this.state.hostlist.length : 0)}
@@ -429,9 +429,4 @@ class TableList extends React.Component {
     }
 }
 
-/* Inject intl to TableList props */
-const propTypes = {
-    intl: intlShape.isRequired,
-};
-TableList.propTypes = propTypes
 export default injectIntl(TableList)

@@ -195,7 +195,7 @@ class LineMarkCollection extends React.Component {
     if (this.getMonitoringInterval) {
       clearInterval(this.getMonitoringInterval);
     }
-    this.setState = (state,callback)=>{
+    this.setState = ()=>{
       return;
     };
     

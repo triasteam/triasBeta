@@ -1,20 +1,28 @@
 import React from "react"
 import Timer from './Timer'
 import { FormattedMessage } from 'react-intl' /* react-intl imports */
+import PropTypes from 'prop-types';
+
 /**
- * Custom headline component.
+ * Custom component which displays page title and current event details.
  */
 export default class HeadLine extends React.Component {
+    static propTypes = {
+        /** Name */
+        headBarName: PropTypes.string,
+        /** List of events */
+        eventList: PropTypes.object,
+        /** Current event index */
+        currentEventIndex: PropTypes.number
+    }
+
     constructor(props) {
         super(props);
         this.state = {
         }
     }
-    componentDidMount() {
-        
-    }
-    render() {
 
+    render() {
         return (
             <div className="sub-header">
                 <div className="headBar">

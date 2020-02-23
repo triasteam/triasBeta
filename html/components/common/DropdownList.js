@@ -71,7 +71,7 @@ export default class DropdownList extends React.Component {
      * Before a mounted component receives new props, reset some state.
      * @param {Object} nextProps new props
      */
-    componentWillReceiveProps (nextProps) {
+    componentWillReceiveProps(nextProps) {
         var self = this
         // if the prop will change
         if(JSON.stringify(this.props.itemsToSelect) != JSON.stringify(nextProps.itemsToSelect) ){
