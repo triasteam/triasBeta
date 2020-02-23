@@ -1,15 +1,28 @@
 import React from "react"
-/*
-** The Subcomponent of the time axis ----- count down
+import PropTypes from 'prop-types';
 
-** Provide time countdown function
-
-** Parent param
-
-* - Timestamp: {this.props.interval}
-* - Time to increase or decrease : {this.state.TimeChange}
-*/
+/** 
+ * The Subcomponent of the time axis in chain status tab page.
+ * 
+ * Provide a timer or a countdown.
+ * 
+ * ### Example:
+ * ```js
+ * <TimeInterval
+ *  interval="12:16:50"
+ *  TimeChange="add"
+ * />
+ * ```
+ */
 export default class TimeInterval extends React.Component {
+    static propTypes = {
+        /** Start time (ex. 12:16:50)*/
+        interval: PropTypes.string,
+        /** Whether to increase or decrease time( "add" or "decrease") */
+        TimeChange: PropTypes.string,
+        /** Function to refresh event list */
+        refreshEventList: PropTypes.func
+    }
     constructor(props) {
         super(props);
         this.state = {

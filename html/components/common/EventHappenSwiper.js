@@ -1,9 +1,9 @@
 import React from "react";
-
 import Swiper from "swiper/dist/js/swiper.js";
 import "swiper/dist/css/swiper.min.css";
 import TimeInterval from "./TimeInterval";
 import $ from "jquery";
+
 /**
  * The Subcomponent of the ChainStatus --- TimeLine
  * Show the occurrence of events at different times
@@ -39,9 +39,9 @@ export default class EventHappenSwiper extends React.Component {
       }
     });
   }
+  
   /**
    * Get the list of events at different times
-   *
    */
   getTimeEvent() {
     var self = this;
@@ -78,17 +78,20 @@ export default class EventHappenSwiper extends React.Component {
   componentDidMount() {
     this.getTimeEvent();
   }
+
   /**
    * Refresh event list
    */
   refreshEventList = () =>{
     this.getTimeEvent();
   }
+
   componentWillUnmount = () => {
     this.setState = (state,callback)=>{
       return;
     };
-}
+  }
+
   render() {
     return (
       <div className="eventSwiper">

@@ -122,9 +122,7 @@ export default class RightPart extends React.Component {
                   {this.state.currentInfo == -1 ? (
                     0
                   ) : this.state.currentInfo.selectedEvent.time ? (
-                    <Timer
-                      interval={this.state.currentInfo.selectedEvent.time}
-                      TimeChange={"add"}
+                    <Timer start={this.state.currentInfo.selectedEvent.time}
                     />
                   ) : (
                     "00:00:00"
