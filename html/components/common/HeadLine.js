@@ -55,7 +55,7 @@ export default class HeadLine extends React.Component {
                                 {
                                     this.props.eventList.length > 0 && this.props.currentEventIndex > -1 && 
                                     <p className="sub-sub">
-                                        <Timer interval={this.props.eventList[this.props.currentEventIndex].start} TimeChange={'add'} />
+                                        <Timer start={this.props.eventList[this.props.currentEventIndex].start} />
                                     </p>
                                 }
                                 {
