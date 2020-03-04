@@ -16,6 +16,8 @@ This project is a web portal which displays statistics and data of the Trias Bet
 ## Documentation
 For more documention about Trias, see [Trias White Paper](https://www.trias.one/whitepaper).
 
+Front-end React components documentation: https://triasteam.github.io/triasBeta/
+
 ### Install
 Install dependencies: 
 
