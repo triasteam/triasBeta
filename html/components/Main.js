@@ -285,6 +285,16 @@ export default class Main extends React.Component {
                                 </ul>
                                 <ul className="nav pull-right">
                                     <li>
+                                        <a href="https://wallet.trias.one/" target="blank">
+                                            <FormattedMessage id="wallet" />
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="https://explorer.trias.one/" target="blank">
+                                            <FormattedMessage id="explorer" />
+                                        </a>
+                                    </li>
+                                    <li>
                                         <a href="https://www.trias.one/" target="blank">
                                             <FormattedMessage id="triasHomepage" />
                                         </a>
