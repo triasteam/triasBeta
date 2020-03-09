@@ -10,6 +10,7 @@ import hashlib
 import base64
 import threading
 import traceback
+from functools import reduce
 from django.http import JsonResponse
 from django.db.models import Q, Count
 # from ratelimit.decorators import ratelimit
@@ -148,6 +149,7 @@ def get_visualization(request):
         redis_client.set('ranking', str([i for i in node_rank]))
 
         # node link
+        ctx_list = reduce(lambda x, y: x if y in x else x + [y], [[], ] + ctx_list)
         random.shuffle(ctx_list)
         for ctx_item in ctx_list[:20]:
             target = node_rank.index(ctx_item['attestee'])

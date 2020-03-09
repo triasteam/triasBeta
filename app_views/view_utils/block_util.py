@@ -36,7 +36,7 @@ def get_ranking():
     try:
         for node in node_list:
             url = "http://%s:%s/QueryNodes" % (node, jc.ranking_port)
-            params = {"period": 2, "numRank": 100}
+            params = {"period": -1, "numRank": 100}
             result = requests.post(url=url, json=params)
             if result:
                 return result.json()
