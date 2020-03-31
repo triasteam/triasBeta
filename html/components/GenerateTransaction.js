@@ -1,18 +1,23 @@
 import React from "react"
-import Modal from "react-bootstrap"
-import { Link } from 'react-router-dom'
+// import Modal from "react-bootstrap"
+// import { Link } from 'react-router-dom'
 // import ES6Promise from 'es6-promise'
 // ES6Promise.polyfill() //关键代码,让ie识别promise对象!
 import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
 import $ from 'jquery'
 import { CSSTransition } from 'react-transition-group';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { cold } from "react-hot-loader";
+// import { cold } from "react-hot-loader";
 
 /**
- * RightPart components which displays:
+ * Component for generating transaction
  */
 class GenerateTransaction extends React.Component {
+    static propTypes = {
+        /** Inject intl to CustomPagination props */
+        intl: intlShape.isRequired
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -307,7 +312,7 @@ class GenerateTransaction extends React.Component {
         }
     }
     componentWillUnmount() {
-        this.setState = (state,callback)=>{
+        this.setState = ()=>{
           return;
         };
     }
@@ -517,10 +522,4 @@ class GenerateTransaction extends React.Component {
         )
     }
 }
-
-/* Inject intl to GenerateTransaction props */
-const propTypes = {
-    intl: intlShape.isRequired,
-};
-GenerateTransaction.propTypes = propTypes
 export default injectIntl(GenerateTransaction)

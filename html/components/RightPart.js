@@ -1,21 +1,23 @@
 import React from "react";
-import { Link } from "react-router-dom";
 // import ES6Promise from 'es6-promise'
 // ES6Promise.polyfill() //关键代码,让ie识别promise对象!
 import {
-  injectIntl,
-  intlShape,
   FormattedMessage
 } from "react-intl"; /* react-intl imports */
 import $ from "jquery";
 import HomeActivities from "./HomeActivities";
 import Timer from "./common/Timer";
 import GenerateTransaction from "./GenerateTransaction";
+import PropTypes from "prop-types";
 
 /**
  * RightPart components which displays:
  */
 export default class RightPart extends React.Component {
+  static propTypes = {
+    /** Info about nodes number and current event */
+    currentInfo: PropTypes.object
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -90,7 +92,7 @@ export default class RightPart extends React.Component {
     }
   }
   componentWillUnmount() {
-    this.setState = (state, callback) => {
+    this.setState = () => {
       return;
     };
   }
@@ -122,9 +124,7 @@ export default class RightPart extends React.Component {
                   {this.state.currentInfo == -1 ? (
                     0
                   ) : this.state.currentInfo.selectedEvent.time ? (
-                    <Timer
-                      interval={this.state.currentInfo.selectedEvent.time}
-                      TimeChange={"add"}
+                    <Timer start={this.state.currentInfo.selectedEvent.time}
                     />
                   ) : (
                     "00:00:00"
