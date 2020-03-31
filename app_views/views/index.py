@@ -97,8 +97,8 @@ def get_visualization(request):
     try:
         response = get_ranking()
         if response:
-            rank_list = [item['attestee'] for item in response['data']['dataScore']]
-            ctx_list = response['data']['dataCtx']
+            rank_list = [item['attestee'] for item in response['Data']['DataScore']]
+            ctx_list = response['Data']['DataCtx']
     except Exception as e:
         logger.error(e)
 
