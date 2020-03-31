@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 /**
  * UI Card component which displays 3 types of data.
- * 
- * 
+ *
+ *
  * ### Example:
  * ```js
- * <StaticsCard 
+ * <StaticsCard
  *  cardInfo={ethereum: 0, hyperledger: 0, trias: 9}
- *  src={require("../img/icon/general-statics/icon_gs_nodes@2x.png")} 
+ *  src={require("../img/icon/general-statics/icon_gs_nodes@2x.png")}
  *  title={"Nodes"} />
  * ```
  */
@@ -18,7 +18,7 @@ export default class StaticsCard extends React.Component {
         /** Data of 3 types: trias, hyperledger, ethereum.  */
         cardInfo: PropTypes.object,
         /** Icon source */
-        src: PropTypes.object,
+        src: PropTypes.string,
         /** Title */
         title: PropTypes.string
     }
@@ -44,7 +44,7 @@ export default class StaticsCard extends React.Component {
                 trias: nextProps.cardInfo.trias,
                 hyperledger: nextProps.cardInfo.hyperledger,
                 ethereum: nextProps.cardInfo.ethereum,
-            }) 
+            })
         }
         if(this.state.title != nextProps.title){
             this.setState({

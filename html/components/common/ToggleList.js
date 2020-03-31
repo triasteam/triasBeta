@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 /**
  * Custom toggle list component.
- * 
+ *
  * ### Example:
  * ```js
  * <ToggleList
@@ -22,21 +22,21 @@ export default class ToggleList extends React.Component {
         /** Id of the outer container */
         listID: PropTypes.string,
         /** A list of elements( ele: element shows in the drop-down list ) */
-        itemsToSelect:PropTypes.object,
+        itemsToSelect:PropTypes.array,
         /** Name shows in the toggle button */
-        name: PropTypes.string,
+        name: PropTypes.object,
         /** CSS Class name to append to the container  */
         className: PropTypes.string
     }
     constructor(props) {
         super(props);
         this.state={
-            itemsToSelect:this.props.itemsToSelect,     // list containing options for this drop-down list. 
+            itemsToSelect:this.props.itemsToSelect,     // list containing options for this drop-down list.
             name:this.props.name,
             showListBlock:false,    // whether to show options
         }
     }
-    
+
     /**
      * After the component is mounted.
      * - Set listener to the click event of the document.
@@ -47,13 +47,13 @@ export default class ToggleList extends React.Component {
         $(document).bind('click',function(e){
             if(self.state.showListBlock){ // if the drop-down list is expanded
                 var event = e || window.event;  // browser compatibility
-                var elem = event.target || event.srcElement; 
+                var elem = event.target || event.srcElement;
                 // traversing the parent elements
                 while (elem) {
                     if (elem.id && elem.id==self.props.listID){  // determine if the outer container is clicked
-                        return; 
-                    } 
-                    elem = elem.parentNode; 
+                        return;
+                    }
+                    elem = elem.parentNode;
                 }
                 // if there is a angle icon in the toggle button, toggle it up
                 if($('#' + self.props.listID + ' .item-selected>a').find('.fa-angle-down').length >0){
@@ -62,10 +62,10 @@ export default class ToggleList extends React.Component {
                 self.setState({ // collapse drop-down list
                     showListBlock:false
                 })
-            }            
-        }); 
+            }
+        });
     }
-    
+
     /**
      * Before a mounted component receives new props, reset some state.
      * @param {Object} nextProps new props
@@ -76,8 +76,8 @@ export default class ToggleList extends React.Component {
             this.setState({
                 itemsToSelect:nextProps.itemsToSelect,
                 name: nextProps.name
-            }) 
-        }            
+            })
+        }
     }
 
     /**
