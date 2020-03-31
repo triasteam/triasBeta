@@ -19,8 +19,8 @@ class Node(models.Model):
 class Block(models.Model):
     number = models.BigIntegerField(default=0)
     hash = models.CharField(max_length=255)
-    tx_num = models.IntegerField(default=0)
-    time = models.BigIntegerField()
+    transactionsCount = models.IntegerField(default=0)
+    timestamp = models.BigIntegerField()
 
     class Meta:
         db_table = "block"
@@ -28,9 +28,9 @@ class Block(models.Model):
 
 class Transaction(models.Model):
     hash = models.CharField(max_length=255, default='x111111')
-    time = models.BigIntegerField()
-    block_hash = models.CharField(max_length=255)
-    block_number = models.BigIntegerField()
+    timestamp = models.BigIntegerField()
+    blockHash = models.CharField(max_length=255)
+    blockNumber = models.BigIntegerField()
 
     class Meta:
         db_table = "transaction"
@@ -69,3 +69,13 @@ class TransactionLog(models.Model):
 
     class Meta:
         db_table = "transaction_log"
+
+
+class AbnormalNode(models.Model):
+    count = models.IntegerField(default=0)
+    timestamp = models.BigIntegerField(default=1517746076)
+
+    class Meta:
+        db_table = "abnormal_node_log"
+
+
