@@ -438,7 +438,7 @@ def query_transactions_status(request):
 
         transaction_log = TransactionLog.objects.filter(trias_hash=id)
         if not transaction_log.exists():
-            return JsonResponse({'status': 'failure', 'result': 'trade not exists'})
+            return JsonResponse({'status': 'pending', 'result': 'trade not exists'})
 
         tx = transaction_log[0]
         id = tx.trias_hash
