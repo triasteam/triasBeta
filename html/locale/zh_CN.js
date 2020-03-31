@@ -1,7 +1,9 @@
 const zh_CN = {
     /* 参考属性命名： 类名+标签 */
     headerNav1: "区块链状态",
-    triasHomepage: "Trias 官网" ,
+    triasHomepage: "Trias 官网",
+    wallet: "Wallet 官网",
+    explorer: "Explorer 官网",
     subHeaderP1: "当前事件",
     subHeaderP2: "运行时间",
     subHeaderP3: "下一个事件",

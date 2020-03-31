@@ -1,8 +1,8 @@
 # Trias Beta User Manual
 Trias Beta is for demonstrating Trias' latest technology, it also enables users to analyze how the products are being affected by various simulations.
- 
+
 **Please Note: Some features may not available on the current version.**
- 
+
 # Table of Contents
 
 <!-- TOC -->
@@ -82,23 +82,26 @@ The hardware we used in the test groups is listed here.
 
 ## Transaction Test
 
-![Simulations Review](./img/Send_Transaction.png)
+![Simulations Review](./img/Test_Transaction.png)
 
 Transaction test helps the users to understand how information is stored on the blockchain. Get started by clicking the "Generate New Transaction" button, users can input custom message in the popup window, then click "Send Transaction".
 
-![Simulations Review](./img/Transaction.png)
+![Simulations Review](./img/Send_Transaction.png)
 
-Confirmed transactions will be shown as a transaction card, click "Check Transaction" button to check transaction detail. If something goes wrong during the process, please follow the instructions on the popup window.
+Confirmed transactions will be shown as a transaction card, click "Check Transaction" button to check transaction detail. If you need to check the transaction later, be sure to back up the transaction hash, since the transaction history will be cleared after reloading the webpage.
 
 ![Simulations Review](./img/Check_Transaction.png)
 
----
+When checking a transaction you backed up, paste the transaction hash into the search bar, click enter. If the transaction exists, you'll see the transaction details popup, otherwise, please check if you input a valid hash.
+
+![Simulations Review](./img/Search_Transaction.png)
+
+If something goes wrong during the process, please follow the instructions on the popup window. **Please Note: Even the error message says the transaction may not exist, there is still chance that the transaction is confirming, you can check again a moment later to be sure.**
 
 # Activities Tab
 
 Activities tab contains all the history activities, you can refine the result with the group filter and the date selector.
 
----
 
 # Node List Tab
 

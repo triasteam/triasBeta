@@ -1,15 +1,14 @@
 var path = require("path");
 var webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
   context: __dirname,
 
   entry: {
     // Add as many entry points as you have container-react-components here
-    app: './html/app.js',
-    vendors: ['react']
+    app: './html/app.js'
   },
 
   output: {
@@ -22,8 +21,8 @@ module.exports = {
   ], // add all vendor libs
 
   plugins: [
-    new BundleAnalyzerPlugin({ analyzerPort: 8919 }),
-    new webpack.optimize.CommonsChunkPlugin({name:'vendors', filename:'vendors.js'}),
+    // new BundleAnalyzerPlugin({ analyzerPort: 8919 }),
+    // new webpack.optimize.CommonsChunkPlugin({name:'vendors', filename:'vendors.js'}),
     new webpack.LoaderOptionsPlugin({  
       options: {  
           postcss: function(){  

@@ -9,6 +9,7 @@ import uuid
 import hashlib
 import base64
 import threading
+import traceback
 from django.http import JsonResponse
 from django.db.models import Q
 # from ratelimit.decorators import ratelimit
@@ -89,41 +90,47 @@ def get_visualization(request):
         "ethereum": {"links": [], "nodes": []}
     }
 
+    rank_list = []
+    ctx_list = []
+
     try:
         response = get_ranking()
         if response:
-            source_list = list(response.keys())
-            source_list.remove('timestamp')
-            source_list.remove('action')
-            source_list.remove('ranking')
-        else:
-            source_list = []
+            rank_list = [item['attestee'] for item in response['data']['dataScore']]
+            ctx_list = response['data']['dataCtx']
     except Exception as e:
         logger.error(e)
-        source_list = []
 
     try:
-        links = []
-        node_rank = []
-        all_nodes = list(Node.objects.order_by('status', '-block_heigth').values_list('node_ip', flat=True))
-        result['trias']['nodes'] = []
-
         # get validators
         validators = get_validators()
         validators_ips = []
         if validators:
             for validator in validators['result']['validators']:
-                validator_ip = Node.objects.filter(pub_key=validator['pub_key']['data'])
+                validator_ip = Node.objects.filter(pub_key=validator['pub_key']['value'])
                 if validator_ip.exists():
                     validators_ips.append(validator_ip[0].node_ip)
+
+        node_rank = []
+        all_nodes = list(Node.objects.order_by('status', '-block_heigth').values_list('node_ip', flat=True))
+        result['trias']['nodes'] = []
+
+        for rank_item in rank_list:
+            if rank_item in all_nodes:
+                node_rank.append(rank_item)
+
+        for mysql_node in all_nodes:
+            if mysql_node not in rank_list:
+                node_rank.append(mysql_node)
 
         # save ranking to redis
         redis_client = redis.Redis(jc.redis_ip, jc.redis_port, socket_connect_timeout=1)
         saved_ranking = redis_client.get('ranking')
-        logger.info('previous ranking %s' % validators_ips)
+        logger.info('previous ranking %s' % saved_ranking)
 
-        for index, item in enumerate(validators_ips):
+        for index, item in enumerate(node_rank):
             node_status = Node.objects.get(node_ip=item).status
+            level = 0 if (item in validators_ips) else 1
             trend = 0
             if saved_ranking:
                 pre_ranking = eval(saved_ranking)
@@ -134,55 +141,24 @@ def get_visualization(request):
                         trend = 1
                     elif index > pre_ranking.index(item):
                         trend = -1
-            result['trias']['nodes'].append({"node_ip": node_show[item], "status": node_status, 'level': 0, 'trend': trend})
-            node_rank.append(item)
-            all_nodes.remove(item)
-
-        for item in all_nodes:
-            node_status = Node.objects.get(node_ip=item).status
-            node_rank.append(item)
-            result['trias']['nodes'].append({"node_ip": node_show[item], "status": node_status, 'level': 1, 'trend': 0})
-
-        # untrusted_node
-        untrusted_node_list = []
-        for source_ip in source_list:
-            target_obj = response[source_ip]
-            target_ip_list = list(target_obj.keys())
-            for target_ip in target_ip_list:
-                if response[source_ip][target_ip][2] == 0:
-                    if target_ip not in untrusted_node_list:
-                        untrusted_node_list.append(target_ip)
-
-        # node link
-        saved_source_list = redis_client.get('saved_source_list')
-        saved_links = redis_client.get('saved_links')
-        if saved_source_list and eval(saved_source_list) == source_list and saved_links and eval(saved_ranking) == validators_ips:
-            result['trias']['links'] = eval(saved_links)
-            logger.info('Get links from redis')
-        else:
-            for source_ip in source_list:
-                target_obj = response[source_ip]
-                target_ip_list = list(target_obj.keys())
-                for target_ip in target_ip_list:
-                    links.append({"source": node_rank.index(source_ip), "target": node_rank.index(target_ip)})
-            random.shuffle(links)
-            result['trias']['links'] = links[:20]
-            redis_client.set('saved_source_list', str(source_list), 60)
-            redis_client.set('saved_links', str(result['trias']['links']), 60)
+            result['trias']['nodes'].append(
+                {"node_ip": node_show[item], "status": node_status, 'level': level, 'trend': trend})
 
         redis_client.delete('ranking')
-        redis_client.set('ranking', str([i for i in validators_ips]))
+        redis_client.set('ranking', str([i for i in node_rank]))
 
-        # identify untrusted nodes
-        for untrusted_node in untrusted_node_list:
-            for node in result['trias']['nodes']:
-                if node_show[untrusted_node] == node['node_ip'] and node['status'] != 1:
-                    node['status'] = 2
+        # node link
+        random.shuffle(ctx_list)
+        for ctx_item in ctx_list[:20]:
+            target = node_rank.index(ctx_item['attestee'])
+            source = node_rank.index(ctx_item['attester'])
+            result['trias']['links'].append({'target': target, 'source': source})
 
         status = 'success'
     except Exception as e:
         logger.error(e)
         status = 'failure'
+        logger.error(traceback.format_exc())
 
     return JsonResponse({'status': status, 'result': result})
 
@@ -256,7 +232,7 @@ def general_static(request):
 def get_tps(request):
 
     try:
-        qtime = int(time.time())
+        qtime = int(time.time()) - 3600 * 8
         isBlock = Block.objects.filter(Q(time__lte=qtime) & Q(time__gt=(qtime - 60)))
         data = 0
         if isBlock.exists():
@@ -507,7 +483,7 @@ def query_transactions_status(request):
 def query_transactions(request):
     try:
         hash = request.GET.get('hash', '')
-        if (not hash) or (len(hash) != 40):
+        if (not hash) or (len(hash) != 64):
             return JsonResponse({'status': 'failure', 'result': 'parameter error'})
 
         status, result = 'failure', 'Tx (%s) not found' % hash

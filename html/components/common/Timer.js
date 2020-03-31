@@ -26,7 +26,7 @@ export default class Timer extends React.Component {
 
     /**
      * When the component was mounted.
-     * Start the timer. 
+     * Start the timer.
      */
     componentDidMount() {
         this.startTimer()
@@ -56,18 +56,18 @@ export default class Timer extends React.Component {
     startTimer(){
         let hour = this.props.start.split(':')
         this.currentTime = (new Date().getHours() - Number(hour[0]))*3600 +
-                          (new Date().getMinutes() - Number(hour[1])) * 60 + 
-                          (new Date().getSeconds() - Number(hour[2])) 
+                          (new Date().getMinutes() - Number(hour[1])) * 60 +
+                          (new Date().getSeconds() - Number(hour[2]))
         // Countdown update
         this.timeInterval = setInterval(() => {
             this.currentTime++;
             this.updateTime(this.currentTime)
         }, 1000)
     }
-    
+
     /**
      * Update time according to number of seconds
-     * @param {int} seconds 
+     * @param {int} seconds
      */
     updateTime(seconds) {
         var day = 0,
