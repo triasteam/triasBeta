@@ -10,7 +10,7 @@ from app_views.models import TransactionLog
 jc = JsonConfiguration()
 
 
-def url_data(url, params=None, time_out=1):
+def url_data(url, params=None, time_out=10):
     try:
         s = requests.Session()
         s.mount('http://', HTTPAdapter(max_retries=2))
