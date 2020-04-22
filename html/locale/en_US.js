@@ -1,12 +1,11 @@
 const en_US = {
     /* Attribute naming(for reference only): class name + tag name */
     headerNav1: "Chain Status",
-    triasHomepage: "Trias Homepage" ,
-    wallet: "Blockchain Wallet",
-    explorer: "Blockchain Explorer",
+    wallet: "Wallet",
+    explorer: "Explorer",
     subHeaderP1: "Current Event",
     subHeaderP2: "Run Time",
-    subHeaderP3: "Next Event",    
+    subHeaderP3: "Next Event",
     titleGeneralStatistics: "General Statistics",
     titleSimulations: "Simulations",
     titleHardwareSpecifications: "Hardware Specifications",

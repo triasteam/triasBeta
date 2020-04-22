@@ -107,6 +107,37 @@ body {
                     top: 0;
                     left: 0;
                 }
+                .demo-link{
+                    position: relative;
+                    color: #A1A6AD;
+                    display: inline-block;
+                    padding: 28px 16px;
+                    cursor: pointer;
+                    .label{
+                        position: relative;
+                        display: inline-block;
+                        padding: 2px 6px;
+                        margin-left: 8px;
+                        font-size: 12px;
+                        border-radius: 2px;
+                        font-weight: 500;
+                        color: rgba(255,255,255,1);
+                        line-height: 14px;
+                        background: linear-gradient(to left,rgba(131,201,14,1) 0%,rgba(34,159,32,1) 100%);
+                        &:before{
+                            content: "";
+                            position: absolute;
+                            width: 0;
+                            height: 0;
+                            border-top: 4px solid transparent;
+                            border-right: 4px solid #229f20;
+                            border-bottom: 4px solid transparent;
+                            border-left: none;
+                            left: -4px;
+                            top: 5px;
+                        }
+                    }
+                }
             }
         }
         .lang {
@@ -151,9 +182,9 @@ body {
                     span.active .fa-globe-americas{
                         color: #5db85c;
                     }
-                }      
+                }
             }
-        }        
+        }
     }
 }
 

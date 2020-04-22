@@ -55,14 +55,14 @@ export default class Main extends React.Component {
             eventList: [],
             currentEventIndex: -1,
             currentInfo: {
-                selectedEvent: {  
+                selectedEvent: {
                     name: "",
                     time: "",
                     group: 0,
                 },
-                all_nodes_num: 0,  
-                fault_nodes_num: 0,  
-                current_index: -1, 
+                all_nodes_num: 0,
+                fault_nodes_num: 0,
+                current_index: -1,
             }
         }
         // options for internationalisation
@@ -160,29 +160,29 @@ export default class Main extends React.Component {
                     if(data.result.current_index == -1){
                         self.setState({
                             currentInfo: {
-                                selectedEvent: {  
+                                selectedEvent: {
                                     name: "",
                                     time: "",
                                     group: 0,
                                 },
-                                all_nodes_num: 0,  
-                                fault_nodes_num: 0,  
-                                current_index: -1, 
+                                all_nodes_num: 0,
+                                fault_nodes_num: 0,
+                                current_index: -1,
                             }
-                
+
                         })
                     } else {
                         let k = data.result.current_index;
                         self.setState({
                             currentInfo: {
-                                selectedEvent: {  
+                                selectedEvent: {
                                     name: data.result.event_list[k].name,
                                     time: data.result.event_list[k].start,
                                     group: 1,
                                 },
-                                all_nodes_num: data.result.all_nodes_num,  
-                                fault_nodes_num: data.result.fault_nodes_num,  
-                                current_index: data.result.current_index, 
+                                all_nodes_num: data.result.all_nodes_num,
+                                fault_nodes_num: data.result.fault_nodes_num,
+                                current_index: data.result.current_index,
                             }
                         })
                     }
@@ -191,14 +191,14 @@ export default class Main extends React.Component {
                         currentEventIndex: -1,
                         eventList: [],
                         currentInfo: {
-                            selectedEvent: {  
+                            selectedEvent: {
                                 name: "",
                                 time: "",
                                 group: 0,
                             },
-                            all_nodes_num: 0,  
-                            fault_nodes_num: 0,  
-                            current_index: -1, 
+                            all_nodes_num: 0,
+                            fault_nodes_num: 0,
+                            current_index: -1,
                         }
                     })
                 }
@@ -225,7 +225,7 @@ export default class Main extends React.Component {
             let shouldUpdateTime = this.state.eventList[this.state.currentEventIndex+1].interval + 3
             // Called at the point in time that the next event occurs
             this.timeOut = setTimeout(()=>{
-                // update headLine 
+                // update headLine
                 this.getTimeEvent()
                 clearTimeout(this.timeOut)
             },shouldUpdateTime * 1000)
@@ -260,9 +260,9 @@ export default class Main extends React.Component {
                         <header className="header clearfix">
                             <div className="clearfix">
                                 <div className="logo">
-                                    <Link to="/">
+                                    <a href="https://www.trias.one">
                                         <img src={require("../img/logo.png")} alt="" />
-                                    </Link>
+                                    </a>
                                 </div>
                                 <ul className="nav">
                                     <li>
@@ -282,21 +282,27 @@ export default class Main extends React.Component {
                                             <FormattedMessage id="termNodeList" />
                                         </NavLink>
                                     </li>
+                                    <li>
+                                        <div className="demo-link">
+                                            Testnet Demos
+                                            <div className="label">NEW</div>
+                                        </div>
+                                    </li>
                                 </ul>
                                 <ul className="nav pull-right">
-                                    <li>
-                                        <a href="https://wallet.trias.one/" target="blank">
-                                            <FormattedMessage id="wallet" />
-                                        </a>
-                                    </li>
                                     <li>
                                         <a href="https://explorer.trias.one/" target="blank">
                                             <FormattedMessage id="explorer" />
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="https://www.trias.one/" target="blank">
-                                            <FormattedMessage id="triasHomepage" />
+                                        <a href="https://wallet.trias.one/" target="blank">
+                                            <FormattedMessage id="wallet" />
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="https://www.trias.one/testnet" target="blank">
+                                            Trias x ETH
                                         </a>
                                     </li>
                                     <li className='lang'>
@@ -308,8 +314,8 @@ export default class Main extends React.Component {
                                 </ul>
                             </div>
                         </header>
-                        <HeadLine 
-                            headBarName = {this.state.pathName} 
+                        <HeadLine
+                            headBarName = {this.state.pathName}
                             eventList = {this.state.eventList}
                             currentEventIndex = {this.state.currentEventIndex}/>
                         <section className="main">
@@ -321,7 +327,7 @@ export default class Main extends React.Component {
                                 {/* <Route exact path="/stayTuned" component={StayTuned} /> */}
                             </Switch>
                         </section>
-                        
+
                     </div>
                 </Router>
             </IntlProvider>
