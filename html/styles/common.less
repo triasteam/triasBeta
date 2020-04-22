@@ -147,13 +147,6 @@ body {
                     width: initial;
                     height: initial;
                     cursor: pointer;
-                    .fa-globe-americas{
-                        float: left;
-                        font-size: 24px;
-                        margin-left: 0;
-                        margin-right: 4px;
-                        margin-top: -3px;
-                    }
                     >a>i:last-child{
                         margin-left: 28px;
                     }
@@ -174,12 +167,7 @@ body {
                         display: inline-block;
                         width: 100%;
                     }
-                    .fa-globe-americas{
-                        color: #1E2328;
-                        margin-right: 8px;
-                        font-size: 24px;
-                    }
-                    span.active .fa-globe-americas{
+                    span.active{
                         color: #5db85c;
                     }
                 }
@@ -245,4 +233,61 @@ body {
     }
 }
 
+.video{
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #d5dee7;
+    border-radius:20px;
+    min-width: 491px;
+    padding: 0 17px 17px;
+    z-index: 100;
+    box-shadow:0px 12px 24px 0px rgba(32,33,41,0.3);
+    h4{
+        display: inline-block;
+        font-size:16px;
+        font-weight:500;
+        color:rgba(43,47,55,1);
+        line-height:47px;
+        text-shadow:0px 12px 24px rgba(32,33,41,0.3);
+    }
+    .video-btn{
+        font-size:24px;
+        color:rgba(125,138,150,1);
+        line-height:24px;
+        text-shadow:0px 12px 24px rgba(32,33,41,0.3)
+    }
+}
+.video.centered{
+    top: 16%;
+    bottom: auto;
+    width: 70%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+.video-container {
+    margin: 0 auto;
+    background: #fff;
+    box-shadow:0px 12px 24px 0px rgba(32,33,41,0.3);
+    border-radius:12px;
+    padding: 7px;
+}
+.video-responsive{
+    overflow: hidden;
+    padding-bottom: 56.25%;
+    position: relative;
+    height: 0;
+    border-radius: 3px;
+}
+.video-responsive iframe{
+    left:0;
+    top:0;
+    height:100%;
+    width:100%;
+    position:absolute;
+}
 
+.video.resized{
+    border-radius:40px;
+}

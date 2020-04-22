@@ -338,7 +338,6 @@ class GenerateTransaction extends React.Component {
                             onChange={self.onChangeSearchInput.bind(this)}
                         />
                         <button className="nodelist-search" onClick={self.searchTransaction.bind(self)} >
-                            <i className="fa fa-search" aria-hidden="true"></i>
                         </button>
                     </form>
                     { self.state.queryHint  && <p className="query-info">{self.state.queryHint}</p> }

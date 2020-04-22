@@ -65,14 +65,6 @@ export default class Main extends React.Component {
                 current_index: -1,
             }
         }
-        // options for internationalisation
-        this.languageList = [{
-            name: "中文",
-            value: 'zh'
-        }, {
-            name: "English",
-            value: 'en'
-        }]
     }
 
     /**
@@ -243,12 +235,10 @@ export default class Main extends React.Component {
 
         this.languageList = [{
             ele: <span onClick={()=>this.changeLanguage('zh')} className={this.state.lang==='zh'?'active':''}>
-                <i className="fas fa-globe-americas"></i>
                 中文
             </span>
         }, {
             ele: <span  onClick={()=>this.changeLanguage('en')} className={this.state.lang==='en'?'active':''}>
-                <i className="fas fa-globe-americas"></i>
                 English
             </span>
         }]
@@ -283,7 +273,7 @@ export default class Main extends React.Component {
                                         </NavLink>
                                     </li>
                                     <li>
-                                        <div className="demo-link">
+                                        <div className="demo-link" onClick={()=>{$('.video').toggleClass('centered');}}>
                                             Testnet Demos
                                             <div className="label">NEW</div>
                                         </div>
@@ -327,7 +317,23 @@ export default class Main extends React.Component {
                                 {/* <Route exact path="/stayTuned" component={StayTuned} /> */}
                             </Switch>
                         </section>
-
+                        <div className={this.state.isVideoResized?"video resized":"video"}>
+                            <h4>Trias Blockchain Demo</h4>
+                            <div className="pull-right">
+                                <div className="video-btn resize"></div>
+                                <div className="video-btn close"></div>
+                            </div>
+                            <div className="video-container">
+                                <div className="video-responsive">
+                                    {
+                                        this.state.lang==='en'?
+                                        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/v0U9-b_2O7Q" frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                                        :
+                                        <iframe height="498" width="510" src="https://player.youku.com/embed/XNDYyNDc0NjQ5Ng==" frameBorder="0" allowFullScreen></iframe>
+                                    }
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </Router>
             </IntlProvider>
