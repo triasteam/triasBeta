@@ -244,27 +244,56 @@ body {
     z-index: 100;
     box-shadow:0px 12px 24px 0px rgba(32,33,41,0.3);
     h4{
-        display: inline-block;
         font-size:16px;
         font-weight:500;
         color:rgba(43,47,55,1);
-        line-height:47px;
+        line-height:37px;
         text-shadow:0px 12px 24px rgba(32,33,41,0.3);
     }
     .video-btn{
-        font-size:24px;
-        color:rgba(125,138,150,1);
-        line-height:24px;
-        text-shadow:0px 12px 24px rgba(32,33,41,0.3)
+        width: 21px;
+        height: 21px;
+        background-repeat: no-repeat;
+        background-position: center;
+        float: right;
+        margin-top: 7px;
+        cursor: pointer;
+        &.resize{
+            background-image:url('../img/expand-alt-solid.svg');
+        }
+        &.close{
+            margin-left: 14px;
+            margin-right: 14px;
+            background-image:url('../img/times-circle-solid.svg');
+        }
     }
-}
-.video.centered{
-    top: 16%;
-    bottom: auto;
-    width: 70%;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
+    .deco{
+        position: absolute;
+        bottom: 0;
+        right: 17px;
+        height: 17px;
+        .bar, .circle{
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .bar{
+            width:17px;
+            height:4px;
+            background:rgba(255,255,255,1);
+            box-shadow:0px 12px 24px 0px rgba(32,33,41,0.3);
+            border-radius:3px;
+            margin-right: 6px;
+        }
+        .circle{
+            width:7px;
+            height:7px;
+            background:rgba(76,198,48,1);
+            box-shadow:0px 12px 24px 0px rgba(32,33,41,0.3);
+            border:2px solid rgba(255,255,255,1);
+            border-radius: 50%;
+            margin-right: 9px;
+        }
+    }
 }
 .video-container {
     margin: 0 auto;
@@ -288,6 +317,48 @@ body {
     position:absolute;
 }
 
-.video.resized{
+.video.centered{
+    top: 16%;
+    bottom: auto;
+    width: 70%;
+    max-width: 959px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
     border-radius:40px;
+    padding: 0 34px 34px;
+    h4{
+        line-height: 60px;
+        font-size:24px;
+    }
+    .video-btn{
+        width: 28px;
+        height: 28px;
+        margin-top: 14px;
+    }
+    .video-btn.resize{
+        background-image: url(../img/compress-alt-solid.svg);
+    }
+    .deco{
+        height: 34px;
+        right: 34px;
+        line-height: 34px;
+        .bar{
+            width:34px;
+            height:7px;
+            margin-right: 12px;
+        }
+        .circle{
+            width:12px;
+            height:12px;
+            margin-right: 20px;
+        }
+    }
+    .video-container{
+        border-radius:18px;
+        padding: 14px;
+    }
+    .video-responsive{
+        border-radius: 7px;
+    }
 }

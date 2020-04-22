@@ -228,6 +228,17 @@ export default class Main extends React.Component {
           return;
         };
     }
+
+    onClickDemoLink(){
+        // 如果视频弹窗已经隐藏，点击之后显示弹窗
+        if($('.video').css('display')==='none'){
+            $('.video').toggle()
+            // 重载视频
+            // $('iframe').attr('src', $('iframe').attr('src'));
+        }else{  // 如果视频弹窗已经显示，点击之后缩小或放大弹窗
+            $('.video').toggleClass('centered')
+        }
+    }
     render() {
         let messages = {}
         messages['en'] = en_US;
@@ -273,7 +284,7 @@ export default class Main extends React.Component {
                                         </NavLink>
                                     </li>
                                     <li>
-                                        <div className="demo-link" onClick={()=>{$('.video').toggleClass('centered');}}>
+                                        <div className="demo-link" onClick={this.onClickDemoLink.bind(this)}>
                                             Testnet Demos
                                             <div className="label">NEW</div>
                                         </div>
@@ -317,11 +328,17 @@ export default class Main extends React.Component {
                                 {/* <Route exact path="/stayTuned" component={StayTuned} /> */}
                             </Switch>
                         </section>
-                        <div className={this.state.isVideoResized?"video resized":"video"}>
-                            <h4>Trias Blockchain Demo</h4>
-                            <div className="pull-right">
-                                <div className="video-btn resize"></div>
-                                <div className="video-btn close"></div>
+                        <div className="video">
+                            <h4>
+                                Trias Blockchain Demo
+                                <div className="video-btn close"  onClick={()=>$('.video').toggle()}></div>
+                                <div className="video-btn resize" onClick={()=>$('.video').toggleClass('centered')}></div>
+                            </h4>
+                            <div className="deco">
+                                <div className="bar"></div>
+                                <div className="bar"></div>
+                                <div className="bar"></div>
+                                <div className="circle"></div>
                             </div>
                             <div className="video-container">
                                 <div className="video-responsive">
