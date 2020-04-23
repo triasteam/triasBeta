@@ -1,7 +1,6 @@
 const zh_CN = {
     /* 参考属性命名： 类名+标签 */
     headerNav1: "区块链状态",
-    triasHomepage: "Trias 官网",
     wallet: "Wallet 官网",
     explorer: "Explorer 官网",
     subHeaderP1: "当前事件",
@@ -44,7 +43,7 @@ const zh_CN = {
     simuLable5: '软硬件故障',
     /* 多次使用的名词，'term...' */
     termActivities: "活动通知",
-    termNode: "节点",    
+    termNode: "节点",
     termVisualization: "节点可视化",
     termStatus: "状态",
     termRanking: "排名",
