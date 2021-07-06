@@ -19,6 +19,7 @@ from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfigur
 from app_views.view_utils.logger import logger
 from app_views.view_utils.block_util import get_ranking, get_validators, send_transaction_util, url_data
 from app_views.view_utils.redis_util import get_monitoring
+from app_views.view_utils.redis_common import get_redis_connection
 
 jc = JsonConfiguration()
 ac = ActivityConfiguration()
@@ -125,7 +126,8 @@ def get_visualization(request):
                 node_rank.append(mysql_node)
 
         # save ranking to redis
-        redis_client = redis.Redis(jc.redis_ip, jc.redis_port, socket_connect_timeout=1)
+        # redis_client = redis.Redis(jc.redis_ip, jc.redis_port, socket_connect_timeout=1)
+        redis_client = get_redis_connection(socket_connect_timeout=1)
         saved_ranking = redis_client.get('ranking')
         logger.info('previous ranking %s' % saved_ranking)
 
