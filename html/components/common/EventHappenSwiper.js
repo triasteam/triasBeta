@@ -1,6 +1,6 @@
 import React from "react";
-import Swiper from "swiper";
-import "swiper/swiper.min.css";
+import Swiper from "swiper/swiper-bundle.min.js";
+import "swiper/swiper-bundle.min.css";
 import TimeInterval from "./TimeInterval";
 import $ from "jquery";
 
