@@ -26,7 +26,7 @@ export default class DropdownList extends React.Component {
          * - The name shows in the drop-down list.
          * - The value will be passed when related option is selected.
          */
-        itemsToSelect: PropTypes.object,
+        itemsToSelect: PropTypes.array,
         /** Index of last row in current page. */
         onSelect: PropTypes.func,
         /** Total number of items. */

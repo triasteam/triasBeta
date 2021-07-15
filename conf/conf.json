@@ -23,7 +23,7 @@
   "server_port": "46657",
   "redis_ip":"192.168.1.241",
   "redis_port": 9000,
-  "mysql_ip": "192.168.1.210",
+  "mysql_ip": "192.168.1.211",
   "mysql_port": "3306",
   "mysql_user": "8lab",
   "mysql_password": "8lab",

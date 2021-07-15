@@ -59,7 +59,7 @@ class CustomPagination extends React.Component {
         /** (Optional) Id of the DropdownList, required when there are multiple CustomPaginations or DropdownLists in a page. */
         dropdownListId: PropTypes.string,
         /** (Optional) Options for the drop-down list of the maximum number of rows per page*/
-        rowsPerPageRange: PropTypes.object
+        rowsPerPageRange: PropTypes.array
     }
 
     static defaultProps = {

@@ -47,7 +47,7 @@
     "echarts-for-react": "^2.0.15-beta.0",
     "es5-shim": "^4.5.9",
     "es6-promise": "^3.1.2",
-    "jquery": "^1.12.4",
+    "jquery": "^3.6.0",
     "prop-types": "15.7.2",
     "react": "^16.3.2",
     "react-bootstrap": "^0.31.3",
@@ -57,7 +57,7 @@
     "react-loadable": "^5.5.0",
     "react-router-dom": "^4.3.0-rc.3",
     "react-transition-group": "^2.6.1",
-    "swiper": "^4.5.0"
+    "swiper": "^6.7.5"
   },
   "license": " Apache2.0"
 }

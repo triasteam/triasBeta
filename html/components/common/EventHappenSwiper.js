@@ -1,6 +1,6 @@
 import React from "react";
-import Swiper from "swiper/dist/js/swiper.js";
-import "swiper/dist/css/swiper.min.css";
+import Swiper from "swiper";
+import "swiper/swiper.min.css";
 import TimeInterval from "./TimeInterval";
 import $ from "jquery";
 
@@ -20,7 +20,8 @@ export default class EventHappenSwiper extends React.Component {
    * initialize swiper carousel
    */
   createSwiper() {
-    var mySwiper = new Swiper(".swiper-container", {
+    console.log()
+    let mySwiper = new Swiper(".swiper-container", {
       // direction: 'vertical', // 垂直切换选项
       loop: false, // 循环模式选项
       slidesPerView: 5, // display time block
