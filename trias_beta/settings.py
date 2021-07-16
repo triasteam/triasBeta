@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '8285ru(*m*%4c^a)mpbpdna#(q)^471ezg+y+gk4-)fm@lvv+g'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -75,8 +75,8 @@ WSGI_APPLICATION = 'trias_beta.wsgi.application'
 
 WEBPACK_LOADER = {
     'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'bundles/prod/',  # change when production
-        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats-prod.json'),  # change when production
+        'BUNDLE_DIR_NAME': 'bundles/local/',  # change when production
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats-local.json'),  # change when production
     }
 }
 
