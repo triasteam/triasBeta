@@ -21,6 +21,10 @@ module.exports = {
   externals: [
   ], // add all vendor libs
 
+  optimization: {
+
+  },
+
   plugins: [
     // new BundleAnalyzerPlugin({ analyzerPort: 8919 }),
     // new webpack.optimize.CommonsChunkPlugin({name:'vendors', filename:'vendors.js'}),
