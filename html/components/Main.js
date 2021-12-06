@@ -296,11 +296,11 @@ export default class Main extends React.Component {
                                             <FormattedMessage id="explorer" />
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="https://wallet.trias.one/" target="blank">
-                                            <FormattedMessage id="wallet" />
-                                        </a>
-                                    </li>
+                                    {/*<li>*/}
+                                    {/*    <a href="https://wallet.trias.one/" target="blank">*/}
+                                    {/*        <FormattedMessage id="wallet" />*/}
+                                    {/*    </a>*/}
+                                    {/*</li>*/}
                                     <li>
                                         <a href="https://www.trias.one/testnet" target="blank">
                                             Trias x ETH
