@@ -328,29 +328,29 @@ export default class Main extends React.Component {
                                 {/* <Route exact path="/stayTuned" component={StayTuned} /> */}
                             </Switch>
                         </section>
-                        <div className="video">
-                            <h4>
-                                Trias Blockchain Demo
-                                <div className="video-btn close"  onClick={()=>$('.video').toggle()}></div>
-                                <div className="video-btn resize" onClick={()=>$('.video').toggleClass('centered')}></div>
-                            </h4>
-                            <div className="deco">
-                                <div className="bar"></div>
-                                <div className="bar"></div>
-                                <div className="bar"></div>
-                                <div className="circle"></div>
-                            </div>
-                            <div className="video-container">
-                                <div className="video-responsive">
-                                    {
-                                        this.state.lang==='en'?
-                                        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/v0U9-b_2O7Q" frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                                        :
-                                        <iframe height="498" width="510" src="https://player.youku.com/embed/XNDYyNDc0NjQ5Ng==" frameBorder="0" allowFullScreen></iframe>
-                                    }
-                                </div>
-                            </div>
-                        </div>
+                        {/*<div className="video">*/}
+                        {/*    <h4>*/}
+                        {/*        Trias Blockchain Demo*/}
+                        {/*        <div className="video-btn close"  onClick={()=>$('.video').toggle()}></div>*/}
+                        {/*        <div className="video-btn resize" onClick={()=>$('.video').toggleClass('centered')}></div>*/}
+                        {/*    </h4>*/}
+                        {/*    <div className="deco">*/}
+                        {/*        <div className="bar"></div>*/}
+                        {/*        <div className="bar"></div>*/}
+                        {/*        <div className="bar"></div>*/}
+                        {/*        <div className="circle"></div>*/}
+                        {/*    </div>*/}
+                        {/*    <div className="video-container">*/}
+                        {/*        <div className="video-responsive">*/}
+                        {/*            {*/}
+                        {/*                this.state.lang==='en'?*/}
+                        {/*                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/v0U9-b_2O7Q" frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>*/}
+                        {/*                :*/}
+                        {/*                <iframe height="498" width="510" src="https://player.youku.com/embed/XNDYyNDc0NjQ5Ng==" frameBorder="0" allowFullScreen></iframe>*/}
+                        {/*            }*/}
+                        {/*        </div>*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
                     </div>
                 </Router>
             </IntlProvider>
