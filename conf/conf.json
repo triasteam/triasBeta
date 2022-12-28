@@ -28,7 +28,7 @@
   "mysql_port": "3306",
   "mysql_user": "8lab",
   "mysql_password": "8lab",
-  "mysql_database": "explorer_monitor_script",
+  "mysql_database": "explorer_monitor_script99",
   "ranking_port": 8000
   
 }
