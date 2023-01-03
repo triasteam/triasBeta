@@ -14,7 +14,7 @@ from functools import reduce
 from django.http import JsonResponse
 from django.db.models import Q, Count
 # from ratelimit.decorators import ratelimit
-from app_views.models import Block, Node, Transaction, Activity, Hardware, TransactionLog, AbnormalNode
+from app_views.models import Block, Node, Transaction, Activity, Hardware, TransactionLog, AbnormalNode,Address
 from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration, get_node_show
 from app_views.view_utils.logger import logger
 from app_views.view_utils.block_util import get_ranking, get_validators, send_transaction_util, url_data
@@ -248,6 +248,9 @@ def general_static_bsc(request):
         block_heigth_list.append(0)
         block_height =max(block_heigth_list)
 
+        accounts = Address.objects.using("bsc").count()
+
+
         # 今日交易总数
         today_start_time = int(time.mktime(datetime.datetime.fromtimestamp(time.time()).date().timetuple()))
         today_end_time = today_start_time + 86400 - 1
@@ -263,7 +266,7 @@ def general_static_bsc(request):
 
         status = 'success'
         result = {}
-        result['trias'] = {'nodes': nodes, 'block_height': block_height, 'accounts': None,
+        result['trias'] = {'nodes': nodes, 'block_height': block_height, 'accounts': accounts,
                            'peak_tx': peak_tx, 'today_tx': today_tx, 'tx_num': tx_num}
         result['ethereum'] = {'nodes': 0, 'block_height': 0, 'accounts': None,
                            'peak_tx': 0, 'today_tx': 0, 'tx_num': 0}

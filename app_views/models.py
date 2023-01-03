@@ -26,14 +26,13 @@ class Block(models.Model):
         db_table = "block"
 
 
-# class BscBlock(models.Model):
-#     number = models.BigIntegerField(default=0)
-#     hash = models.CharField(max_length=255)
-#     transactionsCount = models.IntegerField(default=0)
-#     timestamp = models.BigIntegerField()
+class Address(models.Model):
+    number = models.BigIntegerField(default=0)
+    balance = models.IntegerField(default=0)
+    time = models.BigIntegerField()
 
-#     class Meta:
-#         db_table = "block"
+    class Meta:
+        db_table = "address"
 
 
 
