@@ -97,3 +97,4 @@ package-lock.json
 sonar-project.properties
 
 !docs/build/
+.vscode/settings.json

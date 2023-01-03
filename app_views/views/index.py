@@ -232,6 +232,55 @@ def general_static(request):
     return JsonResponse({'status': status, 'result': result})
 
 
+
+
+
+# @ratelimit(key='ip', rate='30/m', block=True)
+def general_static_bsc(request):
+
+    try:
+        # 节点总数
+        nodes = Node.objects.count()
+        # 交易总数
+        tx_num = Transaction.objects.using("bsc").count()
+        # 最新块高
+        block_heigth_list = list(Block.objects.using("bsc").values_list('number', flat=True))
+        block_heigth_list.append(0)
+        block_height =max(block_heigth_list)
+
+        # 今日交易总数
+        today_start_time = int(time.mktime(datetime.datetime.fromtimestamp(time.time()).date().timetuple()))
+        today_end_time = today_start_time + 86400 - 1
+        today_tx = Transaction.objects.using("bsc").filter(Q(timestamp__gte=today_start_time) & Q(timestamp__lte=today_end_time)).count()
+
+        # 交易峰值(Peak Tx) (前30s)的每个块里的最高交易数
+        start = today_start_time - 86400  # yesterday start timestamp
+        end = today_start_time  # today start timestamp
+        # >= 2019-02-26 00:00:00 & < 2019-02-27 00:00:00
+        lastes_tx = list(Block.objects.using("bsc").filter(Q(timestamp__gte=start) & Q(timestamp__lt=end)).values_list('transactionsCount', flat=True))
+        lastes_tx.append(0)
+        peak_tx = max(lastes_tx)
+
+        status = 'success'
+        result = {}
+        result['trias'] = {'nodes': nodes, 'block_height': block_height, 'accounts': None,
+                           'peak_tx': peak_tx, 'today_tx': today_tx, 'tx_num': tx_num}
+        result['ethereum'] = {'nodes': 0, 'block_height': 0, 'accounts': None,
+                           'peak_tx': 0, 'today_tx': 0, 'tx_num': 0}
+        result['hyperledger'] = {'nodes': 0, 'block_height': 0, 'accounts': None,
+                           'peak_tx': 0, 'today_tx': 0, 'tx_num': 0}
+
+    except Exception as e:
+        logger.error(e)
+        status, result = 'failure', {}
+
+    return JsonResponse({'status': status, 'result': result})
+
+
+
+
+
+
 # @ratelimit(key='ip', rate='30/m', block=True)
 def get_tps(request):
 

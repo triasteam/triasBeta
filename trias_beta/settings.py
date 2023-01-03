@@ -97,7 +97,9 @@ NODE_SHOW_JSON = STATICFILES_DIRS[1] + "/node_show.json"
 
 with open(CONF_JSON, 'r') as conf:
     rec = conf.read()
-records = json.loads(rec)
+data = json.loads(rec)
+records = data['tm']
+bsc = data['bsc']
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -110,6 +112,15 @@ DATABASES = {
         'PASSWORD': records["mysql_password"],
         'HOST': records["mysql_ip"],
         'PORT': records["mysql_port"],
+        'CONN_MAX_AGE': 180
+    },
+    'bsc':{
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': bsc['mysql_database'],
+        'USER': bsc["mysql_user"],
+        'PASSWORD': bsc["mysql_password"],
+        'HOST': bsc["mysql_ip"],
+        'PORT': bsc["mysql_port"],
         'CONN_MAX_AGE': 180
     }
 }
