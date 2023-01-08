@@ -159,7 +159,7 @@ LOGGING = {
         'default': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/var/log/leviatom/leviatom.log',     # log file
+            'filename': './leviatom.log',     # log file
             'maxBytes': 1024 * 1024 * 5,                   # file size
             'backupCount': 5,                              # Backup
             'formatter': 'standard',                       # log format
@@ -172,7 +172,7 @@ LOGGING = {
         'request_handler': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/var/log/leviatom/request.log',
+            'filename': './request.log',
             'maxBytes': 1024 * 1024 * 5,
             'backupCount': 5,
             'formatter': 'standard'
