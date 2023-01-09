@@ -3,12 +3,17 @@ import $ from "jquery";
 import CustomPagination from "./CustomPagination"
 import { injectIntl, intlShape, FormattedMessage } from 'react-intl' /* react-intl imports */
 import { DatePicker } from 'antd';
-
+import PropTypes from 'prop-types'
 /**
- * The Subcomponent of the nodeList page and Activities page -----  List of components
- * 
+ * The Subcomponent for table in the nodeList page and Activities page.
  */
 class TableList extends React.Component {
+    static propTypes = {
+        /** Inject intl to TableList props */
+        intl: intlShape.isRequired,
+        /** API to get data in the table */
+        searchListApi: PropTypes.string
+    };
 
     constructor(props) {
         super(props);
@@ -20,12 +25,12 @@ class TableList extends React.Component {
             hostlist: [], // List of Data
             rowsPerPage: 10, // Initialize to get the number of pages per page
             currentPage: 1, // current page number
-            startValue: null, // start date 
+            startValue: null, // start date
             endValue: null, //end date
             endOpen: false, // end date select box
             testGroup: 'All Test Groups', // Initialize the test group
             toggleTestGroup: false, // Select test group
-            testGroupId: 3, // Initialize the ID of test group 
+            testGroupId: 3, // Initialize the ID of test group
         }
     }
     /**
@@ -66,7 +71,7 @@ class TableList extends React.Component {
 
     }
 
-    handleStartOpenChange = (open) => {
+    handleStartOpenChange = () => {
         // if (!open) {
         //     this.setState({ endOpen: true });
         // }
@@ -77,7 +82,6 @@ class TableList extends React.Component {
         this.setState({ endOpen: open });
         this.getHostList(this.state.currentPage, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
     }
-
 
     /**
      * Listen for changes in the search field
@@ -101,9 +105,9 @@ class TableList extends React.Component {
 
     /**
      * Get list data
-     * @param {number} currentPage --- current page 
+     * @param {number} currentPage --- current page
      * @param {number} rowsPerPage --- the number of pages per page
-     * @param {string} searchKey   --- keyWord 
+     * @param {string} searchKey   --- keyWord
      * @param {number} testGroupId --- the ID of testGroup
      */
     getHostList(currentPage, rowsPerPage, searchKey, testGroupId) {
@@ -154,7 +158,7 @@ class TableList extends React.Component {
 
     /**
      * Sets the maximum number of rows per page to be displayed in the list
-     * @param {int} num 
+     * @param {int} num
      */
     setRowsPerPage(num) {
         this.setState({
@@ -167,7 +171,7 @@ class TableList extends React.Component {
 
     /**
      * Click the page number, the previous page, the next page when the button operation
-     * @param {int} pagenum 
+     * @param {int} pagenum
      */
     handleSelectPage(pagenum) {
         this.setState({
@@ -185,11 +189,11 @@ class TableList extends React.Component {
         var re = /^[0-9]+$/
         var hostlistPage = e.target.value      //get input page number
         /*
-        * If the entered page number is not empty, and if the entered page number does not conform to the specification 
+        * If the entered page number is not empty, and if the entered page number does not conform to the specification
         * (not a positive integer, or greater than the maximum page number)
         */
         if (hostlistPage != "" && (!re.test(hostlistPage) || hostlistPage == 0 || hostlistPage > this.state.pageCount)) {
-            $('#inputPageNum').val('');   //clear input value                      
+            $('#inputPageNum').val('');   //clear input value
         }
     }
     /**
@@ -214,11 +218,11 @@ class TableList extends React.Component {
             this.strogePageNum(pagenum)
             this.getHostList(pagenum, this.state.rowsPerPage, this.state.nodeSearchKey, this.state.testGroupId)
         }
-       
+
     }
     /**
      * Timestamp format conversion
-     * @param {timestamp} inputTime 
+     * @param {timestamp} inputTime
      */
     getTimeFormat(inputTime) {
         var date = new Date(inputTime*1000);
@@ -237,7 +241,7 @@ class TableList extends React.Component {
     }
     /**
      * Save the current page number to window.localStorage
-     * @param {*} currentPage 
+     * @param {*} currentPage
      */
     strogePageNum(currentPage){
         let storage = window.localStorage;
@@ -260,7 +264,7 @@ class TableList extends React.Component {
     componentWillUnmount = () => {
         // remove window.localStorage
         this.removeStrogePageNum()
-        this.setState = (state,callback)=>{
+        this.setState = ()=>{
           return;
         };
     }
@@ -277,7 +281,6 @@ class TableList extends React.Component {
                         onChange={this.onChangeSearchInput.bind(this)}
                     />
                     <button className="nodelist-search" onClick={this.handleSearchNode.bind(this)} >
-                        <i className="fa fa-search" aria-hidden="true"></i>
                     </button>
                 </form>
 
@@ -403,12 +406,8 @@ class TableList extends React.Component {
                     </tbody>
                 </table>
 
-
-
-
-
                 <CustomPagination
-                    from={(this.state.currentPage - 1) * this.state.rowsPerPage + 1} 
+                    from={(this.state.currentPage - 1) * this.state.rowsPerPage + 1}
                     to={(this.state.currentPage - 1) * this.state.rowsPerPage + (this.state.hostlist ? this.state.hostlist.length : 0)}
                     totalItemsCount={this.state.totalItemsCount}
                     totalPagesCount={this.state.pageCount}
@@ -429,9 +428,4 @@ class TableList extends React.Component {
     }
 }
 
-/* Inject intl to TableList props */
-const propTypes = {
-    intl: intlShape.isRequired,
-};
-TableList.propTypes = propTypes
 export default injectIntl(TableList)

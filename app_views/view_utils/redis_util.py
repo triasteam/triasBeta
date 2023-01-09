@@ -1,13 +1,15 @@
 import redis
 from app_views.view_utils.localconfig import JsonConfiguration
 from app_views.view_utils.logger import logger
+from app_views.view_utils.redis_common import get_redis_connection
 
 jc = JsonConfiguration()
 
 
 def get_monitoring():
     try:
-        redis_client = redis.Redis(jc.redis_ip, jc.redis_port, socket_connect_timeout=1)
+        #redis_client = redis.Redis(jc.redis_ip, jc.redis_port, socket_connect_timeout=1)
+        redis_client = get_redis_connection(socket_connect_timeout=1)
         faulty_nodes_list = get_single_data(redis_client, 'faulty_nodes_list')
         fault_accetpance_rate = get_single_data(redis_client, 'fault_accetpance_rate')
         tps_monitoring = get_single_data(redis_client, 'tps_monitoring')

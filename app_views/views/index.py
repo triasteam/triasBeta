@@ -10,14 +10,16 @@ import hashlib
 import base64
 import threading
 import traceback
+from functools import reduce
 from django.http import JsonResponse
-from django.db.models import Q
+from django.db.models import Q, Count
 # from ratelimit.decorators import ratelimit
-from app_views.models import Block, Node, Transaction, Activity, Hardware, TransactionLog
+from app_views.models import Block, Node, Transaction, Activity, Hardware, TransactionLog, AbnormalNode
 from app_views.view_utils.localconfig import JsonConfiguration, ActivityConfiguration, get_node_show
 from app_views.view_utils.logger import logger
 from app_views.view_utils.block_util import get_ranking, get_validators, send_transaction_util, url_data
 from app_views.view_utils.redis_util import get_monitoring
+from app_views.view_utils.redis_common import get_redis_connection
 
 jc = JsonConfiguration()
 ac = ActivityConfiguration()
@@ -124,7 +126,8 @@ def get_visualization(request):
                 node_rank.append(mysql_node)
 
         # save ranking to redis
-        redis_client = redis.Redis(jc.redis_ip, jc.redis_port, socket_connect_timeout=1)
+        # redis_client = redis.Redis(jc.redis_ip, jc.redis_port, socket_connect_timeout=1)
+        redis_client = get_redis_connection(socket_connect_timeout=1)
         saved_ranking = redis_client.get('ranking')
         logger.info('previous ranking %s' % saved_ranking)
 
@@ -148,6 +151,7 @@ def get_visualization(request):
         redis_client.set('ranking', str([i for i in node_rank]))
 
         # node link
+        ctx_list = reduce(lambda x, y: x if y in x else x + [y], [[], ] + ctx_list)
         random.shuffle(ctx_list)
         for ctx_item in ctx_list[:20]:
             target = node_rank.index(ctx_item['attestee'])
@@ -202,13 +206,13 @@ def general_static(request):
         # 今日交易总数
         today_start_time = int(time.mktime(datetime.datetime.fromtimestamp(time.time()).date().timetuple()))
         today_end_time = today_start_time + 86400 - 1
-        today_tx = Transaction.objects.filter(Q(time__gte=today_start_time) & Q(time__lte=today_end_time)).count()
+        today_tx = Transaction.objects.filter(Q(timestamp__gte=today_start_time) & Q(timestamp__lte=today_end_time)).count()
 
         # 交易峰值(Peak Tx) (前30s)的每个块里的最高交易数
         start = today_start_time - 86400  # yesterday start timestamp
         end = today_start_time  # today start timestamp
         # >= 2019-02-26 00:00:00 & < 2019-02-27 00:00:00
-        lastes_tx = list(Block.objects.filter(Q(time__gte=start) & Q(time__lt=end)).values_list('tx_num', flat=True))
+        lastes_tx = list(Block.objects.filter(Q(timestamp__gte=start) & Q(timestamp__lt=end)).values_list('transactionsCount', flat=True))
         lastes_tx.append(0)
         peak_tx = max(lastes_tx)
 
@@ -233,10 +237,10 @@ def get_tps(request):
 
     try:
         qtime = int(time.time()) - 3600 * 8
-        isBlock = Block.objects.filter(Q(time__lte=qtime) & Q(time__gt=(qtime - 60)))
+        isBlock = Block.objects.filter(Q(timestamp__lte=qtime) & Q(timestamp__gt=(qtime - 60)))
         data = 0
         if isBlock.exists():
-            for tx in list(isBlock.values_list('tx_num', flat=True)):
+            for tx in list(isBlock.values_list('transactionsCount', flat=True)):
                 data += tx
         logger.info('one minute tx num: %s' % data)
         data /= 60
@@ -303,82 +307,61 @@ def get_data_monitoring(request):
     }
 
     try:
-        faulty_nodes_list, fault_accetpance_rate, tps_monitoring = get_monitoring()
+        now = datetime.datetime.now()
+        end_timestamp = int(time.mktime(now.replace(second=0, microsecond=0).timetuple()))
+        timestamp_list = [end_timestamp-60*i for i in range(11)][::-1]
+        result_time = timestamp_list[:-1]
+        result_tps = []
+        event_list = []
 
-        if faulty_nodes_list:
-            new_faulty_nodes_list = [eval(i) for i in faulty_nodes_list]
-            start_time = new_faulty_nodes_list[0]
-            a_x_time = [(start_time-i*60) for i in range(11)][::-1]
+        # get tps and event_list
+        for tmp in range(len(timestamp_list)-1):
+            tx_nums = Block.objects.filter(Q(timestamp__gte=(timestamp_list[tmp]-3600*8)) &
+                                           Q(timestamp__lt=(timestamp_list[tmp+1]-3600*8))).aggregate(tx_nums=Count('transactionsCount'))
+            result_tps.append(tx_nums['tx_nums'])
 
-            # Get recent events
-            event_list = []
-            for item in a_x_time:
-                activity_query = Activity.objects.filter(Q(time__gte=item) & Q(time__lt=(item + 60))).order_by('time')
-                activity = -1
-                if activity_query.exists():
-                    for type in list(activity_query.values_list('type', flat=True)):
-                        if type == 1 or type == 4:
-                            activity = type
-                            break
-                event_list.append(activity)
+            activity_query = Activity.objects.filter(Q(time__gte=timestamp_list[tmp]) &
+                                                     Q(time__lt=(timestamp_list[tmp+1]))).order_by('time')
+            activity = -1
+            if activity_query.exists():
+                for type in list(activity_query.values_list('type', flat=True)):
+                    if type == 1 or type == 4:
+                        activity = type
+                        break
+            event_list.append(activity)
 
-            result['faulty_nodes_list']['event_list'] = event_list
-            result['faulty_nodes_list']['trias']['time'] = a_x_time
-            result['faulty_nodes_list']['trias']['value'] = new_faulty_nodes_list[1:][::-1]
-            result['faulty_nodes_list']['ethereum']['time'] = a_x_time
-            result['faulty_nodes_list']['ethereum']['value'] = [0,0,0,0,0,0,0,0,0,0,0]
-            result['faulty_nodes_list']['hyperledger']['time'] = a_x_time
-            result['faulty_nodes_list']['hyperledger']['value'] = [0,0,0,0,0,0,0,0,0,0,0]
+        # get faulty nodes
+        result_faulty_nodes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        abnormal_nodes = AbnormalNode.objects.filter(timestamp__gte=timestamp_list[0]).order_by('id').values()
+        for abnormal_node in abnormal_nodes:
+            timestamp = abnormal_node.timestamp
+            result_faulty_nodes[result_time.index(timestamp)] = abnormal_node.count
 
-        if fault_accetpance_rate:
-            new_fault_accetpance_rate = [eval(i) for i in fault_accetpance_rate]
-            start_time = new_fault_accetpance_rate[0]
-            b_x_time = [(start_time - i * 60) for i in range(11)][::-1]
+        result_fault_accetpance_rate = [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3]
 
-            # Get recent events
-            event_list = []
-            for item in b_x_time:
-                activity_query = Activity.objects.filter(Q(time__gte=item) & Q(time__lt=(item + 60))).order_by('time')
-                activity = -1
-                if activity_query.exists():
-                    for type in list(activity_query.values_list('type', flat=True)):
-                        if type == 1 or type == 4:
-                            activity = type
-                            break
-                event_list.append(activity)
+        result['faulty_nodes_list']['event_list'] = event_list
+        result['faulty_nodes_list']['trias']['time'] = result_time
+        result['faulty_nodes_list']['trias']['value'] = result_faulty_nodes
+        result['faulty_nodes_list']['ethereum']['time'] = result_time
+        result['faulty_nodes_list']['ethereum']['value'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        result['faulty_nodes_list']['hyperledger']['time'] = result_time
+        result['faulty_nodes_list']['hyperledger']['value'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-            result['fault_accetpance_rate']['event_list'] = event_list
-            result['fault_accetpance_rate']['trias']['time'] = b_x_time
-            result['fault_accetpance_rate']['trias']['value'] = new_fault_accetpance_rate[1:][::-1]
-            result['fault_accetpance_rate']['ethereum']['time'] = b_x_time
-            result['fault_accetpance_rate']['ethereum']['value'] = [0,0,0,0,0,0,0,0,0,0,0]
-            result['fault_accetpance_rate']['hyperledger']['time'] = b_x_time
-            result['fault_accetpance_rate']['hyperledger']['value'] = [0,0,0,0,0,0,0,0,0,0,0]
+        result['fault_accetpance_rate']['event_list'] = event_list
+        result['fault_accetpance_rate']['trias']['time'] = result_time
+        result['fault_accetpance_rate']['trias']['value'] = result_fault_accetpance_rate
+        result['fault_accetpance_rate']['ethereum']['time'] = result_time
+        result['fault_accetpance_rate']['ethereum']['value'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        result['fault_accetpance_rate']['hyperledger']['time'] = result_time
+        result['fault_accetpance_rate']['hyperledger']['value'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        if tps_monitoring:
-            new_tps_monitoring = [eval(i) for i in tps_monitoring]
-            start_time = new_tps_monitoring[0]
-            c_x_time = [(start_time - i * 60) for i in range(11)][::-1]
-
-            # Get recent events
-            event_list = []
-            for item in c_x_time:
-                activity_query = Activity.objects.filter(Q(time__gte=item) & Q(time__lt=(item + 60))).order_by('time')
-                activity = -1
-                if activity_query.exists():
-                    for type in list(activity_query.values_list('type', flat=True)):
-                        if type == 1 or type == 4:
-                            activity = type
-                            break
-                event_list.append(activity)
-
-            result['tps_monitoring']['event_list'] = event_list
-            result['tps_monitoring']['trias']['time'] = c_x_time
-            result['tps_monitoring']['trias']['value'] = new_tps_monitoring[1:][::-1]
-            result['tps_monitoring']['ethereum']['time'] = c_x_time
-            result['tps_monitoring']['ethereum']['value'] = [0,0,0,0,0,0,0,0,0,0,0]
-            result['tps_monitoring']['hyperledger']['time'] = c_x_time
-            result['tps_monitoring']['hyperledger']['value'] = [0,0,0,0,0,0,0,0,0,0,0]
+        result['tps_monitoring']['event_list'] = event_list
+        result['tps_monitoring']['trias']['time'] = result_time
+        result['tps_monitoring']['trias']['value'] = result_tps
+        result['tps_monitoring']['ethereum']['time'] = result_time
+        result['tps_monitoring']['ethereum']['value'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        result['tps_monitoring']['hyperledger']['time'] = result_time
+        result['tps_monitoring']['hyperledger']['value'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         status = 'success'
 
@@ -457,7 +440,7 @@ def query_transactions_status(request):
 
         transaction_log = TransactionLog.objects.filter(trias_hash=id)
         if not transaction_log.exists():
-            return JsonResponse({'status': 'failure', 'result': 'trade not exists'})
+            return JsonResponse({'status': 'pending', 'result': 'trade not exists'})
 
         tx = transaction_log[0]
         id = tx.trias_hash

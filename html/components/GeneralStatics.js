@@ -4,7 +4,7 @@ import $ from 'jquery'
 import StaticsCard from "./common/StaticsCard";
 
 /**
- * GeneralStatics components which displays:
+ * Component for General Statics part
  */
 class GeneralStatics extends React.Component {
     constructor(props) {
@@ -111,7 +111,7 @@ class GeneralStatics extends React.Component {
         })
     }
     componentWillUnmount() {
-        this.setState = (state,callback)=>{
+        this.setState = ()=>{
           return;
         };
     }

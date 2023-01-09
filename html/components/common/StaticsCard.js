@@ -1,17 +1,28 @@
 import React from "react"
+import PropTypes from 'prop-types';
+
 /**
- * StaticsCard components which displays:
- * 
- * Params: 
- *      cardInfo
- *      src
- *      title
- * 
- *      eg: 
- *      <StaticsCard cardInfo={this.state.nodes} src={require("../img/icon/general-statics/icon_gs_nodes@2x.png")} title={this.state.lang=="zh"?"节点":"Nodes"} />
- * 
+ * UI Card component which displays 3 types of data.
+ *
+ *
+ * ### Example:
+ * ```js
+ * <StaticsCard
+ *  cardInfo={ethereum: 0, hyperledger: 0, trias: 9}
+ *  src={require("../img/icon/general-statics/icon_gs_nodes@2x.png")}
+ *  title={"Nodes"} />
+ * ```
  */
 export default class StaticsCard extends React.Component {
+    static propTypes = {
+        /** Data of 3 types: trias, hyperledger, ethereum.  */
+        cardInfo: PropTypes.object,
+        /** Icon source */
+        src: PropTypes.string,
+        /** Title */
+        title: PropTypes.string
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -33,7 +44,7 @@ export default class StaticsCard extends React.Component {
                 trias: nextProps.cardInfo.trias,
                 hyperledger: nextProps.cardInfo.hyperledger,
                 ethereum: nextProps.cardInfo.ethereum,
-            }) 
+            })
         }
         if(this.state.title != nextProps.title){
             this.setState({
@@ -41,11 +52,13 @@ export default class StaticsCard extends React.Component {
             })
         }
     }
+
     componentWillUnmount() {
-        this.setState = (state,callback)=>{
+        this.setState = ()=>{
           return;
         };
     }
+
     render() {
         return (
             <div className="card-container">

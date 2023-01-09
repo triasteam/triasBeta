@@ -1,23 +1,28 @@
 import React from "react"
-import Modal from "react-bootstrap"
-import { Link } from 'react-router-dom'
+// import Modal from "react-bootstrap"
+// import { Link } from 'react-router-dom'
 // import ES6Promise from 'es6-promise'
 // ES6Promise.polyfill() //关键代码,让ie识别promise对象!
 import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
 import $ from 'jquery'
 import { CSSTransition } from 'react-transition-group';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { cold } from "react-hot-loader";
+// import { cold } from "react-hot-loader";
 
 /**
- * RightPart components which displays:
+ * Component for generating transaction
  */
 class GenerateTransaction extends React.Component {
+    static propTypes = {
+        /** Inject intl to CustomPagination props */
+        intl: intlShape.isRequired
+    }
+
     constructor(props) {
         super(props);
         this.state = {
             showInputModal: false,
-            showErrorModal: false,
+            showWarningModal: false,
             showNullModal: false,
             showDetailModal: false,
             showFailureModal: false,
@@ -178,26 +183,21 @@ class GenerateTransaction extends React.Component {
                         failLog: data.result.log,
                     })
                 } else if ( data.status == "failure" ) {
-                    if ( data.result == "trade not exists" ) {
-                        self.setState({
-                            showErrorModal: !self.state.showErrorModal,
-                            errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
-                            errorInfo: self.state.lang=='zh'?'此交易正在后台生成，请稍后再试。':'The transaction is being generated in the background, please wait a few seconds.',
-                            // errorType: 2,
-                            errorType:1
-                        })
-                    } else {
-                        let info = data.result;
-                        info = info.replace(info[0],info[0].toUpperCase());
-                        self.setState({
-                            showErrorModal: !self.state.showErrorModal,
-                            // errorTitle: self.state.lang=='zh'?'发生错误！':'Error Occurred!',
-                            errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
-                            errorInfo: info,
-                            // errorType: 2,
-                            errorType:1
-                        })
-                    }
+                    let info = data.result;
+                    info = info.replace(info[0],info[0].toUpperCase());
+                    self.setState({
+                        showWarningModal: !self.state.showWarningModal,
+                        errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
+                        errorInfo: info,
+                        errorType:1
+                    })
+                } else if(data.status == "pending"){
+                    self.setState({
+                        showWarningModal: !self.state.showWarningModal,
+                        errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
+                        errorInfo: self.state.lang=='zh'?'此交易正在后台生成，请稍后再试。':'The transaction is being generated in the background, please wait a few seconds.',
+                        errorType:2 // 使用 pending 的icon
+                    })
                 }
             }
         })
@@ -235,33 +235,14 @@ class GenerateTransaction extends React.Component {
                             successHeight: data.result.block_height,
                             successContent: data.result.content,
                         })
-
-                    } else if ( data.status == "tx_failure" ) {
+                    } else {
+                        let info = data.result;
                         self.setState({
-                            showFailureModal: !self.state.showFailureModal,
-                            failContent: data.result.content,
-                            failLog: data.result.log,
+                            showWarningModal: !self.state.showWarningModal,
+                            errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
+                            errorInfo: info.data || (self.state.lang=='zh'?'服务器繁忙。':'The server is busy now.'),
+                            errorType: 1,
                         })
-                    } else if ( data.status == "failure" ) {
-                        if ( data.result == "trade not exists" ) {
-                            self.setState({
-                                showErrorModal: !self.state.showErrorModal,
-                                errorTitle: self.state.lang=='zh'?'未找到交易。':'Transaction Not Found.',
-                                errorInfo: self.state.lang=='zh'?'此交易不存在，请重新查询。':'The transaction you’re checking may not exist, try checking another one.',
-                                errorType: 1,
-                            })
-                        } else {
-                            let info = data.result;
-                            info = info.replace(info[0],info[0].toUpperCase());
-                            self.setState({
-                                showErrorModal: !self.state.showErrorModal,
-                                // errorTitle: self.state.lang=='zh'?'参数错误！':'Parameter error!',
-                                errorTitle: self.state.lang=='zh'?'请稍候再试。':'Try Again Later.',
-                                errorInfo: info,
-                                errorType: 1,
-                            })
-
-                        }
                     }
                 }
             })
@@ -298,7 +279,7 @@ class GenerateTransaction extends React.Component {
             })
         } else if (type == 3) {
             self.setState ({
-                showErrorModal: !self.state.showErrorModal,
+                showWarningModal: !self.state.showWarningModal,
             })
         } else if (type == 0) {
             self.setState ({
@@ -307,7 +288,7 @@ class GenerateTransaction extends React.Component {
         }
     }
     componentWillUnmount() {
-        this.setState = (state,callback)=>{
+        this.setState = ()=>{
           return;
         };
     }
@@ -357,7 +338,6 @@ class GenerateTransaction extends React.Component {
                             onChange={self.onChangeSearchInput.bind(this)}
                         />
                         <button className="nodelist-search" onClick={self.searchTransaction.bind(self)} >
-                            <i className="fa fa-search" aria-hidden="true"></i>
                         </button>
                     </form>
                     { self.state.queryHint  && <p className="query-info">{self.state.queryHint}</p> }
@@ -485,21 +465,20 @@ class GenerateTransaction extends React.Component {
                     </section>
                 </CSSTransition>
                 <CSSTransition
-                        in={self.state.showErrorModal}
+                        in={self.state.showWarningModal}
                         timeout={300}
                         classNames="modal-layer"
                         unmountOnExit
                         >
                     <section className="modal-layer">
                         <div className="mask" onClick={self.hideModal.bind(self,3)}></div>
-                        <div className="modal error-modal">
-                            <div className="close-btn" onClick={()=>{self.setState({showErrorModal:!self.state.showErrorModal})}}>
+                        <div className={"modal error-modal "+(self.state.errorType == 2?"pending":"")}>
+                            <div className="close-btn" onClick={()=>{self.setState({showWarningModal:!self.state.showWarningModal})}}>
                                 <img src={require('../img/icon/button_icon/close.png')} alt="关闭弹窗" />
                             </div>
                             {self.state.errorType == 1 && <img src={require('../img/icon/button_icon/icon_warning_title@2x.png')} /> }
-                            {/* {self.state.errorType == 2 && <img src={require('../img/icon/button_icon/icon_error_title@2x.png')} alt="查询错误" /> } */}
-                            <h2 style={{color:(self.state.errorType == 1 ) ? '#A1FC3A':'#FF0075'}}>{self.state.errorTitle}</h2>
-                            {/* <h2 style={self.state.errorType == 1 ? {color:'#A1FC3A'}: {color:'#FF0075'}}>{self.state.errorTitle}</h2> */}
+                            {self.state.errorType == 2 && <img src={require('../img/icon/button_icon/pending.gif')} /> }
+                            <h2 style={{color:'#A1FC3A'}}>{self.state.errorTitle}</h2>
                             <p>{self.state.errorInfo}</p>
                         </div>
                     </section>
@@ -517,10 +496,4 @@ class GenerateTransaction extends React.Component {
         )
     }
 }
-
-/* Inject intl to GenerateTransaction props */
-const propTypes = {
-    intl: intlShape.isRequired,
-};
-GenerateTransaction.propTypes = propTypes
 export default injectIntl(GenerateTransaction)

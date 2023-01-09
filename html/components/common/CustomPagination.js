@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 /**
  * Custom pagination component.
  * Combined with pagenation component of React-Bootstrap.
- * 
+ *
  * ### Example:
  * ```js
  * <CustomPagination
@@ -89,11 +89,11 @@ class CustomPagination extends React.Component {
      * Before a mounted component receives new props, reset some state.
      * @param {Object} nextProps new props
      */
-    componentWillReceiveProps (nextProps) {   
+    componentWillReceiveProps (nextProps) {
         this.setState({
             from: nextProps.from,
             to: nextProps.to,
-            totalItemsCount: nextProps.totalItemsCount, 
+            totalItemsCount: nextProps.totalItemsCount,
             totalPagesCount: nextProps.totalPagesCount,
             currentPage: nextProps.currentPage,
         })
@@ -102,7 +102,7 @@ class CustomPagination extends React.Component {
         //     this.setState({
         //         lang: nextProps.intl.locale
         //     })
-        // }             
+        // }
     }
 
     render(){
@@ -115,7 +115,7 @@ class CustomPagination extends React.Component {
                         itemsToSelect={this.props.rowsPerPageRange || [
                             {
                                 name: this.props.intl.locale==='zh'?'10 项/页':'10 / page',
-                                value: 10      
+                                value: 10
                             }, {
                                 name: this.props.intl.locale==='zh'?'20 项/页':'20 / page',
                                 value: 20
@@ -128,7 +128,7 @@ class CustomPagination extends React.Component {
                             }, {
                                 name: this.props.intl.locale==='zh'?'50 项/页':'50 / page',
                                 value: 50
-                            }, 
+                            },
                         ]}
                         onSelect={(item) => this.props.onChangeRowsPerPage(item)} />
                     <p className='itemsCount'>
@@ -159,8 +159,8 @@ class CustomPagination extends React.Component {
                                 onKeyDown={this.props.onPageInputKeyDown.bind(this)}
                             />
                             )}
-                        </FormattedMessage>                        
-                        <span className='totalPages'>/{this.state.totalPagesCount}</span>       
+                        </FormattedMessage>
+                        <span className='totalPages'>/{this.state.totalPagesCount}</span>
                         <FormattedMessage id='paginationJumpBtn' tagName="p">
                             {(txt) => (
                                 <input type="button"
@@ -170,7 +170,7 @@ class CustomPagination extends React.Component {
                             )}
                         </FormattedMessage>
                     </div>
-                </div>                            
+                </div>
             </div>
         )
     }

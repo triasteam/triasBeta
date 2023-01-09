@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '8285ru(*m*%4c^a)mpbpdna#(q)^471ezg+y+gk4-)fm@lvv+g'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -97,7 +97,9 @@ NODE_SHOW_JSON = STATICFILES_DIRS[1] + "/node_show.json"
 
 with open(CONF_JSON, 'r') as conf:
     rec = conf.read()
+    print(rec,'4545454545454')
 records = json.loads(rec)
+
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases

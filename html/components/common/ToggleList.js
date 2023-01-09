@@ -1,32 +1,42 @@
 import React from "react"
 import $ from "jquery";
+import PropTypes from 'prop-types';
+
 /**
  * Custom toggle list component.
- * Usage:
+ *
+ * ### Example:
+ * ```js
  * <ToggleList
  * listID="langlist"
  * itemsToSelect={[{
-      ele: <span onClick={()=>this.changeLanguage('zh')}>中文</span>
-    }, {
-        ele: <span  onClick={()=>this.changeLanguage('en')}>English</span>
-    }]}
+ *      ele: <span onClick={()=>this.changeLanguage('zh')}>中文</span>
+ *      }, {
+ *      ele: <span  onClick={()=>this.changeLanguage('en')}>English</span>
+ *  }]}
  * name={<i className="fas fa-globe-americas"></i>} />
- * 
- * Attributes:
- * - listID: id of the outer container
- * - itemsToSelect: a list of elements( ele: element shows in the drop-down list )
- * - name: shows in the toggle button
+ * ```
  */
 export default class ToggleList extends React.Component {
+    static propTypes = {
+        /** Id of the outer container */
+        listID: PropTypes.string,
+        /** A list of elements( ele: element shows in the drop-down list ) */
+        itemsToSelect:PropTypes.array,
+        /** Name shows in the toggle button */
+        name: PropTypes.object,
+        /** CSS Class name to append to the container  */
+        className: PropTypes.string
+    }
     constructor(props) {
         super(props);
         this.state={
-            itemsToSelect:this.props.itemsToSelect,     // list containing options for this drop-down list. 
+            itemsToSelect:this.props.itemsToSelect,     // list containing options for this drop-down list.
             name:this.props.name,
             showListBlock:false,    // whether to show options
         }
     }
-    
+
     /**
      * After the component is mounted.
      * - Set listener to the click event of the document.
@@ -37,13 +47,13 @@ export default class ToggleList extends React.Component {
         $(document).bind('click',function(e){
             if(self.state.showListBlock){ // if the drop-down list is expanded
                 var event = e || window.event;  // browser compatibility
-                var elem = event.target || event.srcElement; 
+                var elem = event.target || event.srcElement;
                 // traversing the parent elements
                 while (elem) {
                     if (elem.id && elem.id==self.props.listID){  // determine if the outer container is clicked
-                        return; 
-                    } 
-                    elem = elem.parentNode; 
+                        return;
+                    }
+                    elem = elem.parentNode;
                 }
                 // if there is a angle icon in the toggle button, toggle it up
                 if($('#' + self.props.listID + ' .item-selected>a').find('.fa-angle-down').length >0){
@@ -52,10 +62,10 @@ export default class ToggleList extends React.Component {
                 self.setState({ // collapse drop-down list
                     showListBlock:false
                 })
-            }            
-        }); 
+            }
+        });
     }
-    
+
     /**
      * Before a mounted component receives new props, reset some state.
      * @param {Object} nextProps new props
@@ -66,8 +76,8 @@ export default class ToggleList extends React.Component {
             this.setState({
                 itemsToSelect:nextProps.itemsToSelect,
                 name: nextProps.name
-            }) 
-        }            
+            })
+        }
     }
 
     /**
@@ -95,9 +105,9 @@ export default class ToggleList extends React.Component {
         );
         return (
         <div className={"my-dropdown-list toggle-list "+ (this.props.className|| '')} id={this.props.listID}>
-            <div className="item-selected">
-                <a onClick={this.changeListState.bind(this)}>{this.state.name}</a>
-            </div>
+            {/*<div className="item-selected">*/}
+            {/*    <a onClick={this.changeListState.bind(this)}>{this.state.name}</a>*/}
+            {/*</div>*/}
             {/* Collapse or expand the drop-down list according to this.state.showListBlock; if there is no option, then always hide the option box. */}
             <div className={(this.state.showListBlock && listToShow.length>0)?"list-block":"hide list-block"} onClick={()=>{this.changeListState()}}>
                 <ul>

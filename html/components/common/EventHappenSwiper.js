@@ -20,8 +20,12 @@ export default class EventHappenSwiper extends React.Component {
    * initialize swiper carousel
    */
   createSwiper() {
+<<<<<<< HEAD
     console.log()
     let mySwiper = new Swiper(".swiper-container", {
+=======
+    new Swiper(".swiper-container", {
+>>>>>>> 75035511b0160026892b63fba079f54c01ed4d56
       // direction: 'vertical', // 垂直切换选项
       loop: false, // 循环模式选项
       slidesPerView: 5, // display time block
@@ -88,7 +92,7 @@ export default class EventHappenSwiper extends React.Component {
   }
 
   componentWillUnmount = () => {
-    this.setState = (state,callback)=>{
+    this.setState = ()=>{
       return;
     };
   }

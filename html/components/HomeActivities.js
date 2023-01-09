@@ -2,7 +2,7 @@ import React from "react"
 import { Link } from 'react-router-dom'
 // import ES6Promise from 'es6-promise'
 // ES6Promise.polyfill() //关键代码,让ie识别promise对象!
-import {injectIntl, intlShape, FormattedMessage } from 'react-intl'; /* react-intl imports */
+import {FormattedMessage } from 'react-intl'; /* react-intl imports */
 import $ from 'jquery'
 
 /**
@@ -15,7 +15,6 @@ export default class HomeActivities extends React.Component {
             activities:[],
         }
     }
-
 
     componentDidMount() {
         this.getActivities();
@@ -92,15 +91,9 @@ export default class HomeActivities extends React.Component {
         if(this.activitiesInterval) {
             clearInterval(this.activitiesInterval);
         }
-        this.setState = (state,callback)=>{
+        this.setState = ()=>{
             return;
         };  
-    }
-    /**
-     * Before a mounted component receives new props, reset some state.
-     * @param {Object} nextProps new props
-     */
-    componentWillReceiveProps(nextProps) {
     }
 
     render() {

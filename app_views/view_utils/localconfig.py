@@ -17,7 +17,7 @@ class JsonConfiguration:
         self.server_port = records["server_port"]
         self.redis_ip = records["redis_ip"]
         self.redis_port = records["redis_port"]
-        self.ranking_port = records["ranking_port"]
+        self.redis_password = records["redis_password"]
 
 
 class ActivityConfiguration:

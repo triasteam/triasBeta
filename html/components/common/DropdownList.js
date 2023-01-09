@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 
 /**
  * Custom drop-down list component.
- * 
+ *
  * ### Example:
- * 
+ *
  * ```jsx
  * <DropdownList
  *  listID="id"
@@ -20,9 +20,9 @@ export default class DropdownList extends React.Component {
         /** Id of the outer container */
         listID: PropTypes.string,
         /** Index of first row in current page.
-         * 
+         *
          * (ex. [{name:'主机名',value:'clientname'},{name:'文件哈希',value:'filedata'},...]).
-         * 
+         *
          * - The name shows in the drop-down list.
          * - The value will be passed when related option is selected.
          */
@@ -32,16 +32,16 @@ export default class DropdownList extends React.Component {
         /** Total number of items. */
         itemDefault: PropTypes.object
     }
-    
+
     constructor(props) {
         super(props);
         this.state={
-            itemsToSelect:this.props.itemsToSelect,     // list containing options for this drop-down list. 
+            itemsToSelect:this.props.itemsToSelect,     // list containing options for this drop-down list.
             activeItem:this.props.itemDefault || this.props.itemsToSelect[0],     // current option. The first item of itemsToSelect by default.
             showListBlock:false,    // whether to show options
         }
     }
-    
+
     /**
      * After the component is mounted.
      * - Set listener to the click event of the document.
@@ -52,40 +52,40 @@ export default class DropdownList extends React.Component {
         $(document).bind('click',function(e){
             if(self.state.showListBlock){ // if the drop-down list is expanded
                 var event = e || window.event;  // browser compatibility
-                var elem = event.target || event.srcElement; 
+                var elem = event.target || event.srcElement;
                 // traversing the parent elements
                 while (elem) {
                     if (elem.id && elem.id==self.props.listID){  // determine if the outer container is clicked
-                        return; 
-                    } 
-                    elem = elem.parentNode; 
-                } 
+                        return;
+                    }
+                    elem = elem.parentNode;
+                }
                 self.setState({ // collapse drop-down list
                     showListBlock:false
                 })
-            }            
-        }); 
+            }
+        });
     }
-    
+
     /**
      * Before a mounted component receives new props, reset some state.
      * @param {Object} nextProps new props
      */
-    componentWillReceiveProps (nextProps) {
+    componentWillReceiveProps(nextProps) {
         var self = this
         // if the prop will change
         if(JSON.stringify(this.props.itemsToSelect) != JSON.stringify(nextProps.itemsToSelect) ){
             this.setState({
                 itemsToSelect:nextProps.itemsToSelect,
                 activeItem: nextProps.itemsToSelect[self.state.itemsToSelect.indexOf(self.state.activeItem)]
-            }) 
+            })
         }
         if(JSON.stringify(this.props.itemDefault) != JSON.stringify(nextProps.itemDefault)){
             this.setState({
-                activeItem: nextProps.itemDefault || nextProps.itemsToSelect[0] 
+                activeItem: nextProps.itemDefault || nextProps.itemsToSelect[0]
             })
-            this.props.onSelect(nextProps.itemDefault.value)  // invoke the handler and pass the value 
-        }               
+            this.props.onSelect(nextProps.itemDefault.value)  // invoke the handler and pass the value
+        }
     }
 
     /**
@@ -101,11 +101,11 @@ export default class DropdownList extends React.Component {
 
     /**
      * handler for the change of selected item
-     * @param {Object} item 
+     * @param {Object} item
      */
     selectItem(item){
         this.setState({
-            activeItem: item            
+            activeItem: item
         })
         this.changeListState() // collapse the drop-down list
         this.props.onSelect(item.value)
@@ -115,7 +115,7 @@ export default class DropdownList extends React.Component {
         var self = this
         var listToShow = this.state.itemsToSelect && this.state.itemsToSelect.map(function(item,index){
             return (
-                <li 
+                <li
                 key={'select-item-'+index}
                 className={JSON.stringify(item)==JSON.stringify(self.state.activeItem)?'active':''}
                 onClick={self.selectItem.bind(self,item)}
@@ -129,10 +129,10 @@ export default class DropdownList extends React.Component {
             <div>
                 <div className="select-img" onClick={this.changeListState.bind(this)}><i className="fas fa-angle-down"></i></div>
                 <input
-                    className="item-selected" 
-                    type="text" 
+                    className="item-selected"
+                    type="text"
                     readOnly
-                    value={this.state.activeItem && this.state.activeItem.name} 
+                    value={this.state.activeItem && this.state.activeItem.name}
                     onClick={this.changeListState.bind(this)}
                 />
             </div>
