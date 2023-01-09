@@ -8,8 +8,9 @@ from django.shortcuts import render
 class QtsAuthentication(object):
     def __init__(self, get_response):
         self.get_response = get_response    
-    def process_request(self, request):
+    def __call__(self, request):
         if 'api' in request.path:
-            pass
+            response = self.get_response(request)
+            return response
         else:
             return render(request,'index.html')
