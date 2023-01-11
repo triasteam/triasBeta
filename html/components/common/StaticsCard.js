@@ -90,7 +90,7 @@ export default class StaticsCard extends React.Component {
             <span className="point"></span>
             <span className="param-name">Trias -1</span>
             <span className="param-value">
-              {this.state.trias ? this.state.trias : "--"}
+              {this.state.trias !=null ? this.state.trias : "--"}
             </span>
           </div>
           {/* <div className="param-item clearfix">
@@ -107,7 +107,7 @@ export default class StaticsCard extends React.Component {
             <span className="point"></span>
             <span className="param-name">Trias 1</span>
             <span className="param-value">
-              {this.state.trias1 ? this.state.trias1 : "--"}
+              {this.state.trias1 !=null ? this.state.trias1 : "--"}
             </span>
           </div>
           <div className="param-item clearfix null-param">
