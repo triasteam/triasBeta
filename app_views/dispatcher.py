@@ -2,12 +2,15 @@
 # middleware for dispatch url
 """
 
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 
 
 class QtsAuthentication(object):
-    def process_request(self, request):
+    def __init__(self, get_response):
+        self.get_response = get_response    
+    def __call__(self, request):
         if 'api' in request.path:
-            pass
+            response = self.get_response(request)
+            return response
         else:
-            return render_to_response('index.html')
+            return render(request,'index.html')

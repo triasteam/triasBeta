@@ -1,33 +1,71 @@
+
 {
-  "node_list": [
-    {
-      "ip": "106.3.133.178",
-      "port": "46657"
-    }, {
-      "ip": "106.3.133.179",
-      "port": "46657"
-    }, {
-      "ip": "106.3.133.180",
-      "port": "46657"
-    }, {
-      "ip": "210.73.218.171",
-      "port": "46657"
-    }, {
-      "ip": "210.73.218.172",
-      "port": "46657"
-    }, {
-      "ip": "101.251.223.190",
-      "port": "46657"
-    }
-  ],
-  "server_port": "46657",
-  "redis_ip":"192.168.1.241",
-  "redis_port": 9000,
-  "mysql_ip": "192.168.1.211",
-  "mysql_port": "3306",
-  "mysql_user": "8lab",
-  "mysql_password": "8lab",
-  "mysql_database": "explorer_monitor_script99",
-  "ranking_port": 8000
-  
+  "tm":{
+    "node_list": [
+      {
+        "ip": "106.3.133.178",
+        "port": "46657"
+      }, {
+        "ip": "106.3.133.179",
+        "port": "46657"
+      }, {
+        "ip": "106.3.133.180",
+        "port": "46657"
+      }, {
+        "ip": "210.73.218.171",
+        "port": "46657"
+      }, {
+        "ip": "210.73.218.172",
+        "port": "46657"
+      }, {
+        "ip": "101.251.223.190",
+        "port": "46657"
+      }
+    ],
+    "server_port": "46657",
+    "redis_ip":"192.168.1.99",
+    "redis_port": 6379,
+    "redis_password": "octa8lab",
+    "mysql_ip": "192.168.1.99",
+    "mysql_port": "3306",
+    "mysql_user": "8lab",
+    "mysql_password": "8lab",
+    "mysql_database": "explorer_monitor_script99",
+    "ranking_port": 8000
+    
+  },
+  "bsc":{
+    "node_list": [
+      {
+        "ip": "106.3.133.178",
+        "port": "46657"
+      }, {
+        "ip": "106.3.133.179",
+        "port": "46657"
+      }, {
+        "ip": "106.3.133.180",
+        "port": "46657"
+      }, {
+        "ip": "210.73.218.171",
+        "port": "46657"
+      }, {
+        "ip": "210.73.218.172",
+        "port": "46657"
+      }, {
+        "ip": "101.251.223.190",
+        "port": "46657"
+      }
+    ],
+    "server_port": "46657",
+    "redis_ip":"192.168.1.99",
+    "redis_port": 6379,
+    "redis_password": "octa8lab",
+    "mysql_ip": "192.168.1.99",
+    "mysql_port": "3306",
+    "mysql_user": "8lab",
+    "mysql_password": "8lab",
+    "mysql_database": "bsc99_explorer",
+    "ranking_port": 8000
+    
+  }
 }

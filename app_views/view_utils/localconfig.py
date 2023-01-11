@@ -11,7 +11,8 @@ class JsonConfiguration:
     def __init__(self):
         with open(CONF_JSON, 'r') as conf:
             rec = conf.read()
-        records = json.loads(rec)
+        data = json.loads(rec)
+        records = data['tm']
 
         self.node_list = records["node_list"]
         self.server_port = records["server_port"]

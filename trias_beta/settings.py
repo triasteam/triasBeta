@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'app_views'
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -97,8 +97,9 @@ NODE_SHOW_JSON = STATICFILES_DIRS[1] + "/node_show.json"
 
 with open(CONF_JSON, 'r') as conf:
     rec = conf.read()
-    print(rec,'4545454545454')
-records = json.loads(rec)
+data = json.loads(rec)
+records = data['tm']
+bsc = data['bsc']
 
 
 # Database
@@ -112,6 +113,15 @@ DATABASES = {
         'PASSWORD': records["mysql_password"],
         'HOST': records["mysql_ip"],
         'PORT': records["mysql_port"],
+        'CONN_MAX_AGE': 180
+    },
+    'bsc':{
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': bsc['mysql_database'],
+        'USER': bsc["mysql_user"],
+        'PASSWORD': bsc["mysql_password"],
+        'HOST': bsc["mysql_ip"],
+        'PORT': bsc["mysql_port"],
         'CONN_MAX_AGE': 180
     }
 }
@@ -150,7 +160,7 @@ LOGGING = {
         'default': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/var/log/leviatom/leviatom.log',     # log file
+            'filename': './leviatom.log',     # log file
             'maxBytes': 1024 * 1024 * 5,                   # file size
             'backupCount': 5,                              # Backup
             'formatter': 'standard',                       # log format
@@ -163,7 +173,7 @@ LOGGING = {
         'request_handler': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/var/log/leviatom/request.log',
+            'filename': './request.log',
             'maxBytes': 1024 * 1024 * 5,
             'backupCount': 5,
             'formatter': 'standard'
@@ -196,3 +206,4 @@ TIME_ZONE = 'Asia/Shanghai'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = False
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

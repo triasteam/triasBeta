@@ -283,12 +283,12 @@ export default class Main extends React.Component {
                                             <FormattedMessage id="termNodeList" />
                                         </NavLink>
                                     </li>
-                                    <li>
+                                    {/* <li>
                                         <div className="demo-link" onClick={this.onClickDemoLink.bind(this)}>
                                             Testnet Demos
                                             <div className="label">NEW</div>
                                         </div>
-                                    </li>
+                                    </li> */}
                                 </ul>
                                 <ul className="nav pull-right">
                                     <li>
@@ -303,7 +303,7 @@ export default class Main extends React.Component {
                                     {/*</li>*/}
                                     <li>
                                         <a href="https://www.trias.one/testnet" target="blank">
-                                            Trias x ETH
+                                        Faucet
                                         </a>
                                     </li>
                                     <li className='lang'>
