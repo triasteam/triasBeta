@@ -16,12 +16,16 @@ node_show = get_node_show()
 def get_node_list(request):
 
     try:
+        chain_type = request.GET.get('chain_type', 'tm')
         node_status = request.GET.get('status', '')
         search = request.GET.get('search', '')
         page = int(request.GET.get('curr_page', 1))
         size = int(request.GET.get('page_size', 10))
+        if chain_type == "bsc":
+            nodes = Node.objects.using("bsc").all().order_by('-block_heigth', '-status', 'id')
+        else:
+            nodes = Node.objects.all().order_by('-block_heigth', '-status', 'id')
 
-        nodes = Node.objects.all().order_by('-block_heigth', '-status', 'id')
 
         if node_status:
             nodes = nodes.filter(status=node_status)
