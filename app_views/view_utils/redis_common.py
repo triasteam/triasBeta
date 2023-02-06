@@ -6,9 +6,9 @@ from app_views.view_utils.logger import logger
 jc = JsonConfiguration()
 
 def init_redis_config(**kwargs):
-    host = jc.redis_ip
-    port = jc.redis_port
-    password = jc.redis_password
+    host = jc.data["tm"]["redis_ip"]
+    port = jc.data["tm"]["redis_port"]
+    password = jc.data["tm"]["redis_password"]
     if type(host) == list:
         from rediscluster import RedisCluster
         startup_nodes = []

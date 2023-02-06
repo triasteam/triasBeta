@@ -35,7 +35,7 @@ def get_ranking():
     node_list = get_ordered_node()
     try:
         for node in node_list:
-            url = "http://%s:%s/QueryNodes" % (node, jc.ranking_port)
+            url = "http://%s:%s/QueryNodes" % (node, jc.data["tm"]["ranking_port"])
             params = {"period": 2, "numRank": 100}
             result = requests.post(url=url, json=params)
             if result:
@@ -51,7 +51,7 @@ def get_validators():
              #tm v0.35edi server:
             # bef api to myupgrade : from tri_block_validators
             #to tri_validators
-            url = "http://%s:%s/tri_validators" % (node, jc.server_port)
+            url = "http://%s:%s/tri_validators" % (node, jc.data["tm"]["server_port"])
             result = url_data(url)
             if result and ('error' not in result):
                 return result
@@ -69,7 +69,7 @@ def send_transaction_util(id, content):
             #tm v0.35edi server:
             # bef api to myupgrade : from tri_bc_tx_commit
             #to tri_broadcast_tx_commit
-            url = "http://%s:%s/tri_broadcast_tx_commit" % (node, jc.server_port)
+            url = "http://%s:%s/tri_broadcast_tx_commit" % (node, jc.data["tm"]["server_port"])
             result = url_data(url, params=params, time_out=120)
             logger.info('request url result is: %s' % result)
             if result:

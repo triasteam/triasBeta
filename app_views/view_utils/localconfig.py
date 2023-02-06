@@ -12,14 +12,14 @@ class JsonConfiguration:
         with open(CONF_JSON, 'r') as conf:
             rec = conf.read()
         data = json.loads(rec)
-        records = data['tm']
+        # records = data['tm']
 
-        self.node_list = records["node_list"]
-        self.server_port = records["server_port"]
-        self.redis_ip = records["redis_ip"]
-        self.redis_port = records["redis_port"]
-        self.redis_password = records["redis_password"]
-
+        # self.node_list = records["node_list"]
+        # self.server_port = records["server_port"]
+        # self.redis_ip = records["redis_ip"]
+        # self.redis_port = records["redis_port"]
+        # self.redis_password = records["redis_password"]
+        self.data = data
 
 class ActivityConfiguration:
 
