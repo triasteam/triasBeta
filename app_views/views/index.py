@@ -406,15 +406,25 @@ def get_tps(request):
 
     try:
         qtime = int(time.time()) - 3600 * 8
-        isBlock = Block.objects.filter(
+        isTMBlock = Block.objects.filter(
             Q(timestamp__lte=qtime) & Q(timestamp__gt=(qtime - 60)))
         data = 0
+        if isTMBlock.exists():
+            for tx in list(
+                    isTMBlock.values_list('transactionsCount', flat=True)):
+                data += tx
+        logger.info('one minute tx num: %s' % data)
+        data /= 60
+
+        isBlock = Block.objects.using("bsc").filter(
+            Q(timestamp__lte=qtime) & Q(timestamp__gt=(qtime - 60)))
+        bsc_data = 0
         if isBlock.exists():
             for tx in list(isBlock.values_list('transactionsCount',
                                                flat=True)):
                 data += tx
-        logger.info('one minute tx num: %s' % data)
-        data /= 60
+        logger.info('one minute bsc num: %s' % data)
+        bsc_data /= 60
 
         result = {
             "trias": {
@@ -422,8 +432,8 @@ def get_tps(request):
                 'value': round(data, 2)
             },
             "ethereum": {
-                'rate': 0,
-                'value': 0
+                'rate': round(data / 100, 2),
+                'value': round(data, 2)
             },
             "hyperledger": {
                 'rate': 0,
