@@ -235,7 +235,7 @@ def get_instant_message(request):
         nodes = jc.data[chain_type]["node_list"]
         status = 'success'
         result = check_nodes(nodes)
-        
+
         ###############################################################################
         # Old Version Code：
         # nowtime = int(time.time())
@@ -444,14 +444,16 @@ def get_faulty_nodes(request):
     try:
         faulty_nodes_num = Node.objects.filter(status=1).count()
         all_nodes_num = Node.objects.count()
+        eth_faulty_num = Node.objects.using("bsc").filter(status=1).count()
+        all_eth_num = Node.objects.using("bsc").count()
         result = {
             "trias": {
                 'rate': round(faulty_nodes_num / all_nodes_num, 2),
                 'value': faulty_nodes_num
             },
             "ethereum": {
-                'rate': 0,
-                'value': 0
+                'rate': round(eth_faulty_num / all_eth_num, 2),
+                'value': eth_faulty_num
             },
             "hyperledger": {
                 'rate': 0,
@@ -479,8 +481,8 @@ def get_fault_accetpance_rate(request):
                 'value': 30
             },
             "ethereum": {
-                'rate': 0,
-                'value': 0
+                'rate': 0.5,
+                'value': 50
             },
             "hyperledger": {
                 'rate': 0,
