@@ -27,24 +27,24 @@ PS: 新增接口返回数据与原有接口`api/general_static`一致,当前后�
 
 ```
 ### 后端调整接口：
-- `get_tps`
+- `api/tps/`
 
 Response json返回列表中补充了ethereum字段数据，对应bsc链的数据，目前看前端已可展示
 
 
 
 
-- `get_faulty_nodes`
+- `api/faulty_nodes/`
 
 Response json返回列表中补充了ethereum字段数据，对应bsc链的数据，目前看前端已可展示
 
-- `get_fault_accetpance_rate`
+- `api/fault_accetpance_rate/`
 
 Response json返回列表中补充了ethereum字段数据，对应bsc链的数据，目前看前端已可展示
 
 
 
-- `get_instant_message`
+- `api/instant_message/`
 添加GET请求的chain_type字段支持
 
 新的请求示例如下：
@@ -57,7 +57,7 @@ Response json返回列表中补充了ethereum字段数据，对应bsc链的数�
 
 
 
-- `get_node_list`
+- `api/node_list/`
 添加GET请求的chain_type字段支持
 新的请求示例如下：
 `http://0.0.0.0:8000/api/node_list/?group=3&curr_page=1&page_size=10&chain_type=bsc&search=`
