@@ -491,8 +491,8 @@ def get_fault_accetpance_rate(request):
                 'value': 30
             },
             "ethereum": {
-                'rate': 0.5,
-                'value': 50
+                'rate': 0.49,
+                'value': 49
             },
             "hyperledger": {
                 'rate': 0,
