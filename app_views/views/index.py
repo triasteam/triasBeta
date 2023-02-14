@@ -536,6 +536,7 @@ def get_data_monitoring(request):
         result_time = timestamp_list[:-1]
         result_tps = []
         event_list = []
+        result_tps_eth = []
 
         # get tps and event_list
         for tmp in range(len(timestamp_list) - 1):
@@ -545,6 +546,16 @@ def get_data_monitoring(request):
                                    3600 * 8))).aggregate(
                                        tx_nums=Count('transactionsCount'))
             result_tps.append(tx_nums['tx_nums'])
+
+            # 与上面的逻辑一致,获取bsc结果
+            tx_nums_eth = Block.objects.using("bsc").filter(
+                Q(timestamp__gte=(timestamp_list[tmp] - 3600 * 8))
+                & Q(timestamp__lt=(timestamp_list[tmp + 1] -
+                                   3600 * 8))).aggregate(
+                                       tx_nums=Count('transactionsCount'))
+            result_tps_eth.append(tx_nums_eth['tx_nums'])            
+
+
 
             activity_query = Activity.objects.filter(
                 Q(time__gte=timestamp_list[tmp])
@@ -558,6 +569,22 @@ def get_data_monitoring(request):
                         break
             event_list.append(activity)
 
+            # 与上面的逻辑一致,获取bsc结果
+            activity_query_eth = Activity.objects.using("bsc").filter(
+                Q(time__gte=timestamp_list[tmp])
+                & Q(time__lt=(timestamp_list[tmp + 1]))).order_by('time')
+            activity_eth = -1
+            if activity_query_eth.exists():
+                for type in list(activity_query_eth.values_list('type',
+                                                            flat=True)):
+                    if type == 1 or type == 4:
+                        activity_eth = type
+                        break
+            event_list.append(activity_eth)
+
+
+
+
         # get faulty nodes
         result_faulty_nodes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         abnormal_nodes = AbnormalNode.objects.filter(
@@ -567,17 +594,28 @@ def get_data_monitoring(request):
             result_faulty_nodes[result_time.index(
                 timestamp)] = abnormal_node.count
 
+        # get eth faulty nodes
+        eth_result_faulty_nodes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        eth_abnormal_nodes = AbnormalNode.objects.using("bsc").filter(
+            timestamp__gte=timestamp_list[0]).order_by('id').values()
+        for abnormal_node in eth_abnormal_nodes:
+            timestamp = abnormal_node.timestamp
+            eth_result_faulty_nodes[result_time.index(
+                timestamp)] = abnormal_node.count
+
+
+
         result_fault_accetpance_rate = [
             0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3
         ]
-
+        result_fault_accetpance_rate_eth = [
+            0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5
+        ]
         result['faulty_nodes_list']['event_list'] = event_list
         result['faulty_nodes_list']['trias']['time'] = result_time
         result['faulty_nodes_list']['trias']['value'] = result_faulty_nodes
         result['faulty_nodes_list']['ethereum']['time'] = result_time
-        result['faulty_nodes_list']['ethereum']['value'] = [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        ]
+        result['faulty_nodes_list']['ethereum']['value'] = eth_result_faulty_nodes
         result['faulty_nodes_list']['hyperledger']['time'] = result_time
         result['faulty_nodes_list']['hyperledger']['value'] = [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -588,9 +626,7 @@ def get_data_monitoring(request):
         result['fault_accetpance_rate']['trias'][
             'value'] = result_fault_accetpance_rate
         result['fault_accetpance_rate']['ethereum']['time'] = result_time
-        result['fault_accetpance_rate']['ethereum']['value'] = [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        ]
+        result['fault_accetpance_rate']['ethereum']['value'] = result_fault_accetpance_rate_eth
         result['fault_accetpance_rate']['hyperledger']['time'] = result_time
         result['fault_accetpance_rate']['hyperledger']['value'] = [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -600,9 +636,7 @@ def get_data_monitoring(request):
         result['tps_monitoring']['trias']['time'] = result_time
         result['tps_monitoring']['trias']['value'] = result_tps
         result['tps_monitoring']['ethereum']['time'] = result_time
-        result['tps_monitoring']['ethereum']['value'] = [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        ]
+        result['tps_monitoring']['ethereum']['value'] = result_tps_eth
         result['tps_monitoring']['hyperledger']['time'] = result_time
         result['tps_monitoring']['hyperledger']['value'] = [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
