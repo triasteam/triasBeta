@@ -47,7 +47,8 @@ const en_US = {
     termVisualization: "Visualization",
     termStatus: "Status",
     termRanking: "Ranking",
-    termNodeList: "Node list",
+    tusimaNodeList: "trias 1 list",
+    triasNodeList:"trias -1 list",
     /* Table head: 'th...' */
     thBlockHeight: "Block height",
     thBlockHash: "Current block hash",

@@ -38,6 +38,10 @@ const Activities = Loadable({
     loading: MyLoadingComponent
 });
 const NodeList = Loadable({
+    loader: () => import('./triasList'),
+    loading: MyLoadingComponent
+});
+const NodeList1 = Loadable({
     loader: () => import('./NodeList'),
     loading: MyLoadingComponent
 });
@@ -103,6 +107,11 @@ export default class Main extends React.Component {
                 pathName: lang==='en'?'Node List':'节点列表'
             });
             break;
+            case 'nodes_trias':
+            this.setState({
+                pathName: lang==='en'?'Node List':'节点列表'
+            });
+            break;
         }
     }
 
@@ -129,6 +138,11 @@ export default class Main extends React.Component {
             this.setState({
                 pathName: self.state.lang==='en'?'Node List':'节点列表'
             });
+            break
+            case 'nodes_trias':
+                this.setState({
+                    pathName: self.state.lang==='en'?'Node List':'节点列表'
+                });
             break;
         }
     }
@@ -279,8 +293,14 @@ export default class Main extends React.Component {
                                     </li>
                                     <li>
                                         {/* No exact attribute. Be active when url is like '/nodes...'.*/}
-                                        <NavLink to="/nodes" activeClassName="active" onClick={this.changeHeadline.bind(this,this.state.lang==='en'?'Node List':'节点列表')}>
-                                            <FormattedMessage id="termNodeList" />
+                                        <NavLink to="/nodes" activeClassName="active" onClick={this.changeHeadline.bind(this,this.state.lang==='en'?'trias 1 List':'节点列表')}>
+                                            <FormattedMessage id="tusimaNodeList" />
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        {/* No exact attribute. Be active when url is like '/nodes...'.*/}
+                                        <NavLink to="/nodes_trias" activeClassName="active" onClick={this.changeHeadline.bind(this,this.state.lang==='en'?'trias -1 List':'节点列表')}>
+                                            <FormattedMessage id="triasNodeList" />
                                         </NavLink>
                                     </li>
                                     {/* <li>
@@ -324,6 +344,7 @@ export default class Main extends React.Component {
                                 <Route exact path="/"  render={props => <ChainSatus currentInfo = {this.state.currentInfo} {...props} />}  />
                                 <Route exact path="/activities" component={Activities} />
                                 <Route exact path="/nodes" component={NodeList} />
+                                <Route exact path="/nodes_trias" component={NodeList1} />
                                 <Redirect to="/" />{/* when no routes above matched, redirect to ChainStatus page */}
                                 {/* <Route exact path="/stayTuned" component={StayTuned} /> */}
                             </Switch>
