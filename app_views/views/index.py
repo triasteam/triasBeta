@@ -113,11 +113,12 @@ def get_visualization(request):
 
     try:
         response = get_ranking()
+        # ["result"]["block"]["trust_nodes"]
         if response:
             rank_list = [
-                item['attestee'] for item in response['data']['dataScore']
+                item['ip'] for item in response["result"]["block"]["trust_nodes"]
             ]
-            ctx_list = response['data']['dataCtx']
+            # ctx_list = response['data']['dataCtx']
     except Exception as e:
         logger.error(e)
 
@@ -194,7 +195,24 @@ def get_visualization(request):
         logger.error(e)
         status = 'failure'
         logger.error(traceback.format_exc())
-
+    # result['trias']['nodes'].append({
+    #     "node_ip": "192.168.1.221",
+    #     "status": 0,
+    #     'level': 1,
+    #     'trend': 0
+    # })
+    # result['trias']['nodes'].append({
+    #     "node_ip": "192.168.1.222",
+    #     "status": 1,
+    #     'level': 0,
+    #     'trend': 1
+    # })      
+    # result['ethereum']['nodes'].append({
+    #     "node_ip": "192.168.1.229",
+    #     "status": 1,
+    #     'level': 1,
+    #     'trend': -1
+    # })        
     return JsonResponse({'status': status, 'result': result})
 
 
