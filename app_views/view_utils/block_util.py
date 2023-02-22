@@ -35,9 +35,9 @@ def get_ranking():
     node_list = get_ordered_node()
     try:
         for node in node_list:
-            url = "http://%s:%s/QueryNodes" % (node, jc.data["tm"]["ranking_port"])
-            params = {"period": 2, "numRank": 100}
-            result = requests.post(url=url, json=params)
+            url = "http://%s:%s/tri_block_info" % (node, jc.data["tm"]["server_port"])
+            # params = {"period": 2, "numRank": 100}
+            result = requests.get(url)
             if result:
                 return result.json()
     except Exception as e:
