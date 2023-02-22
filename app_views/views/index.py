@@ -570,8 +570,8 @@ def get_data_monitoring(request):
                 Q(timestamp__gte=(timestamp_list[tmp] - 3600 * 8))
                 & Q(timestamp__lt=(timestamp_list[tmp + 1] -
                                    3600 * 8))).aggregate(
-                                       tx_nums=Count('transactionsCount'))
-            result_tps_eth.append(tx_nums_eth['tx_nums'])            
+                                       tx_nums_eth=Count('transactionsCount'))
+            result_tps_eth.append(tx_nums_eth['tx_nums_eth'])            
 
 
 
