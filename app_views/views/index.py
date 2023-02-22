@@ -440,8 +440,8 @@ def get_tps(request):
         if isBlock.exists():
             for tx in list(isBlock.values_list('transactionsCount',
                                                flat=True)):
-                data += tx
-        logger.info('one minute bsc num: %s' % data)
+                bsc_data += tx
+        logger.info('one minute bsc num: %s' % bsc_data)
         bsc_data /= 60
 
         result = {
@@ -450,8 +450,8 @@ def get_tps(request):
                 'value': round(data, 2)
             },
             "ethereum": {
-                'rate': round(data / 100, 2),
-                'value': round(data, 2)
+                'rate': round(bsc_data / 100, 2),
+                'value': round(bsc_data, 2)
             },
             "hyperledger": {
                 'rate': 0,
