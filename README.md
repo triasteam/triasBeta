@@ -1,74 +1,98 @@
-**本分支版仅本用于前端开发联调测试,后续会将其合并入其它分支**
+# Trias Beta
+[![GitHub license](https://img.shields.io/badge/license-GPL3.0-blue.svg)](https://github.com/triasteam/triasBeta/blob/master/LICENSE.md)
+[![Build Status](https://travis-ci.org/triasteam/triasBeta.svg)](https://travis-ci.org/triasteam/triasBeta)
 
-### 安装依赖:
+This project is a web portal which displays statistics and data of the Trias Beta system.
 
-`pip3 install -r requirements.txt`
+## Requirements
+|Requirement|Notes|
+|:-----|:---|
+|python|3.10 or later|
+|Django|3.2.10 or later|
+|django-webpack-loader|0.7.0|
+|requests|2.26.0|
+|PyMySQL|1.0.2|
+|react|16.3.2|
+|webpack|2.7.0|
 
-### 运行
+## Documentation
+For more documention about Trias, see [Trias White Paper](https://www.trias.one/whitepaper).
 
-```
-python3 manage.py runserver --insecure
-```
-
-### 后端新增接口:
-
-`api/general_static_bsc`
-
-返回示例:
-
-```
-{"status": "success", "result": {"trias": {"nodes": 5, "block_height": 669, "accounts": 14, "peak_tx": 0, "today_tx": 0, "tx_num": 96}, "ethereum": {"nodes": 0, "block_height": 0, "accounts": null, "peak_tx": 0, "today_tx": 0, "tx_num": 0}, "hyperledger": {"nodes": 0, "block_height": 0, "accounts": null, "peak_tx": 0, "today_tx": 0, "tx_num": 0}}}
-```
-
-PS: 新增接口返回数据与原有接口`api/general_static`一致,当前后端`api/general_static_bsc`中的返回数据只提供了:
-
-```json
-"trias": {"nodes": 5, "block_height": 669, "accounts": 14, "peak_tx": 0, "today_tx": 0, "tx_num": 96}
+### Install
+Install dependencies: 
 
 ```
-### 后端调整接口：
-- `api/tps/`
-
-Response json返回列表中补充了ethereum字段数据，对应bsc链的数据，目前看前端已可展示
-
-- api/data_monitoring
-Response json返回列表中补充了ethereum字段数据,现在数据库还没数据暂不确定展示效果
-
-- `api/faulty_nodes/`
-
-Response json返回列表中补充了ethereum字段数据，对应bsc链的数据，目前看前端已可展示
-
-- `api/fault_accetpance_rate/`
-
-Response json返回列表中补充了ethereum字段数据，对应bsc链的数据，目前看前端已可展示
-
-
-
-- `api/instant_message/`
-添加GET请求的chain_type字段支持
-
-新的请求示例如下：
-`http://127.0.0.1:8000/api/instant_message/?chain_type=bsc`
-
-返回示例:
-```json
-{"status": "success", "result": {"node_time": 1676280307, "normal_nodes": ["106.3.133.178", "106.3.133.179", "106.3.133.180", "210.73.218.171", "210.73.218.172", "101.251.223.190"], "fault_nodes": [], "event": []}}
+pip3 install -r requirements.txt
+```
+```
+npm install
 ```
 
+### Quick Start
+- Development mode, run `webpack-dev-server`: 
+  
+  `npm start`
+  
+- Production mode, run `webpack`: 
+  
+  `npm run build`
+
+Then, start the django server: 
+
+`python3 manage.py runserver`
+
+Finally, open http://localhost:8000 .
+
+### How To Use?
+See [Trias Beta User Manual](https://github.com/triasteam/triasBeta/blob/master/userguide/TriasBetaUserManual.md).
+
+### Directory Description
+|Directory|Description|
+|:-----|:---|
+|**app_views/**|This directory is used for Django custom application *app*.|
+|**conf/**|This directory contains Django configuration files for deployment.|
+|**html/**|This directory contains source code of web views such as web page assets files, react components, bundles and so on.|
+|**trias_beta/**|This directory is used for Django custom peject.|
+
+## A Note on Production Readiness
+
+While Trias is being used in production in private, permissioned
+environments, we are still working actively to harden and audit it in preparation
+for use in public blockchains.
+We are also still making breaking changes to the protocol and the APIs.
+Thus, we tag the releases as *alpha software*.
+
+In any case, if you intend to run Trias in production,
+please [contact us](mailto:contact@trias.one) and [join the chat](https://www.trias.one).
+
+## Security
+
+To report a security vulnerability,  [bug report](mailto:contact@trias.one)
+
+## Contributing
+
+All code contributions and document maintenance are temporarily responsible for TriasLab.
+
+Trias are now developing at a high speed and we are looking forward to working with quality partners who are interested in Trias. If you want to join，please contact us:
+- [Telegram](https://t.me/triaslab)
+- [Medium](https://medium.com/@Triaslab)
+- [BiYong](https://0.plus/#/triaslab)
+- [Twitter](https://twitter.com/triaslab)
+- [Gitbub](https://github.com/trias-lab/Documentation)
+- [Reddit](https://www.reddit.com/r/Trias_Lab)
+- [More](https://www.trias.one/)
+- [Email](mailto:contact@trias.one)
 
 
-- `api/node_list/`
-添加GET请求的chain_type字段支持
-新的请求示例如下：
-`http://0.0.0.0:8000/api/node_list/?group=3&curr_page=1&page_size=10&chain_type=bsc&search=`
+### Upgrades
 
-返回示例：
-```json
-{"status": "success", "result": {"nodes_list": [{"id": 75, "node_ip": "106.3.133.178", "block_heigth": 120875, "latest_block_hash": "0xe9d6fbaa92c062794ca8419bd1b4ea64dfc018616dafc7b309098bf3a9a8c694", "latest_block_time": 1676277717, "status": 0, "pub_key": "-", "show_ip": "192.168.1.221"}], "num": 1, "page": 1, "total_page": 1}}
-```
+Trias is responsible for the code and documentation upgrades for all Trias modules. In an effort to avoid accumulating technical debt prior to Beta, we do not guarantee that data breaking changes (ie. bumps in the MINOR version) will work with existing Trias blockchains. In these cases you will have to start a new blockchain, or write something custom to get the old data into the new chain.
 
+## Resources
 
+### Research
 
-
-
-以上数据可在返回示例中找到
+* [The latest paper](https://www.contact@trias.one/attachment/Trias-whitepaper%20attachments.zip)
+* [Project process](https://trias.one/updates/project)
+* [Original Whitepaper](https://trias.one/whitepaper)
+* [News room](https://trias.one/updates/recent)
